@@ -459,7 +459,7 @@ function render(delta) {
     
     // create lasers, if shooting
     if (ship.active && ship.shooting) {
-       if (laserTick === 0 || laserTick % 10 === 0) {
+       if (laserTick === 0 || laserTick % 20 === 0) {
          let laser = new Laser({
            color: '#00ff5c',
            x: ship.x  - (ship.radius * 0.5),
