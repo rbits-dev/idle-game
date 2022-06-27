@@ -169,11 +169,11 @@ function Ship(options) {
   this.x = options.x || stage.width * .5 - this.radius - .5;
   this.y = options.y || stage.height - this.radius - playerOffsetY;
   this.width = this.radius * 2;
-  this.height = this.width;
+  this.height = (138.0 / 217 ) * this.width;
   this.color = options.color || 'red';
   this.left = false;
   this.right = false;
-  this.speed = 10;
+  this.speed = 5;
   this.active = true;
   this.img = playerList[0];
 
@@ -227,11 +227,11 @@ Ship.prototype.onKeyUp = function(e) {
 }
 
 function Laser(options) {
-  this.x = options.x - 1 - .5;
-  this.y = options.y || stage.height - 148;
+  this.x = options.x - 5 - .5;
+  this.y = options.y || stage.height - 182;
   this.width = 128; //6;
   this.height = 128; //20;
-  this.speed = 16;
+  this.speed = 8;
   this.color = options.color || 'white';
   this.active = true;
   this.img = playerList[1];
