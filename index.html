@@ -71,6 +71,7 @@
 <div class="topbanner" style=" background-repeat:repeat-x; background-image: url('top.png'); height:25px;"></div>
 <ul class="hud">
   <li class="hud__score">Score: <span>0</span></li>
+  <li class="hud__hscore">HighScore: <span>0</span></li>
 </ul>
 <img id="alien" src="img/alien.svg" style="display: none;"/> 
 </body>
@@ -80,6 +81,7 @@
   const DEV_MODE = false;
  
   const playerOffsetY = 90;
+  const SHIPDECAY = 6;
 
   var images = [
   "aliens/bear.png",
@@ -122,7 +124,8 @@ var effects = [
       dialogue = document.querySelector('.dialogue'),
       startBtn = dialogue.querySelector('button'),
       hud = document.querySelector('.hud'),
-      scoreNode = hud.querySelector('.hud__score span');
+      scoreNode = hud.querySelector('.hud__score span'),
+      highScoreNode = hud.querySelector('.hud__hscore span');
 
 let ship, lasers = [], enemies = [],
     playing = false,
@@ -130,6 +133,7 @@ let ship, lasers = [], enemies = [],
     speedMultiplier,
     enemySeedFrameInterval,
     score = 0,
+    highScore = 0,
     tick = 0,
     laserTick = 0;
 
@@ -176,7 +180,8 @@ function Ship(options) {
   this.speed = 5;
   this.active = true;
   this.img = playerList[0];
-
+  this.decaying = false;
+  this.decay = SHIPDECAY;
   document.addEventListener('keydown', this.onKeyDown.bind(this));
   document.addEventListener('keyup', this.onKeyUp.bind(this));
 }
@@ -194,7 +199,14 @@ Ship.prototype.draw = function() {
     ctx.fillRect(this.x, this.y, this.width, this.width);
   }
   else {
-    ctx.drawImage( this.img, this.x, this.y, this.width, this.height );
+
+    let img = this.img;
+    if( this.decaying ) {
+      img = effectList[ randomBetween(1, 2) ];
+      console.log(img);
+    }
+
+    ctx.drawImage( img, this.x, this.y, this.width, this.height );
   }
   
   ctx.restore();
@@ -327,6 +339,9 @@ function handleLaserCollision() {
         
         // increase score
         score += calcScore(enemy.radius);
+        if( score > highScore ) {
+          highScoreNode.textContent = score;
+        }
         scoreNode.textContent = score;
              }
     }
@@ -340,15 +355,22 @@ function handleShipCollision() {
       let collision = hitTest(ship, enemy);
       if (collision) {
         playSound("explosion", false);
-        console.log('your ship was destroyed');
-        ship.active = false;
+        ship.decaying = true;
         setTimeout(() => {
           playSound("spawn", true);
           ship.active = true;
+          ship.decaying = false;
+          ship.decay = SHIPDECAY;
           speedMultiplier = 1;
           enemySeedFrameInterval = 100;
+          if( score > highScore ) {
+            highScore = score;
+            highScoreNode.textContent = score;
+          }
+
           score = 0;
           scoreNode.textContent = score;
+          
         }, 2000);
       }
     }
@@ -356,6 +378,15 @@ function handleShipCollision() {
 }
 
 function drawShip(xPosition) {
+  
+  if (ship.decaying  ) {
+    ship.decay = ship.decay -1;
+    if(ship.decay == 0 ) {
+      ship.decaying = false;
+      ship.active = false;
+    }
+  }
+
   if (ship.active) {
     ship.update(xPosition);
     ship.draw();
