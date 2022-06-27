@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Press start to play and fight Whales, DIPS and FUD" />
+  <title>A game in the crypto space.</title>
+  <link rel="stylesheet" href="css/style-min.css" />
+  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
+
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:description" content="Press start to play and fight Whales, DIPS and FUD">
+  <meta name="twitter:title" content="Moonshooter">
+  <meta name="twitter:image" content="/img/moonshot-logo.png">
+  <meta name="twitter:site" content="@RS25Moonshot">
+
+  <meta property="og:title" content="Project Moonshot" />
+  <meta property="og:site_name" content="Moonshot"/>
+  <meta property="og:description" content="Moonshooter" />
+  <meta property="og:image" content="https://project-moonshot.me/img/moonshot-logo.png" />
+
+  <link rel="stylesheet" href="css/game-min.css">
+ 
+
+</head>
+<body>
+  <audio id="laser">
+    <source src="audio/414888__matrixxx__retro-laser-shot-04.mp3" type="audio/mp3">
+  </audio>
+  <audio id="explosion">
+    <source src="audio/521105__matrixxx__retro-explosion-07.mp3" type="audio/mp3">
+  </audio>
+  <audio id="boom1">
+    <source src="audio/404752__owlstorm__retro-video-game-sfx-explode-3.mp3" type="audio/mp3">
+  </audio>
+  <audio id="boom2">
+    <source src="audio/350977__cabled-mess__boom-c-06.mp3" type="audio/mp3">
+  </audio>
+  <audio id="spawn">
+    <source src="audio/404772__owlstorm__retro-video-game-sfx-blast-off.mp3" type="audio/mp3">
+  </audio>
+  <audio id="level">
+    <source src="audio/43010__noisecollector__level2.mp3" type="audio/mp3">
+  </audio>
+  <audio id="spaceintro">
+    <source src="audio/Space_Invaders_Music.ogg" type="audio/ogg">
+  </audio>
+
+<div class="dialogue">
+  <div class="dialogue__content">
+    <h2>Moonshooter</h2>
+    <div class="spacer-small"></div>
+    <ul>
+      <li>Only for device that has cursor keys.</li>
+      <li>Use the <span class="key key--arrow">&#8592;</span> and <span class="key key--arrow">&#8594;</span> keys to move.</li>
+      <li>Use <span class="key">spacebar</span> to fire lasers.</li>
+    </ul>
+    <button>Start</button>
+  </div>
+</div>
+<div class="topbanner" style=" background-repeat:repeat-x; background-image: url('top.png'); height:25px;"></div>
+<ul class="hud">
+  <li class="hud__score">Score: <span>0</span></li>
+</ul>
+<img id="alien" src="img/alien.svg" style="display: none;"/> 
+</body>
+
+
+<script>
+  const DEV_MODE = false;
+ 
+  const playerOffsetY = 90;
+
+  var images = [
+  "aliens/bear.png",
+  "aliens/delisted.png",
+  "aliens/dip.png",
+  "aliens/dump.png",
+  "aliens/fomo.png",
+  "aliens/fud.png",
+  "aliens/gasfee.png",
+  "aliens/rekt.png",
+  "aliens/rugpull.png",
+  "aliens/scammer.png",
+  "aliens/sir.png",
+  "aliens/taxes.png",
+  "aliens/whale.png",
+  "aliens/yngmi.png"
+
+  ];
+
+var playerImages = [
+    "spaceship/defaultship.png",
+    "sperm/sperm1.png",
+    "sperm/sperm2.png",    
+];
+
+var effects = [
+  "pop/pop1.png",
+  "pop/pop1.png",
+  "pop/pop2.png"
+];
+
+
+  const imageList = [];
+  const playerList = [];
+  const effectList = [];
+  var imagesLoaded = 0;
+
+  const stage = document.createElement('canvas'),
+      ctx = stage.getContext('2d'),
+      dialogue = document.querySelector('.dialogue'),
+      startBtn = dialogue.querySelector('button'),
+      hud = document.querySelector('.hud'),
+      scoreNode = hud.querySelector('.hud__score span');
+
+let ship, lasers = [], enemies = [],
+    playing = false,
+    gameStarted = false,
+    speedMultiplier,
+    enemySeedFrameInterval,
+    score = 0,
+    tick = 0,
+    laserTick = 0;
+
+function playSound(name, b) {
+    let a = document.getElementById(name);
+    if(!a.isplaying && !b) {
+      a.currentTime = 0;
+      a.loop = false;
+    }
+    a.isplaying = a.play();    
+}
+
+function playMusic(name) {
+    let a = document.getElementById(name);
+    if(!a.isplaying) {
+      a.currentTime = 0;
+      a.loop = true;
+    }
+    a.isplaying = a.play();
+}
+
+function randomBetween(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function calcScore(x) {
+  return Math.floor((1 / x) * 500);
+}
+
+function randomBoom() {
+  let choices = [ "boom1", "boom2"];
+  return choices[ randomBetween( 0, 1 ) ];
+}
+
+function Ship(options) {  
+  this.radius = 40;
+  this.x = options.x || stage.width * .5 - this.radius - .5;
+  this.y = options.y || stage.height - this.radius - playerOffsetY;
+  this.width = this.radius * 2;
+  this.height = this.width;
+  this.color = options.color || 'red';
+  this.left = false;
+  this.right = false;
+  this.speed = 10;
+  this.active = true;
+  this.img = playerList[0];
+
+  document.addEventListener('keydown', this.onKeyDown.bind(this));
+  document.addEventListener('keyup', this.onKeyUp.bind(this));
+}
+
+Ship.prototype.update = function(x) {
+  this.x = x;
+  this.y = stage.height - this.radius - playerOffsetY;
+}
+
+Ship.prototype.draw = function() {
+  ctx.save();
+  
+  if (DEV_MODE) {
+    ctx.fillStyle = 'skyblue';
+    ctx.fillRect(this.x, this.y, this.width, this.width);
+  }
+  else {
+    ctx.drawImage( this.img, this.x, this.y, this.width, this.height );
+  }
+  
+  ctx.restore();
+  /*
+  ctx.fillStyle = this.color;
+  ctx.fillRect(this.x + this.radius - 5, this.y, 10, this.radius);
+  ctx.fillRect(this.x, this.y + this.radius, this.width, 10);
+  ctx.fillRect(this.x, this.y + this.radius + 10, 10, 5);
+  ctx.fillRect(this.x + this.width - 10, this.y + this.radius + 10, 10, 5);
+  
+  ctx.restore(); */
+}
+
+Ship.prototype.onKeyDown = function(e) {
+  if (ship.active) {
+    if (e.keyCode === 39) this.right = true;
+    else if (e.keyCode === 37) this.left = true;
+
+    if (e.keyCode == 32 && !this.shooting) {
+      this.shooting = true;
+      laserTick = 0;
+    }
+  }
+}
+
+Ship.prototype.onKeyUp = function(e) {
+  if (e.key === 'ArrowRight') this.right = false;
+  else if (e.key === 'ArrowLeft') this.left = false;
+  else if (e.keyCode == 32) this.shooting = false;
+}
+
+function Laser(options) {
+  this.x = options.x - 1 - .5;
+  this.y = options.y || stage.height - 148;
+  this.width = 128; //6;
+  this.height = 128; //20;
+  this.speed = 16;
+  this.color = options.color || 'white';
+  this.active = true;
+  this.img = playerList[1];
+}
+
+Laser.prototype.update = function(y) {
+  this.y = y;
+}
+
+var blink = 1;
+Laser.prototype.draw = function() {
+  ctx.save();
+
+    ctx.drawImage( playerList[blink], this.x, this.y, this.width, this.height );
+
+    if( randomBetween(0, 50) <= 5)
+      blink ++;
+    if( blink > 2 )
+    blink = 1;
+
+  ctx.restore();
+}
+
+function Enemy(options) {
+  this.radius = randomBetween(50, 100);
+  this.width = this.radius * 2;
+  this.height = this.width;
+  this.x = randomBetween(0, stage.width - this.width);
+  this.y = -this.radius * 2;
+  this.color = options != undefined && options.color ? options.color : 'white';
+  this.speed = 2;
+  this.active = true;
+  this.decay = 6;  
+  this.decaying = false;
+  this.img = imageList[ randomBetween(0, images.length - 1)  ];
+}
+
+Enemy.prototype.update = function(x, y) {
+  this.x = x;
+  this.y = y;
+}
+
+Enemy.prototype.draw = function() {
+  if (DEV_MODE) {
+    ctx.fillStyle = 'skyblue';
+    ctx.fillRect(this.x, this.y, this.width, this.width);
+  }
+  else {
+
+    let img = this.img;
+    if( this.decaying ) {
+      img = effectList[ randomBetween(1, 2) ];
+      console.log(img);
+    }
+
+    ctx.drawImage( img, this.x, this.y, this.width, this.height );
+  }
+}
+
+function hitTest(item1, item2) {
+  let collision = true;
+  if (
+    item1.x > item2.x + item2.width ||
+    item1.y > item2.y + item2.height ||
+    item2.x > item1.x + item1.width ||
+    item2.y > item1.y + item1.height
+  ) {
+    collision = false;
+  }
+  return collision;
+}
+
+function handleLaserCollision() {
+  for (let enemy of enemies) {
+    for (let laser of lasers) {
+      let collision = hitTest(laser, enemy);
+      if (collision && laser.active) {
+        console.log('you destroyed an enemy');
+        playSound( randomBoom(), true );
+
+        enemy.decaying = true;
+        //enemy.active = false;
+        laser.active = false;
+        
+        // increase enemy speed and frequency of enemy spawns
+        speedMultiplier += .025;
+        if (enemySeedFrameInterval > 20) {
+          enemySeedFrameInterval -= 2;
+        }
+        if( speedMultiplier == 2.0 ||speedMultiplier == 3.0 ||speedMultiplier == 4.0 ||speedMultiplier == 5.0 || speedMultiplier == 6.0 ) {
+          playSound("level");
+        }
+        
+        // increase score
+        score += calcScore(enemy.radius);
+        scoreNode.textContent = score;
+             }
+    }
+  }
+}
+
+function handleShipCollision() {
+  // check for collisions between ship and enemies
+  if (enemies.length) {
+    for (let enemy of enemies) {
+      let collision = hitTest(ship, enemy);
+      if (collision) {
+        playSound("explosion", false);
+        console.log('your ship was destroyed');
+        ship.active = false;
+        setTimeout(() => {
+          playSound("spawn", true);
+          ship.active = true;
+          speedMultiplier = 1;
+          enemySeedFrameInterval = 100;
+          score = 0;
+          scoreNode.textContent = score;
+        }, 2000);
+      }
+    }
+  }
+}
+
+function drawShip(xPosition) {
+  if (ship.active) {
+    ship.update(xPosition);
+    ship.draw();
+  }
+}
+
+function drawEnemies() {
+  if (enemies.length) {
+
+    for (let enemy of enemies) {
+      // draw an enemy if it's active
+      if (enemy.active) {
+
+        if (enemy.decaying  ) {
+          enemy.decay = enemy.decay -1;
+          if(enemy.decay == 0 ) {
+            enemy.decaying = false;
+            enemy.active = false;
+          }
+        }
+        if(enemy.active) {
+
+          if( randomBetween(0,100) <= 15 ) {
+            let v = enemy.speed * speedMultiplier;
+            if(randomBetween(0,50) > 25) 
+              enemy.x += v;
+            else
+              enemy.x -= v;
+          }
+
+          enemy.update(enemy.x, enemy.y += enemy.speed * speedMultiplier);
+          enemy.draw();
+        }
+
+        
+      }
+       
+    }
+  }
+}
+
+function enemyCleanup() {
+  if (enemies.length) {
+    enemies = enemies.filter(enemy => {
+      let visible = enemy.y < stage.height + enemy.width;
+      let active = enemy.active === true;
+      return visible && active;
+    });
+  }
+}
+
+function drawLasers() {
+  if (lasers.length) {
+    for (let laser of lasers) {
+      if (laser.active) {
+        laser.update(laser.y -= laser.speed);
+        laser.draw();
+      }
+    }
+  }
+}
+
+function laserCleanup() {
+  lasers = lasers.filter(laser => {
+    let visible = laser.y > -laser.height;
+    let active = laser.active === true;
+    return visible && active;
+  });
+}
+
+function render(delta) {
+  if (playing) {
+    let xPos = ship.x;
+    
+    // seed new enemies
+    if (tick % enemySeedFrameInterval === 0 && ship.active) {
+      const enemy = new Enemy();
+      enemies.push(enemy);
+    //  console.log({enemySeedFrameInterval, speedMultiplier})
+    }
+  
+    // background
+    ctx.save();
+    ctx.fillStyle = '#000000';
+    ctx.fillRect(0, 0, stage.width, stage.height);
+    ctx.restore();
+
+    // ship movement
+    if (ship.left) 
+      xPos = ship.x -= ship.speed;
+    else if (ship.right) 
+      xPos = ship.x += ship.speed;
+
+    // stage boundaries
+    if (gameStarted) {
+      if (xPos < 0) 
+        xPos = 0;
+      else if (xPos > stage.width - ship.width) 
+        xPos = stage.width - ship.width;  
+    }
+    
+    // create lasers, if shooting
+    if (ship.active && ship.shooting) {
+       if (laserTick === 0 || laserTick % 10 === 0) {
+         let laser = new Laser({
+           color: '#00ff5c',
+           x: ship.x  - (ship.radius * 0.5),
+         });
+         lasers.push(laser);
+         playSound("laser", true);
+       }
+    }
+    
+    drawShip(xPos);
+    
+    handleShipCollision();
+    handleLaserCollision();
+    
+    drawLasers();
+    drawEnemies();
+    
+    enemyCleanup();
+    laserCleanup();
+    
+    if (ship.shooting) laserTick++;
+    tick++;
+  }
+  
+  requestAnimationFrame(render);
+}
+
+function startGame(e) {
+  console.log('starting game'); 
+
+  dialogue.classList.add('dialogue--hidden');
+  hud.classList.remove('hud--hidden');
+  e.currentTarget.blur();
+  
+  playMusic("spaceintro");
+
+  // reset the demo/intro to the actual game settings:
+  speedMultiplier = 1;
+  enemySeedFrameInterval = 100;
+  ship.x = stage.width * .5 - ship.radius - .5;
+  ship.y = stage.height - ship.radius - playerOffsetY;
+  enemies = [];
+  gameStarted = true;
+}
+
+function onResize() {
+  stage.width = window.innerWidth;
+  stage.height = window.innerHeight;
+}
+
+function imageLoaded() {
+  imagesLoaded ++;
+}
+
+function imageNotFound() {
+  console.log("Image not found");
+}
+
+function loadImage(value,index,array) {
+  let img = new Image();
+  img.onload = imageLoaded;
+  img.onerror = imageNotFound;
+  img.src = value;
+  imageList.push(img);
+}
+
+function newImage(value) {
+  let img = new Image();
+  img.onload = imageLoaded;
+  img.onerror = imageNotFound;
+  img.src = value;
+  playerList.push(img);
+  return img;
+}
+function newFXImage(value) {
+  let img = new Image();
+  img.onload = imageLoaded;
+  img.onerror = imageNotFound;
+  img.src = value;
+  effectList.push(img);
+  return img;
+}
+
+images.forEach(loadImage);
+playerImages.forEach(newImage);
+effects.forEach(newFXImage);
+
+startBtn.addEventListener('click', startGame);
+window.addEventListener('resize', onResize);
+
+document.body.appendChild(stage);
+onResize();
+
+// start the ship off-screen:
+ship = new Ship({ color:'#c3a17b', x: -100, y: -100});
+
+// set up some ridiculous enemy speeds for the intro:
+speedMultiplier = 6,
+enemySeedFrameInterval = 20;
+
+var myLoader = setInterval( loading, 1000 );
+
+function loading() {
+  if( imagesLoaded == ( playerList.length + images.length + effectList.length) ) {
+    playing = true;
+    clearInterval(myLoader);
+    render();
+  }
+}
+
+</script>
+</html>
