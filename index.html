@@ -5,140 +5,824 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Press start to play and fight Whales, DIPS and FUD" />
-  <title>A game in the crypto space.</title>
+  <title>RA8BIT RAIDERS</title>
   <link rel="stylesheet" href="css/style-min.css" />
-  <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+  <link rel="shortcut icon" href="assets/ra8bits/r.webp" type="image/x-icon" />
+  <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
+
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
 
-  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5">
-
   <meta name="twitter:card" content="summary">
   <meta name="twitter:description" content="Press start to play and fight Whales, DIPS and FUD">
   <meta name="twitter:title" content="Ra8bits">
-  <meta name="twitter:image" content="/img/moonshot-logo.png">
-  <meta name="twitter:site" content="@RS25Moonshot">
+  <meta name="twitter:image" content="assets/logo.webp">
+  <meta name="twitter:site" content="@Ra8bitsNFT">
 
-  <meta property="og:title" content="Ra8bits" />
+  <meta property="og:title" content="RA8BIT RAIDERS" />
   <meta property="og:site_name" content="Ra8bits"/>
   <meta property="og:description" content="Ra8bits" />
-  <meta property="og:image" content="https://project-moonshot.me/img/moonshot-logo.png" />
+  <meta property="og:image" content="assets/logo.webp" />
 
   <link rel="stylesheet" href="css/game-min.css">
- 
+  <link rel="manifest" href="manifest.json">
 
+  <script type="text/javascript" src="https://unpkg.com/web3@1.2.11/dist/web3.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/web3modal@1.9.0/dist/index.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/evm-chains@0.2.0/dist/umd/index.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/@walletconnect/web3-provider@1.2.1/dist/umd/index.min.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/fortmatic@2.0.6/dist/fortmatic.js"></script>
+  <script type="text/javascript" src="js/metadata.js"></script>
+  <script type="text/javascript" src="js/howler.js"></script>
+  <script type="text/javascript" src="js/gamepad.js"></script>
+  
 </head>
 <body>
-  <audio id="laser">
-    <source src="audio/414888__matrixxx__retro-laser-shot-04.mp3" type="audio/mp3">
-  </audio>
-  <audio id="explosion">
-    <source src="audio/521105__matrixxx__retro-explosion-07.mp3" type="audio/mp3">
-  </audio>
-  <audio id="boom1">
-    <source src="audio/404752__owlstorm__retro-video-game-sfx-explode-3.mp3" type="audio/mp3">
-  </audio>
-  <audio id="boom2">
-    <source src="audio/350977__cabled-mess__boom-c-06.mp3" type="audio/mp3">
-  </audio>
-  <audio id="spawn">
-    <source src="audio/404772__owlstorm__retro-video-game-sfx-blast-off.mp3" type="audio/mp3">
-  </audio>
-  <audio id="level">
-    <source src="audio/43010__noisecollector__level2.mp3" type="audio/mp3">
-  </audio>
-  <audio id="spaceintro">
-    <source src="audio/Space_Invaders_Music.ogg" type="audio/ogg">
-  </audio>
+  <div id="audio-elements"></div>
+
+  <div class="gameover__content hidden">
+    <div class="gameover__overlay">
+      <h1>GAME OVER</h1>
+      <ul>
+        <li>Ra8bits invaded Earth!</li>
+      </ul>
+    </div>
+  </div>
 
 <div class="dialogue">
   <div class="dialogue__content">
-    <h2>Ra8bits</h2>
-    <div class="spacer-small"></div>
-    <ul>
-      <li>Only for device that has cursor keys.</li>
-      <li>Use the <span class="key key--arrow">&#8592;</span> and <span class="key key--arrow">&#8594;</span> keys to move.</li>
-      <li>Use <span class="key">spacebar</span> to fire lasers.</li>
+    <div class="dialogue__overlay">
+      <img src="assets/logo.webp" alt="RA8BIT RAIDERS" style="width:90vw;max-width:800px;"/>
+
+    <ul id="introtext">
+      <li>Protect space from raiding Ra8bits</li>
     </ul>
-    <button>Start</button>
+
+    <ul id="starttext" style="display:none;"">
+      <li> Use <span class="key">CURSOR</span> or <span class="key">WASD</span> keys to move. </li>
+      <li> Use <span class="key">spacebar</span> to fire lasers. </li>
+      <li> Use <span class="key">Enter</span> to fire smart missiles.</span> </li>
+      <li> Or use touchpad. </li>
+      <li> Use <span class="key">N</span> and <span class="key">P</span> to cycle the SID JukeBox. </li>
+      <li> Use <span class="key">ESC</span> to quit. </li>
+    </ul>
+
+    <div id="prepare">
+      <div class="buttons" id="loading-data">
+        <ul><li>Loading</li></ul> 
+        <br/>
+        <br/>
+      </div>
+      <div id="readyToConnect" class="buttons hidden">
+        <ul>
+          <li>Connect your wallet to play</li>
+        </ul>
+        <a id="btn-connect">Connect</a>
+      </div>
+      <div id="moonboxes" class="hidden">
+        <ul>
+          <li>Starfighters are available on MoonBoxes</li>
+          <li>You can get one below 👇 #FreeMint</li>
+          <li>(Max 32 ships per wallet)</li>
+        </ul>
+        <div class="buttons" style="padding-top:1vmin;">
+          <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >Mint Starfighter</a>
+        </div>
+        <div class="spacer-small"></div>
+      </div>        
+    </div>
+
+    <div id="connected">
+      <div class="spacer-small"></div>
+
+      <div id="shipyard" class="hidden">
+        <ul id="moreships2">
+          <li>Select your spaceship:</li>
+        </ul>
+        <div>
+          <canvas id="shippreview" class="shipyard"></canvas>
+        </div>
+        <div class="buttons" style="padding-top:1vmin;" id="moreships">
+          <a id="btn-prevship" style="width:5vmax;">&nbsp;&lt;&nbsp;</a>
+          <a id="btn-nextship" style="width:5vmax;">&nbsp;&gt;&nbsp;</a>
+        </div>
+      </div>
+      <div id="noships" class="hidden">  
+        <div class="spacer-small"></div>
+        <ul>
+          <li>Error: No starfighters found for</li>
+          <li id="selectedAccount"></li>
+        </ul>
+        <div class="spacer-small"></div>
+        
+      </div>
+      <div class="spacer-small"></div>
+      <div class="buttons">
+        <a id="btn-start" class="ax hidden">Start</a><br/>
+        <a id="btn-disconnect" class="ax">Quit</a>
+        
+      </div>
+      <ul>
+        <li>👇 Mint a starfighter 👇</li>
+      </ul>
+      <div class="buttons" style="padding-top:20px;">
+        <a id="btn-mint" target="_blank" href="https://moonboxes.io" >MoonBoxes</a>
+      </div>
+    </div>
+   
+    <h3 id="txHash"></h3>
+  </div>
+
   </div>
 </div>
-<div class="topbanner" style=" background-repeat:repeat-x; background-image: url('top.png'); height:25px;"></div>
-<ul class="hud">
+
+<ul class="hud--hidden hud">
+  <li class="hud__lives">Lives:<span>3</span></li>
+  <li class="hud__speed">Rockets: <span>0</span></li>
+  <li class="hud__debug">Level: <span>1</span></li>
   <li class="hud__score">Score: <span>0</span></li>
   <li class="hud__hscore">HighScore: <span>0</span></li>
+  
+  
 </ul>
-<img id="alien" src="img/alien.svg" style="display: none;"/> 
+
 </body>
 
+<script type="text/javascript" src="js/wallet.js"></script>
 
 <script>
-  const DEV_MODE = false;
+
+// A helper function to load all audio data
+function addAudioElement(  source, type, id ) {
+  let sound      = document.createElement('audio');
+  sound.id       = id;
+  sound.loop     = false;
+  sound.src      = source;
+  sound.type     = type;
+  document.getElementById('audio-elements').appendChild(sound);
+  return sound;
+}
+
+
+// SID chip C64 jukebox     
+// https://www.6581-8580.com/socse/index.php?field=title&sorting=title&view=ASC&page=1&wildcard=off&add_fields=&query=a&term_counts=0
+var sidSongs = [
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/Siebold_Markus/Turrican_2-The_Final_Fight_T001.sid_CSG8580R5.mp3",  
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/K/KB/Turrican_32k_T001.sid_CSG8580R5.mp3", 
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/K/Kribust/2011-A_Press_Space_Odyssey_tune_05_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/K/Kribust/2011-A_Press_Space_Odyssey_tune_07_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/P/Prosonix/Pettersen_Ole-Marius/2011-A_Press_Space_Odyssey_tune_09_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/P/Prosonix/Pettersen_Ole-Marius/2011-A_Press_Space_Odyssey_tune_10_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/L/Linus/DTV/2008_A_Space_Odyssey_Load_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/058/MP3/GAMES/A-F/Deep_in_Space_preview_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/055/MP3/MUSICIANS/R/Radiantx/Old_Tunes/A_Theory_of_Space_and_Starships_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/053/MP3/MUSICIANS/E/Eeben_Aleksi/Final_Deep_Space_part_3_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/P/Phobos/In_Space_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/S/Schneider_Markus/Intruder-the_Space_Quest_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/R/Randy/Lost_in_Space_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/070/MP3/MUSICIANS/C/Crowley_Owen/Mario_in_Space_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/069/MP3/GAMES/S-Z/Space_Ace_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/O/Oedipus/Turrican_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/T/The_Blue_Ninja/Turrican_3_preview_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/Siebold_Markus/Turrican_2-The_Final_Fight_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/058/MP3/MUSICIANS/P/Pernet/Turrican_2_Remix_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/073/MP3/MUSICIANS/M/MovieMovies1/Mega_Turrican-Stage_1-2_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/Tel_Jeroen/Cybernoid_II_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/H/Hubbard_Rob/Crazy_Comets_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/Tel_Jeroen/Cybernoid_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/055/MP3/MUSICIANS/D/Detert_Thomas/Starforce_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/074/MP3/MUSICIANS/P/Patfield_Kent/Afterburner_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/G/Gray_Matt/Last_Ninja_2_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/055/MP3/MUSICIANS/H/Hubbard_Rob/Monty_on_the_Run_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/061/MP3/MUSICIANS/H/Hubbard_Rob/Warhawk_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/077/MP3/MUSICIANS/H/Hubbard_Rob/Commando_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/M/Mermaid/Shadowfire_2000_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/060/MP3/MUSICIANS/S/Steel/R-Type_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/061/MP3/MUSICIANS/L/Leitch_Barry/R-Type_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/G/Galway_Martin/Street_Hawk_Prototype_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/060/MP3/MUSICIANS/W/Whittaker_David/Dynamic_Duo_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/055/MP3/MUSICIANS/H/Holt_Hein/Starglider_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/067/MP3/MUSICIANS/D/Detert_Thomas/Giana_Sisters_2_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/071/MP3/MUSICIANS/S/SigmaZeven/Giana_Sisters_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/076/MP3/MUSICIANS/P/Patfield_Kent/Giana_Sisters_Intro_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/076/MP3/MUSICIANS/P/Patfield_Kent/Ghost_n_Goblins_v1_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/T/Tel_Jeroen/Eliminator_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/Taylor_Andy/Super_Space_Invaders_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/064/MP3/MUSICIANS/L/Laxity/Last_Space_Fighter_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/071/MP3/MUSICIANS/J/Jammer/Watcher_of_Time_and_Space_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/074/MP3/MUSICIANS/P/Patfield_Kent/Space_Harrier_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/054/MP3/MUSICIANS/A/Amadeus_Attic/Space_Invaders_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/J/Jeff/Space_Journey_T001.sid_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/062/MP3/MUSICIANS/F/Fredrik/Space_Contact_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/054/MP3/MUSICIANS/B/Bayliss_Richard/Space_Dance_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/067/MP3/MUSICIANS/A/Ajitek/Space_Gauntlet_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/Simon_Laszlo/Barbarian_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/J/Joseph_Richard/Barbarian_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/TLF/Bubble_Dizzy_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/S/Sage/Double_Bubble_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/070/MP3/MUSICIANS/S/Steel/Party_Pirates_Part_Two_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/D/Dr_Piotr/Wolfenstein_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/070/MP3/MUSICIANS/S/Surgeon/Marble_Machine_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/T/Tait_Mark/1943_T001.sid_CSG8580R5.mp3",
+ "http://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/A/Amadeus_Meka_Design/Moon_Balade_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/060/MP3/MUSICIANS/H/Haard_Lars/1943-One_Year_After_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/J/Joseph_Richard/Defender_of_the_Crown_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/D/Daf/Arkanoid_T001.sid_CSG8580R5.mp3",
+ "https://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/cgsc/133/MP3/Terry/Star_Wars_T001.mus_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/cgsc/133/MP3/John_Sharp/Star_Wars_T001.mus_CSG8580R5.mp3",
+ "https://saimei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/Tel_Jeroen/Golden_Axe_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/SounDemoN/Lemmings_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/T/The_Blue_Ninja/Lemmings_2_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/H/Hesford_Paul/Moon_Light_Demo_Tune_6_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/H/Hesford_Paul/Moon_Light_Demo_Tune_4_T001.sid_CSG8580R5.mp3",
+ "https://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/P/Pro_Pen/Mayhem_T001.sid_CSG8580R5.mp3",
+ "https://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/D/DJ/Mayhem_Intro_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/cgsc/140/MP3/Seve_Sids/Mad_Man_Moon_T001.mus_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/H/Hesford_Paul/Moon_Light_Demo_Tune_7_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/053/MP3/MUSICIANS/L/LDX40/Armalyte_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/Simon_Laszlo/Hysteria_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/cgsc/133/MP3/BJ_Pools/Hysteria_A_T001.mus_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/056/MP3/MUSICIANS/H/Hesford_Paul/Moon_Light_Demo_Tune_3_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/A/Abaddon/Full_Moon_Raker_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/S/Signor/Fly_to_Moon_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/GAMES/M-R/Moon_Patrol_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/059/MP3/MUSICIANS/G/Gray_Fred/Dantes_Inferno_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/C/Cooksey_Mark/Ramparts_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/054/MP3/MUSICIANS/C/Cooksey_Mark/Battle_Ships_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/G/Gray_Matt/Tusker_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/066/MP3/MUSICIANS/H/Hobbit/Moon-Trip_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/H/Huelsbeck_Chris/Starball_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/T/Tel_Jeroen/Starball_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/B/Barrett_Steve/Bigfoot_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/D/Deenen_Charles/Soldier_of_Light_T001.sid_CSG8580R5.mp3",
+ "http://ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/051/MP3/MUSICIANS/A/A-Man/Blue_Moon_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/S/Shavitt_Guy/Legend_of_the_Sun_and_Moon_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/D/Deenen_Charles/After_the_War_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/075/MP3/MUSICIANS/J/Joeli_Jani/Nine_Nights_from_the_Black_Moon_T001.sid_CSG8580R5.mp3",
+ "http://chuangtzu.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/057/MP3/MUSICIANS/D/Deenen_Charles/Zamzara_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/074/MP3/MUSICIANS/G/Galimberti_Paolo/Moonshadow_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/B/Beben_Wally/Moonshadow_T001.sid_CSG8580R5.mp3",
+ "http://gemmei.ftp.acc.umu.se/mirror/media/Oakvalley/soasc/hvsc/049/MP3/MUSICIANS/M/Merken_Vincent/Moon_Ganymedes_T001.sid_CSG8580R5.mp3",
+
+
+];
+
+let jukeBoxMuted = false;
+
+function toggleMute() {
+  if(!jukeBoxMuted) {
+    stopMusic(playingNow);
+    jukeBoxMuted = true;
+  }
+  else {
+    if(jukeBoxIndex == -1) {
+      jukeBox( 0 );
+    }
+    else {
+      jukeBoxMuted = false;
+      playSidSong();
+    }
+  }
+  displayText( "SID jukebox is " + (jukeBoxMuted ? "muted" : "unmuted"));
+}
+
+// JukeBox function
+var jukeBoxIndex = -1;
+function jukeBox(dir) {
+  if( dir == 1 ) { // Next song, cycle to start
+    jukeBoxIndex = (jukeBoxIndex + 1) % (sidSongs.length-1);
+  }
+  else if( dir == -1) { // Previous song, cycle to end
+    if( jukeBoxIndex <= 0 ) {
+      jukeBoxIndex = sidSongs.length - 1;
+    }
+    else {
+      jukeBoxIndex = jukeBoxIndex - 1;
+    }
+  }
+  else { // Random song
+    jukeBoxIndex = randomBetween( 0, sidSongs.length - 1 );  
+  }
+
+  playSidSong();
+}
+
+function playSidSong() {
+  let name = sidSongs[jukeBoxIndex].split("/").pop();
+  displayText( cleanupText(name) );
+  stopAndPlayLooping( "sid" + jukeBoxIndex);
+}
+
+const soundSamples = new Map();
+const soundMap = new Map();
+
+// Sound samples
+var hitHurtChoices = [ "hitHurt1", "hitHurt2", "hitHurt3", "hitHurt4", "hitHurt5" ];
+var explosionChoices = [ "explosion1", "explosion2", "explosion3" , "explosion4" , "explosion5" , "explosion6" , "explosion7" , "explosion8", "explosion9", "explosion10","explosion11", "explosion12", "explosion13", "explosion14", 
+ "explosion15", "explosion16", "explosion17", "explosion18", "explosion19", "explosion20", "explosion21", "explosion22", "explosion23", "explosion24" ];
+var pickupCoinChoices = [ "pickupCoin1", "pickupCoin2", "pickupCoin3", "pickupCoin4","pickupCoin5","pickupCoin6","pickupCoin7","pickupCoin8","pickupCoin9","pickupCoin10","pickupCoin11","pickupCoin12","pickupCoin13"];
+var powerupChoices = [ "powerUp1", "powerUp2","powerUp3","powerUp4","powerUp5","powerUp6","powerUp8","powerUp9", "powerUp10", "powerUp11", "powerUp12", "powerUp13", "powerUp14" ]
+var massExplosions = [ "massexplosion1", "massexplosion2" ];
+
+function addAudio( resource, mimetype, id ) {
+  let path = "audio/" + resource;
+  if( "audio/mp3" === mimetype ) {
+    path += ".mp3";
+  }
+  if( "audio/wav" === mimetype ) {
+    path += ".wav";
+  }
+  if ("audio/ogg" === mimetype ) {
+    path += ".ogg";
+  }
+
+  soundSamples.set( path, new Howl( { src: [ path ] } ));
+  soundMap.set( id, path );
+}
+
+// Load Audio data
+function loadAudioElements() {
+
+    for( let h of hitHurtChoices ) {
+      addAudio( h, "audio/mp3", h);
+    }
+    
+    for( let e of explosionChoices ) {
+      addAudio( e, "audio/mp3", e );
+    }
+    
+    addAudio( "explosion11", "audio/mp3", "explosion");
+    addAudio( "explosion12", "audio/mp3", "boom2");
+    addAudio( "explosion13", "audio/mp3", "massexplosion1");
+    addAudio( "explosion14", "audio/mp3", "massexplosion2");
+
+    addAudio( "blipSelect", "audio/mp3", "blip");
+    addAudio( "launch", "audio/mp3", "launch");
+    
+    for( let p of pickupCoinChoices ) {
+      addAudio( p, "audio/mp3", p );
+    }
+
+    for( let p of powerupChoices ) {
+      addAudio( p, "audio/mp3", p );
+    }
+
+    addAudio( "lasershot", "audio/mp3", "laser" );
+    addAudio( "spawn", "audio/mp3", "spawn" );
+    addAudio( "level" , "audio/mp3", "level" );
+    addAudio( "pickup", "audio/mp3", "take");
+    addAudio( "komori", "audio/mp3", "bosslaser");
+    
+    addAudioElement( "audio/Space_Invaders_Music.mp3", "audio/mp3", "spaceintro");
+    addAudioElement( "audio/sawsquarenoise-boss-theme.mp3", "audio/mp3", "bosstheme2");
+    addAudioElement( "audio/442127__euphrosyyn__8-bit-game-over.mp3", "audio/mp3", "gameover");
+
+    for( let k = 0; k < sidSongs.length; k ++ ) {
+      let elem = addAudioElement( sidSongs[k], "audio/mp3", "sid" + k );
+      elem.preload = 'none';
+    }
+}
+
+
+
+// Global definitions
+const DEV_MODE = false;      // Set to true for dev mode
+const playerOffsetY = 180;   
+const SHIPDECAY = 6;         // in ticks
+const ENEMY_DECAY = 6;
+let DEFAULTSPEED = 0;
+
+// Bonus Types
+const MOVE_SPEED = 1;        
+const LASER_SPEED = 2;
+const LASER_QUICKFIRE = 4;
+const LASER_OUT = 5;
+const STEERLESS = 6;
+const MOREENEMIES = 7;
+const SLOW_MOTION = 8;
+const LASER_PIERCING = 9;
+const SLOW_SPEED = 3;
+const NONE = 0;
+
+const BOMB_DECAY_TIME = 6;
+const MISSION_TARGET = 2;           // 40;
+var NEXT_LEVEL = MISSION_TARGET;     // How many enemies to kill before leveling up
+
+const P_SIZE_BONUS = 40;
+const P_SIZE_ENEMY = 20;
+const P_SIZE_COIN  = 28;
+const P_SIZE_PREVIEW_SHIP = 9;
+const P_SIZE_SHIP = 18;
+const P_SIZE_BOMB = 50;
+const P_SIZE_BOSS = 10;
+/*
+const L_SIZE_BONUS = 80;
+const L_SIZE_ENEMY = 48;
+const L_SIZE_COIN  = 56;
+const L_SIZE_PREVIEW_SHIP = 25;
+const L_SIZE_SHIP = 42;
+const L_SIZE_BOMB = 200;
+const L_SIZE_BOSS = 15; */
+const L_SIZE_BONUS = 110;
+const L_SIZE_ENEMY = 56;
+const L_SIZE_COIN  = 70;
+const L_SIZE_PREVIEW_SHIP = 25;
+const L_SIZE_SHIP = 52;
+const L_SIZE_BOMB = 200;
+const L_SIZE_BOSS = 22;
+
+
+const P_SIZE_LASER = 25;
+const L_SIZE_LASER = 75;
+//  this.width = options.width || 23/3; //6;
+//  this.height = options.height || 64/3; //20;   // FIXME probably needs to take in account screen orientation
+
+
+// If you are standing still too long, Ra8bits will fire smart missiles at you
+var standingStillTimer = 0;
+var lastStandingX = 0;
+var paused = false;
+var START_INTERVAL = 200;
+var MIN_INTERVAL = 15;
+var gameClock = 0;                   // game clock
+
+// The Ra8bits and Bonus objects
+var images = [
+  "assets/ra8bits/1.webp", // YNGMI       0
+  "assets/ra8bits/2.webp", // REKT 
+  "assets/ra8bits/3.webp", // DUMP
+  "assets/ra8bits/4.webp", // TAXES
+  "assets/ra8bits/5.webp", // BEAR
+  "assets/ra8bits/6.webp", // RUGPULL     5
+  "assets/ra8bits/7.webp", // FOMO
+  "assets/ra8bits/8.webp", // FUD
+  "assets/ra8bits/9.webp", // YNGMI
+  "assets/ra8bits/10.webp",// SCAM         9
+  "assets/ra8bits/11.webp",// DIP         10
+  "assets/ra8bits/12.webp",// TAXES
+  "assets/ra8bits/13.webp",// REKT
+  "assets/ra8bits/14.webp",// GASFEE
+  "assets/ra8bits/15.webp",// SIR
+  "assets/ra8bits/16.webp",// FOMO        15
+  "assets/ra8bits/17.webp",// WHALE
+  "assets/ra8bits/18.webp",// FUD
+
+  "assets/ra8bits/R1.webp", // Space rock  18
+  "assets/ra8bits/R2.webp", // Space rock  19
+  "assets/ra8bits/R3.webp", // Space rock  20
+  
  
-  const playerOffsetY = 90;
-  const SHIPDECAY = 6;
+  "assets/ra8bits/1up.webp", // EXTRA LIVE   21
+  "assets/ra8bits/r.webp",   // ROCKET
+  "assets/ra8bits/a.webp", // A              23
+  "assets/ra8bits/b.webp", // B
+  "assets/ra8bits/l.webp", // Laser         25
+  "assets/ra8bits/s1.webp", // Shield1
+  "assets/ra8bits/s2.webp", // Shield2 
+  "assets/ra8bits/v.webp", // V
+  "assets/ra8bits/2up.webp", // 2 UP         
+  "assets/ra8bits/lup.webp", // EXTRA LIVE
+  "assets/ra8bits/pl.webp", // PIERCING LASER
+  "assets/ra8bits/sp.webp", // SHIELD MAX POWER INCREASE
+  "assets/ra8bits/tesla.webp", // Space Tesla 21 (BONUS_INDEX)
+  //"assets/ra8bits/lsat.webp", // laser satellite
 
-  var images = [
-  "aliens/bear.png",
-  "aliens/delisted.png",
-  "aliens/dip.png",
-  "aliens/dump.png",
-  "aliens/fomo.png",
-  "aliens/fud.png",
-  "aliens/gasfee.png",
-  "aliens/rekt.png",
-  "aliens/rugpull.png",
-  "aliens/scammer.png",
-  "aliens/sir.png",
-  "aliens/taxes.png",
-  "aliens/whale.png",
-  "aliens/yngmi.png"
-
-  ];
-
-var playerImages = [
-    "spaceship/defaultship.png",
-    "sperm/sperm1.png",
-    "sperm/sperm2.png",    
 ];
 
-var effects = [
-  "pop/pop1.png",
-  "pop/pop1.png",
-  "pop/pop2.png"
+const ENEMY_NONE = -1;                         // Our ship has this ID
+const ENEMY_COIN = 0;                          // The enemy dropped a coin 
+const ENEMY_BOSS = 999;                        // Boss id 
+
+const ENEMY_R1 = 18;
+const ENEMY_R2 = 19;
+const ENEMY_R3 = 20;
+
+const ENEMY_INDEX = 18;
+
+const BONUS_INDEX = 21;                        // Magic number that corresponds with index of images [ 1up.webp ]
+
+const BONUS_1UP = BONUS_INDEX; // 21
+const BONUS_R = BONUS_1UP + 1; //22
+const BONUS_A = BONUS_R + 1; //23
+const BONUS_B = BONUS_A + 1;
+const BONUS_L = BONUS_B + 1;
+const BONUS_S = BONUS_L + 1;
+const BONUS_S2 = BONUS_S + 1;
+const BONUS_V = BONUS_S2 + 1;
+const BONUS_2UP = BONUS_V + 1;
+const BONUS_EXTRA_LIVE = BONUS_2UP + 1;
+const BONUS_PL = BONUS_EXTRA_LIVE + 1;
+const BONUS_SHIELD_POWER = BONUS_PL + 1;
+const BONUS_TESLA = BONUS_SHIELD_POWER + 1;
+const BONUS_LAST = BONUS_TESLA + 1;
+
+const BONUS_COIN = 0;
+
+// Must be in same order as "images"; This defines what each object drops.
+var bonusTypes = [
+  MOREENEMIES,    
+  SLOW_SPEED,
+  NONE,
+  NONE,
+  NONE, //5
+  NONE,  
+  NONE,  
+  NONE,
+  NONE, 
+  SLOW_SPEED, //10
+  NONE, 
+  NONE,
+  SLOW_SPEED,
+  NONE,
+  NONE, //15
+  NONE, 
+  NONE,
+  NONE, //18 asteroid
+  NONE, //19
+  NONE, //20
+  NONE, //21 tesla
+  BONUS_1UP,  //22
+  BONUS_R, //23
+  BONUS_A, //24
+  BONUS_B, //25
+  BONUS_L, //26
+  BONUS_S, //27
+  BONUS_S2,
+  BONUS_V, //29
+  BONUS_2UP,
+  BONUS_EXTRA_LIVE,
+  BONUS_PL,
+  BONUS_SHIELD_POWER,
+  NONE,
+  //BONUS_LSAT,
 ];
 
+// Magic numbers because of how array was arranged
+const PLAYER_MISSILE_ID = 6; 
+const PLAYER_MISSILE_BOOSTER = 7;
 
-  const imageList = [];
-  const playerList = [];
-  const effectList = [];
-  var imagesLoaded = 0;
+// Virtual gamepad buttons
+const gamepadButtons = [];
+let touchEnabled = false;
 
-  const stage = document.createElement('canvas'),
-      ctx = stage.getContext('2d'),
-      dialogue = document.querySelector('.dialogue'),
-      startBtn = dialogue.querySelector('button'),
-      hud = document.querySelector('.hud'),
-      scoreNode = hud.querySelector('.hud__score span'),
-      highScoreNode = hud.querySelector('.hud__hscore span');
+//TODO: loot drop table for enemies, some are more rare than others
 
-let ship, lasers = [], enemies = [],
+var shipyard = [];     // The shipyard. These are all the ships a user has
+var imagesLoaded = 0;
+var currentShip = 0;
+
+// Global spritemap that holds coins 
+var spriteCoins;
+// Global explosions
+var spriteExplosions; 
+
+var LIVES = 3;          // You have 3 lives at start
+
+var showText = false;
+var showTextContent = "";
+
+const stage = document.createElement('canvas'),
+    ctx = stage.getContext('2d'),
+    dialogue = document.querySelector('.dialogue'),
+    gameover = document.querySelector('.gameover__content'),
+    startBtn = document.getElementById('btn-start'),
+    prevShip = document.getElementById('btn-prevship'),
+    nextShip =  document.getElementById('btn-nextship'),
+    // Score:
+    hud = document.querySelector('.hud'),
+    scoreNode = hud.querySelector('.hud__score span'),
+    highScoreNode = hud.querySelector('.hud__hscore span'),
+    livesNode = hud.querySelector('.hud__lives span'),
+    speedNode = hud.querySelector('.hud__speed span'),
+    debugNode = hud.querySelector('.hud__debug span');
+      
+// Setup touch event listeners
+stage.addEventListener( "touchend", touchEnd, { passive: false }); 
+stage.addEventListener( "touchmove", touchMove, { passive: false }); 
+stage.addEventListener( "touchstart", touchStart, { passive: false }); 
+window.addEventListener( "deviceorientation", handleOrientationEvent, true);
+//window.addEventListener( "devicemotion", handleMotionEvent, true );
+  
+
+let ship, lasers = [], enemies = [], bombs = [], backgrounds = [], distanceToPlayer = [], bonusBuffs = [],
     playing = false,
+    connected = false,
     gameStarted = false,
     speedMultiplier,
     enemySeedFrameInterval,
+    smartBombProbability = 5,
     score = 0,
     highScore = 0,
     tick = 0,
-    laserTick = 0;
+    laserTickMax = 20,
+    playerLaserSpeed = 8,
+    currentLevel = 1,
+    currentLives = LIVES,
+    ra8bitCount = 0,
+    laserTick = 0,
+    boss = null;
 
+// Start with loading all audio data
+loadAudioElements();
+
+// And load some spritemaps we will use a lot
+spriteCoins = new SpriteMap( "assets/objects/coins.webp", { numColumns: 6, numRows: 1, frameDelay: 25 }, null );
+spriteProjectiles = new SpriteMap( "assets/projectiles/enemy-rockets.webp", { numColumns: 6, numRows: 1, frameDelay: 1}, null );
+shipProjectiles = new SpriteMap( "assets/projectiles/playermissile.webp", { numColumns: 2 , numRows: 1, frameDelay: 1}, null );
+spriteShields = new SpriteMap( "assets/objects/shields.webp", { numColumns: 2, numRows: 1, frameDelay: 0 }, null );
+spriteExplosions = new SpriteMap( "assets/pop/enemyexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50 }, null );
+
+// No more enemies
+let stopSpawningEnemies = false;
+let enemyIdChangeJammer = false;
+
+// Simple touch controller event handlers
+let lastTouch = new Object();
+    lastTouch.x = -1;
+    lastTouch.y = -1;
+
+function touchEnd(event) {
+  ship.right = false;
+  ship.left = false;
+  ship.up = false;
+  ship.down = false;
+  
+  for( let g of gamepadButtons) {
+      g.doStop();
+  }
+}
+
+function touchStart(event) {
+  lastTouch.x = event.targetTouches[0].clientX;
+  lastTouch.y = event.targetTouches[0].clientY;
+
+  if(!touchEnabled) {
+    touchEnabled = true;
+  }
+  
+  for( let g of gamepadButtons) {
+    if(g.isInside(lastTouch.x, lastTouch.y)) {
+      g.fireEvent(); // when screen resizes update the gamepad button locations
+    }
+  }
+}
+
+let lastAccX = -1;
+let lastAccY = -1;
+function handleMotionEvent(event) {
+
+  if(!playing)
+    return;
+
+  if( lastAccX == -1 && lastAccY == -1 ) {
+    lastAccX = event.acceleration.x;
+    lastAccY = event.acceleration.y;
+    return;
+  }
+
+  x = event.acceleration.x - lastAccX;
+  y = event.acceleration.y - lastAccY;
+
+  ship.right = false;
+  ship.left = false;
+  ship.up = false;
+  ship.down = false;
+
+
+  // figure out touch direction and adjust ship accordingly
+  if( x < 0 ) {
+    ship.right = true;
+  }
+  else if ( x > 0 ) {
+    ship.left = true;
+  }
+
+  if( y > 0 )
+    ship.up = true;
+  else if ( y < 0 )
+    ship.down = true;
+
+  lastAccX = event.acceleration.x;
+  lastAccY = event.acceleration.y;
+}
+
+let motionX = -1;
+let motionY = -1;
+function handleOrientationEvent(event) {
+
+  if(!playing)
+    return;
+
+  if( motionX == -1 && motionY == -1 ) {
+    motionX = event.gamma;
+    motionY = event.beta;
+    return;
+  }
+
+  let x = event.gamma - motionX;
+  let y = event.beta - motionY;
+
+  let fx = Math.abs(x);
+  let fy = Math.abs(y);
+
+  if( x > 90 ) { x = 90; }
+  if( x < -90) { x = -90; }
+  if( y > 180) { y = 180; }
+  if( y < -180) { y = -180; }
+
+  ship.right = false;
+  ship.left = false;
+  ship.up = false;
+  ship.down = false;
+
+  if( fx > 0.2 ) {
+    if( x > 0 ) {
+      ship.right = true;
+    }
+    else if ( x < 0 ) {
+      ship.left = true;
+    }
+  }
+
+  if( fy > 0.2 ) {
+    if( y > 0 )
+      ship.up = true;
+    else if ( y < 0 )
+      ship.down = true;
+  }
+
+  motionX = event.gamma;
+  motionY = event.beta;
+
+}
+
+function touchMove(event) {
+ 
+  if( lastTouch.x == -1 || lastTouch.y == -1 ) {
+    lastTouch.x = event.targetTouches[0].clientX;
+    lastTouch.y = event.targetTouches[0].clientY;
+    return;
+  }
+  
+  let dx = lastTouch.x - event.targetTouches[0].clientX;
+  let dy = lastTouch.y - event.targetTouches[0].clientY;
+
+  ship.right = false;
+  ship.left = false;
+  ship.up = false;
+  ship.down = false;
+
+  // figure out touch direction and adjust ship accordingly
+  if( dx < 0 ) {
+    ship.right = true;
+  }
+  else if ( dx > 0 ) {
+    ship.left = true;
+  }
+
+  if( dy > 0 )
+    ship.up = true;
+  else if ( dy < 0 )
+    ship.down = true;
+
+}
+
+// A magic function that gives a different speed depending on screen orientation
+function setSpeed(speed) {
+  /*let d = stage.width / 1900;
+  if( stage.width < stage.height ) {
+    d = stage.height / 1900;
+  }
+  return speed * d;*/
+  return calcSpeed(speed);
+}
+
+// Some audio functions to play sound and music samples
 function playSound(name, b) {
-    let a = document.getElementById(name);
+  if( name == null ) 
+    return;
+    let id = soundMap.get(name);
+    let a  = soundSamples.get(id);
+
+    if(!a.isplaying && !b) {
+      a.currentTime = 0;
+      a.loop = false;
+    }
+    a.isplaying = a.play(); 
+}
+
+function setConnected(state) {
+  connected = state;
+  if(!connected) {
+    stopMusic(playingNow);
+  }
+}
+
+function playSoundOnce(name, b) {
+    let id = soundMap.get(name);
+    let a  = soundSamples.get(id);
+
     if(!a.isplaying && !b) {
       a.currentTime = 0;
       a.loop = false;
@@ -146,13 +830,58 @@ function playSound(name, b) {
     a.isplaying = a.play();    
 }
 
+var playingNow = ""; 
+
 function playMusic(name) {
     let a = document.getElementById(name);
     if(!a.isplaying) {
       a.currentTime = 0;
       a.loop = true;
     }
-    a.isplaying = a.play();
+    playingNow = name;
+    if(!jukeBoxMuted) {
+      a.isplaying = a.play();
+    }
+}
+
+function playMusicOnce(name) {
+    let a = document.getElementById(name);
+    if(!a.isplaying) {
+      a.currentTime = 0;
+      a.loop = false;
+    }
+    playingNow = name;
+    if(!jukeBoxMuted) {
+      a.isplaying = a.play();
+    }
+}
+
+var audioTimer = 0;
+function stopAndPlay(name) {
+  stopMusic(playingNow);
+  if( audioTimer == 0 )
+  audioTimer =  setTimeout( function(v) {
+      playMusicOnce( v );
+      audioTimer = 0;
+    }, 500, name );
+}
+
+function stopAndPlayLooping(name) {
+  stopMusic(playingNow);
+  if( audioTimer == 0 )
+  audioTimer = setTimeout( function(v) {
+      playMusic( v );
+      audioTimer = 0;
+    }, 500, name );
+}
+
+function stopMusic(name) {
+    let a = document.getElementById(name);
+    if(a !== undefined && a != null && a.isplaying) {
+      a.currentTime = 0;
+      a.loop = false;
+      a.pause();
+    }
 }
 
 function randomBetween(min, max) {
@@ -160,270 +889,2991 @@ function randomBetween(min, max) {
 }
 
 function calcScore(x) {
-  return Math.floor((1 / x) * 500);
+  return Math.floor((1 / x) * 500); // small target is worth
 }
 
-function randomBoom() {
-  let choices = [ "boom1", "boom2"];
-  return choices[ randomBetween( 0, 1 ) ];
+// Return a random explosion when enemy explodes
+function randomBoom(enemy) {
+  
+  if(enemy.id >= BONUS_INDEX )
+    return null;
+
+  if(enemy.spawnBonusType != -1 )
+    return null;
+
+  return explosionChoices[ randomBetween( 0, explosionChoices.length - 1 ) ];
 }
 
+function randomCoin() {
+  return pickupCoinChoices[ randomBetween( 0, pickupCoinChoices.length - 1 ) ];
+}
+
+// The ship was hit
+function randomHit() {
+  return hitHurtChoices[ randomBetween( 0, hitHurtChoices.length - 1 ) ];
+}
+
+// GamePadButtons
+function GamePadButton(options) {
+  this.img = loadBackground(options.img);
+  this.x = options.x;
+  this.y = options.y;
+  this.width = options.width;
+  this.height = options.height;
+  this.doEvent = options.handler ||  function() { };
+  this.doStop = options.stop || function() {};
+}
+
+GamePadButton.prototype.onResize = function(w,h,i) {
+  let bw = (isPortrait() ? w / 8 : w / 16);
+  this.width = Math.floor(bw);
+  this.height = Math.floor(bw);
+}
+
+GamePadButton.prototype.setPosition = function(x1,y1,w,h,i,j) {
+  let bw = (isPortrait() ? w / 8 : w / 16);
+  
+  let x = ( x1 <= 0 ? x1 + bw + (i*bw) : x1 - bw - (i * bw));
+  let y = y1 - bw - (bw*0.5) - (j * bw);
+  this.x = Math.floor(x);
+  this.y = Math.floor(y);
+  this.width = Math.floor(bw);
+  this.height = Math.floor(bw);
+}
+
+
+GamePadButton.prototype.draw = function() {
+  if(!touchEnabled)
+    return;
+  ctx.drawImage( this.img, this.x, this.y, this.width, this.height );
+}
+
+GamePadButton.prototype.isInside = function(x,y) {
+  if( x < this.x || x > (this.x + this.width))
+    return false;
+  if( y < this.y || y > (this.y + this.height))
+    return false;
+  return true;
+}
+GamePadButton.prototype.fireEvent = function() {
+  this.doEvent(); 
+}
+GamePadButton.prototype.stopEvent = function() {
+  this.doStop();
+}
+
+// Background 
+function Background(options) {
+  this.speed_y = options.speed_y;
+  this.background = new SpriteMap( options.img, { numColumns: 1 , numRows: 1, frameDelay: 0, setGeom: true}, this);
+  this.src_y = 0;
+  this.src_x = 0;
+  this.active = false;
+  this.height = 0;
+  this.width = 0;
+}
+
+Background.prototype.setGeom = function(w,h) {
+  
+  this.width = w;
+  this.height = h;
+
+  this.active = true;
+}
+
+Background.prototype.update = function(x,y) {
+  this.src_y -= ( this.speed_y * speedMultiplier );
+  if( this.src_y < (0 - this.height) )
+    this.src_y =  0;
+}
+
+Background.prototype.setSpeed = function(x) {
+  this.speed_y = x;
+}
+
+Background.prototype.configure = function(x,y) {
+  this.src_x = (x > 0 ? x - this.width: 0 );
+}
+
+Background.prototype.draw1 = function() {
+  if(!this.active)
+    return;
+  
+  // Forever scrolling background left
+  this.background.drawSrcAtIndex( ctx, 0, this.src_y - this.height, stage.width, stage.height, 0,0,  stage.width, stage.height );
+  this.background.drawSrcAtIndex( ctx, 0, this.src_y, stage.width, stage.height, 0,0,  stage.width, stage.height );
+  this.background.drawSrcAtIndex( ctx, 0, this.src_y + this.height, stage.width, stage.height, 0,0,  stage.width, stage.height );
+
+}
+
+Background.prototype.draw2 = function() {
+  if(!this.active) 
+    return;
+
+// Forever scrolling background right
+ this.background.drawSrcAtIndex( ctx, 0, this.src_y - this.height, stage.width, stage.height, stage.width - this.width,0,  stage.width, stage.height );
+ this.background.drawSrcAtIndex( ctx, 0, this.src_y, stage.width, stage.height, stage.width - this.width,0,  stage.width, stage.height );
+ this.background.drawSrcAtIndex( ctx, 0, this.src_y + this.height, stage.width, stage.height, stage.width - this.width,0,  stage.width, stage.height );
+
+}
+
+// BonusBuff 
+function BonusBuff(options) {
+  this.active = true;
+  this.bonusType = options.bonusType;
+  this.img = new Image();
+  this.img.src = options.src;
+  this.radius = scaleProportionalToScreen(stage.width, P_SIZE_BONUS, L_SIZE_BONUS);
+  this.y = stage.height - (stage.height/16);
+  this.ttl = options.ttl;
+  this.startedAt = gameClock;
+  
+  this.width = 2 * this.radius;
+  this.height = this.width;
+}
+
+BonusBuff.prototype.onResize = function(w,h,i) {
+  let bw = w / 16;
+  let x = w - 80 - bw - (i * bw);
+  let y = h - bw - (bw*0.5) - (i * bw);
+  this.x = Math.floor(x);
+  this.y = Math.floor(y);
+  this.width = Math.floor(bw);
+  this.height = Math.floor(bw);
+}
+
+BonusBuff.prototype.draw = function(seq) {
+  ctx.save();
+  
+  let age = (gameClock - this.startedAt) / 1000;
+  if( age > this.ttl) {
+    age = this.ttl;
+  }
+  let rem = Math.floor(this.ttl - age);
+  if( rem == 0) {
+    this.active = false;
+  }
+
+  let bw = (this.radius * 5 * seq);
+  this.x = Math.floor( backgrounds[0].width +  (stage.width/2) - (bw/2) );
+  //  (this.radius * 3 * seq);
+  
+  let a = ctx.globalAlpha;
+  ctx.globalAlpha = 0.5;
+  ctx.drawImage( this.img, this.x, this.y, this.width, this.height );
+  ctx.globalAlpha = a;
+
+  ctx.fillStyle = '#ec008c';
+  ctx.textAlign = 'center';
+  ctx.fillText( "" + rem, this.x + this.radius, this.y + this.radius + this.radius, this.width*0.75 );
+     
+  ctx.restore();
+}
+
+
+
+// Ship Shield 
+function Shield(power) {
+  this.x = 0;
+  this.y = 0;
+  this.width = 0;
+  this.height = 0;
+  this.power = power;
+  this.maxPower = power;
+  this.shieldType = randomBetween(0,1);
+  this.radius = 0;
+}
+
+Shield.prototype.setType = function(x) {
+  this.shieldType = x;
+}
+
+Shield.prototype.hit = function(points) {
+  this.power -= points;
+  if( this.power < 0 ) {
+    this.power = 0;
+  }
+  // The ship can't take any damage unfortunately
+  playSound( "boom2", true );
+
+  if(!this.isUp() ) {
+    destroyShip();  
+  }
+}
+
+Shield.prototype.isUp = function() {
+  return (this.power > 0);
+}
+
+// Update the shield's location. We use the center of mass of our space ship
+// The values are rounded down for optimization reasons
+Shield.prototype.update = function(ship) {
+
+  let pythagoras = (ship.width * ship.width) + (ship.height * ship.height);
+  pythagoras *= 1.5;
+  let d = Math.sqrt( pythagoras );
+  this.width = d;
+  this.height = d;
+  
+  this.x = Math.floor( (this.width - ship.width) / 2 );
+  this.y = Math.floor( (this.height - ship.height) / 2);
+
+  this.x = Math.floor( ship.x - this.x );
+  this.y = Math.floor( ship.y - this.y );
+
+  this.radius = this.width/2;
+}
+
+Shield.prototype.draw = function() {
+  if(this.power == 0)
+  return;
+
+  ctx.save();
+
+  if( DEV_MODE ) {
+    ctx.strokeStyle= 'Blue';
+    ctx.strokeRect(this.x, this.y, this.width, this.height);
+  }
+
+  let alpha = ctx.globalAlpha;
+  ctx.globalAlpha = (this.power > 100 ? 100 / 100: this.power / 100 );
+  // We draw from the sprite map directly to the canvas (the spritemap has an offscreen canvas)
+  spriteShields.drawAtIndex( ctx, this.x, this.y, this.width, this.height, this.shieldType );
+  
+  ctx.globalAlpha = alpha;
+  // Draw the power bar
+  let p = this.power;
+  let n = (1.0 / this.maxPower ) * p;
+  ctx.globalAlpha = n;
+
+  let nw = this.radius / 4; //32
+
+  ctx.beginPath();
+  ctx.fillStyle = '#5f6262';
+  ctx.rect( this.x +  nw , this.y + (this.height + 16), (this.width - nw - nw), 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+  
+  
+  ctx.rect( this.x + nw , this.y + (this.height + 16), (this.width - nw - nw) *  n, 10);
+  if(n > 0.66) {
+    ctx.fillStyle = 'Green';
+  } else if (n > 0.33) {
+    ctx.fillStyle = 'Gold'; 
+  } else if (n < 0.15 ) {
+    ctx.fillStyle = 'Red';
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore();
+}
+
+function updateGameClock() {
+    gameClock = performance.now();
+}
+
+// Our spaceship
 function Ship(options) {  
-  this.radius = 40;
-  this.x = options.x || stage.width * .5 - this.radius - .5;
-  this.y = options.y || stage.height - this.radius - playerOffsetY;
-  this.width = this.radius * 2;
-  this.height = (138.0 / 217 ) * this.width;
+  this.radius = options.radius;
+  this.runRadius = this.radius;
+  this.x = Math.floor( options.x || stage.width * .5 - this.radius - .5 );
+  this.y = Math.floor( options.y || stage.height - this.radius - playerOffsetY );
+  this.cx = 0;
+  this.cy = 0;
+  this.width = options.width ||  this.radius * 2;
+  this.height = options.height || this.radius * 2;
   this.color = options.color || 'red';
   this.left = false;
   this.right = false;
-  this.speed = 5;
-  this.active = true;
-  this.img = playerList[0];
-  this.decaying = false;
+  this.up= false;
+  this.down= false;
+  this.secundaryWeaponFire = false; // Fire missiles
+  this.id = ENEMY_NONE;
+  this.speed = options.speed || calcSpeed(DEFAULTSPEED);
+  this.currentSpeed = this.speed;
+  this.loader = -1; // We have to wait until all sprites are loaded
+  this.decaying = false; // When true, the ship is exploding
   this.decay = SHIPDECAY;
-  document.addEventListener('keydown', this.onKeyDown.bind(this));
-  document.addEventListener('keyup', this.onKeyUp.bind(this));
+  this.firespeed = options.firespeed || 9 ;
+  this.launchedAt = gameClock;
+  this.numRockets = options.rockets || 3;
+  this.numLasers = 1;
+  this.rocketActive = false;
+  this.jukePressed = false; // Jukebox inside the ship
+  this.guntype = PLAYER_MISSILE_ID;
+  this.spawnBonusType = -1;
+  this.power = options.power || 100;
+  this.spriteMap = null;
+  this.options = options;
+  this.shield = new Shield(this.power); // We have a shield
+  this.piercingLaser = false; // quantum lasers go straight through their target 
+  this.ready = false;
+  this.aimAndFire = false; // not used for Ship
+  this.ainAndFireGunType = 0;
+  this.mass = 1;
+  this.velocityX = 0.0;
+  this.velocityY = 0.0;
 }
 
-Ship.prototype.update = function(x) {
+function scaleProportionalToScreen(w, portrait, landscape) {
+  
+  if( stage.width < stage.height ) {
+    if( w > (stage.width/portrait))
+      return Math.floor( w / portrait );
+    return w;
+  }
+  if( w > (stage.width/landscape))
+    return Math.floor(w / landscape);
+  return w;
+}
+
+function handleJukeboxPressed(e) {
+  if( e.keyCode == 80 && !this.jukePressed) {
+      this.jukePressed = true;
+      jukeBox(-1);
+    }
+    if( e.keyCode == 78 && !this.jukePressed ) {
+      jukeBox(1);
+      this.jukePressed = true;
+    }
+
+    if( e.keyCode == 77 && !this.jukePressed) {
+      
+      this.jukePressed = true;
+    }
+}
+
+function handleJukeboxRelease(e) {
+  if( e.keyCode == 80 && this.jukePressed) {
+    this.jukePressed = false;
+  }
+  if( e.keyCode == 78 && this.jukePressed ) {
+    this.jukePressed = false;
+  }
+
+  if( e.keyCode == 77 && this.jukePressed ) {
+    toggleMute();
+    this.jukePressed = false;
+  }
+}
+
+// Visit all the spritemaps of an object and return true if everything is loaded
+function spriteLoader(ref) {
+  let isReady = true;
+
+  if( ref.spriteIdle !== undefined) {
+    isReady = ref.spriteIdle.active;
+    if(!isReady) return;
+  }
+  
+  if( ref.spriteLasers !== undefined ) {
+    isReady = ref.spriteLasers.active;
+    if(!isReady) return;
+  }
+
+  if( ref.spriteMoveLeft !== undefined ) {
+    isReady = ref.spriteMoveLeft.active;
+    if(!isReady) return;
+  }
+  
+  if( ref.spriteMoveRight !== undefined) {
+    isReady = ref.spriteMoveRight.active;
+    if(!isReady) return;
+  }
+
+  if( ref.spriteWarn !== undefined) {
+    isReady = ref.spriteWarn.active;
+    if(!isReady) return;
+  }
+  
+  if( isReady ) {
+    ref.ready = true;
+    clearInterval(ref.loader);
+  }
+}
+
+Ship.prototype.calcRadius = function() {
+
+  if( this.shield.isUp() ) {
+    this.runRadius = this.radius;
+  }
+  else 
+  this.runRadius = this.radius;
+
+}
+
+// After loading the spritemaps this function sets the actual dimensions and position of the spaceship
+Ship.prototype.setGeom = function(w,h) {
+
+  let f = w / h;
+
+  this.width = scaleProportionalToScreen(stage.width, P_SIZE_SHIP , L_SIZE_SHIP );
+  
+  this.height = Math.floor( this.width/f );
+
+  let pythagoras = (this.width * this.width) + (this.height * this.height);
+  let d = Math.sqrt( pythagoras );
+
+  this.radius = d * 0.5;
+
+  this.x = Math.floor( stage.width * .5 - (this.width/2) - .5);
+  this.y = Math.floor( stage.height - (this.height/2) - playerOffsetY );
+
+  this.cx = Math.floor( this.x + (this.width/2));
+  this.cy = Math.floor( this.y - (this.height/2));
+
+  this.last = 0;
+  this.lastHit = 0;
+  // spaceship may still be loading sprites
+
+  this.loader = setInterval( spriteLoader, 1000, this);
+ 
+}
+
+// For a short time after spawning, the ship is indestructable
+Ship.prototype.isIndestructable = function() { 
+  let now = gameClock;
+  if( now <= (this.launchedAt + 6000))
+    return true;
+  return false;
+}
+
+// The ship is currently spawning
+Ship.prototype.isSpawning = function() {
+  let now = gameClock;
+  if( now <= (this.launchedAt + 6000) ) {
+    let delta = now - this.launchedAt;
+    let alpha = Math.sin( delta/ 100 ) * 0.5 + 0.5;
+    return alpha;
+  }
+  return 1.0;
+}
+
+// Moved by external actor
+Ship.prototype.moveTo = function(x, y, angle) {
   this.x = x;
-  this.y = stage.height - this.radius - playerOffsetY;
+  this.y = y;
+}
+
+// The ship raises its shield
+Ship.prototype.shieldUp = function(v,r) {
+  if(this.shield !== undefined) {
+    if( r ) {
+      this.shield.power = v; // reset the power level to a new value
+    }
+    else {
+      this.shield.power += v; // or just increment
+      
+      if(this.shield.power > this.shield.maxPower) {
+        this.shield.power = this.shield.maxPower;
+      }
+    }
+  }
+  else {
+    this.shield = new Shield(this.power); 
+  }
+}
+
+Ship.prototype.setPosition = function(x,y) {
+  this.x = x;
+  this.y = y;
+  this.cx = Math.floor( this.x + ( this.width / 2) );
+  this.cy = Math.floor( this.y + ( this.height / 2) );
+  if(this.shield !== undefined) {
+    this.shield.update(this);
+  }
+}
+
+// The ship changes speed
+Ship.prototype.changeSpeed = function(x) {
+  let newSpeed = this.currentSpeed + x;
+  let maxNegSpeed = 0.25;
+  if( newSpeed > this.speed ) {
+    newSpeed = this.speed;
+  }
+  if( newSpeed < maxNegSpeed ) {
+    newSpeed = maxNegSpeed;
+  }
+
+  this.currentSpeed = newSpeed;
+  backgrounds.forEach( updateSpeed );
+}
+
+Ship.prototype.update = function(x,y) {
+  
+  this.x = x;
+  this.y = y;
+
+  this.cx = Math.floor( this.x + ( this.width / 2) );
+  this.cy = Math.floor( this.y + ( this.height / 2) );
+
+  if(this.shield !== undefined) {
+    this.shield.update(this);
+  }
+
+  this.calcRadius();
+
+  if(lastStandingX != this.cx) {
+    standingStillTimer = 0;
+    lastStandingX = this.cx;
+  }
+  else {
+    standingStillTimer ++;
+  }
+}
+
+Ship.prototype.hit = function(points) {
+  this.hitSilent(points, false);
+  navigator.vibrate(200);
+}
+
+Ship.prototype.hitSilent = function(points, silent) {
+  if( this.shield !== undefined) {
+    let now = gameClock;
+    if( now - this.lastHit > 200 ) {
+      if(!silent)
+        playSound( randomHit() );
+      this.lastHit = now;
+    }
+    this.shield.hit(points);
+  }
+  else { 
+    destroyShip();  
+  }
+}
+
+Ship.prototype.isShieldUp = function() {
+  if( this.shield !== undefined) {
+    return this.shield.isUp();
+  }
+}
+
+function drawCircle(ctx, x, y, radius, fill, stroke, strokeWidth) {
+  ctx.beginPath()
+  ctx.arc(x, y, radius, 0, 2 * Math.PI, false)
+  if (fill) {
+    ctx.fillStyle = fill
+    ctx.fill()
+  }
+  if (stroke) {
+    ctx.lineWidth = strokeWidth
+    ctx.strokeStyle = stroke
+    ctx.stroke()
+  }
 }
 
 Ship.prototype.draw = function() {
   ctx.save();
   
-  if (DEV_MODE) {
-    ctx.fillStyle = 'skyblue';
-    ctx.fillRect(this.x, this.y, this.width, this.width);
+  // Select what spritemap we need and draw it
+  let s = this.spriteIdle;
+  let f = this.spriteIdle.frameNo;
+  let l = 0;
+
+  if( this.left ) {
+    s = this.spriteMoveLeft;
+    f = this.spriteMoveLeft.frameNo;
+    l = 1;
+  }
+  if( this.right ) {
+    s = this.spriteMoveRight;
+    f = this.spriteMoveRight.frameNo;
+    l = 2;
+  }
+
+  if( this.up || this.currentSpeed > (this.speed * 0.5) ) {
+    s = this.spriteMap;
+    f = this.spriteMap.frameNo;
+    l = 0;
+  }
+
+  if ( this.shield.power <= 21 && !this.isIndestructable && !this.isSpawning() ) {
+    s = this.spriteWarn;
+    f = this.spriteWarn.frameNo;
+    l = 3;
+  }
+  
+  if( this.decaying ) {
+    s = this.spriteExplosion;
+    f = this.spriteExplosion.frameNo;
+    l = 4;
+  }
+  
+  
+  if( l != this.last ) {
+    s.frameNo = 0;
+  }
+
+  if(DEV_MODE) {
+    ctx.beginPath();
+    ctx.strokeStyle = 'Green';
+    ctx.lineWidth = 1;
+    
+    s.drawAtIndex( ctx, this.x, this.y, this.width, this.height, f );
+  
+    ctx.strokeRect(this.x, this.y, this.width, this.height );
+
+    ctx.strokeStyle = 'Green';
+    ctx.strokeRect(this.cx, this.cy, 4, 4 );
+
+    ctx.strokeStyle = 'Red';
+    drawCircle(ctx,this.cx,this.cy, this.runRadius, false, true, 1);
+
   }
   else {
-
-    let img = this.img;
-    if( this.decaying ) {
-      img = effectList[ randomBetween(1, 2) ];
-      console.log(img);
-    }
-
-    ctx.drawImage( img, this.x, this.y, this.width, this.height );
+    ctx.globalAlpha = this.isSpawning();
+    
+    s.drawAtIndex( ctx, this.x, this.y, this.width, this.height, f );
   }
-  
+
+  if( this.shield !== undefined) {
+    this.shield.draw();
+  }
+
+  s.update();
   ctx.restore();
-  /*
-  ctx.fillStyle = this.color;
-  ctx.fillRect(this.x + this.radius - 5, this.y, 10, this.radius);
-  ctx.fillRect(this.x, this.y + this.radius, this.width, 10);
-  ctx.fillRect(this.x, this.y + this.radius + 10, 10, 5);
-  ctx.fillRect(this.x + this.width - 10, this.y + this.radius + 10, 10, 5);
-  
-  ctx.restore(); */
+
+  this.last = l;
+ 
 }
 
 Ship.prototype.onKeyDown = function(e) {
   if (ship.active) {
-    if (e.keyCode === 39) this.right = true;
-    else if (e.keyCode === 37) this.left = true;
-
+    // Cursor keys
+    if (e.keyCode == 39 || e.keyCode == 68) this.right = true;
+    else if (e.keyCode == 37 || e.keyCode == 65) this.left = true;
+    
+    if (e.keyCode == 38 || e.keyCode == 87) this.up = true;
+    else if (e.keyCode == 40 || e.keyCode == 83) this.down = true;
+    
+    // Enter to fire missile
+    if (e.keyCode == 13) this.secundaryWeaponFire = true;
+    
+    // Space to fire laser
     if (e.keyCode == 32 && !this.shooting) {
       this.shooting = true;
       laserTick = 0;
     }
+
+    // Escape
+    if( e.keyCode == 27 && playing ) {
+      stopGame();
+    }
+
+    // Jukebox handling
+    handleJukeboxPressed(e);
+
+   }
+}
+
+function updateGamePad() {
+  
+  if(!gamepadAPI.active) {
+    return;
   }
+  
+  if(!playing) {
+    gamepadAPI.update();
+   
+    if( connected ) {
+      if( gamepadAPI.axesStatus[0].x > 0.5 || gamepadAPI.buttonPressed( 'DPad-Right', 'hold') || gamepadAPI.buttonPressed( 'DPad-Right')  ) {
+        selectNextShip();
+      }
+      if( gamepadAPI.axesStatus[0].x < -0.5 || gamepadAPI.buttonPressed( 'DPad-Left', 'hold') || gamepadAPI.buttonPressed( 'DPad-Left')  ) {
+        selectPrevShip();
+      }
+    }
+
+    if( gamepadAPI.buttonPressed( "Start") ) {
+      if( ! connected ) {
+        onConnect();
+      }
+      else {
+        startGame();
+      }
+    }
+    
+    return;
+  }
+
+  if( ship === undefined ) {
+    return;
+  }
+
+  gamepadAPI.update();
+
+  if( gamepadAPI.buttonPressed('A', 'hold') || gamepadAPI.buttonPressed( 'A')) {
+    ship.shooting = true;
+    laserTick = 0;
+  }
+
+  if( gamepadAPI.buttonPressed('B')) {
+    ship.secundaryWeaponFire = true;
+  }
+
+  if( gamepadAPI.axesStatus[0].x > 0.5 || gamepadAPI.buttonPressed( 'DPad-Right', 'hold') || gamepadAPI.buttonPressed( 'DPad-Right')  ) {
+    ship.right= true;
+  }
+  if( gamepadAPI.axesStatus[0].x < -0.5 || gamepadAPI.buttonPressed( 'DPad-Left', 'hold') || gamepadAPI.buttonPressed( 'DPad-Left')  ) {
+    ship.left = true;
+  }
+  if( gamepadAPI.axesStatus[0].y > 0.5 || gamepadAPI.buttonPressed( 'DPad-Up', 'hold') || gamepadAPI.buttonPressed( 'DPad-Up') ) {
+    ship.up = true;
+  }
+  if( gamepadAPI.axesStatus[0].y < -0.5 || gamepadAPI.buttonPressed( 'DPad-Down', 'hold') || gamepadAPI.buttonPressed( 'DPad-Down') ) {
+    ship.down = true;
+  }
+
+  if( gamepadAPI.buttonPressed( 'LB' ) ) {
+    jukeBox(-1);
+  }
+  if( gamepadAPI.buttonPressed( 'RB' )) {
+    jukeBox(1);
+  }
+
+}
+
+// Setup key event listener for ship
+Ship.prototype.activate = function() {
+  document.addEventListener('keydown', this.onKeyDown.bind(this));
+  document.addEventListener('keyup', this.onKeyUp.bind(this));
+}
+
+// And remove key event listener when user switches ship
+Ship.prototype.deactivate = function() {
+  document.removeEventListener('keydown', this.onKeyDown.bind(this), true);
+  document.removeEventListener('keyup', this.onKeyUp.bind(this), true);
 }
 
 Ship.prototype.onKeyUp = function(e) {
-  if (e.key === 'ArrowRight') this.right = false;
-  else if (e.key === 'ArrowLeft') this.left = false;
-  else if (e.keyCode == 32) this.shooting = false;
+  if (e.key === 'ArrowRight' || e.key === 'd') this.right = false;
+  else if (e.key === 'ArrowLeft' || e.key === 'a') this.left = false;
+  
+  if (e.key === 'ArrowUp' || e.key === 'w') this.up = false;
+  else if (e.key === 'ArrowDown' || e.key === 's') this.down = false;
+  
+  if( e.key === 'Enter') this.secundaryWeaponFire = false;
+  
+  if (e.keyCode == 32) this.shooting = false;
+  
+  handleJukeboxRelease(e);
+
 }
 
-function Laser(options) {
-  this.x = options.x - 5 - .5;
-  this.y = options.y || stage.height - 182;
-  this.width = 128; //6;
-  this.height = 128; //20;
-  this.speed = 8;
-  this.color = options.color || 'white';
-  this.active = true;
-  this.img = playerList[1];
-}
-
-Laser.prototype.update = function(y) {
-  this.y = y;
-}
-
-var blink = 1;
-Laser.prototype.draw = function() {
-  ctx.save();
-
-    ctx.drawImage( playerList[blink], this.x, this.y, this.width, this.height );
-
-    if( randomBetween(0, 50) <= 5)
-      blink ++;
-    if( blink > 2 )
-    blink = 1;
-
-  ctx.restore();
-}
-
-function Enemy(options) {
-  this.radius = randomBetween(50, 100);
-  this.width = this.radius * 2;
-  this.height = this.width;
-  this.x = randomBetween(0, stage.width - this.width);
-  this.y = -this.radius * 2;
-  this.color = options != undefined && options.color ? options.color : 'white';
-  this.speed = 2;
-  this.active = true;
-  this.decay = 6;  
-  this.decaying = false;
-  this.img = imageList[ randomBetween(0, images.length - 1)  ];
-}
-
-Enemy.prototype.update = function(x, y) {
+// SpriteMap stuff
+function SpaceRectangle(x,y,w,h) {
+  this.w = w;
+  this.h = h;
   this.x = x;
   this.y = y;
 }
 
-Enemy.prototype.draw = function() {
-  if (DEV_MODE) {
-    ctx.fillStyle = 'skyblue';
-    ctx.fillRect(this.x, this.y, this.width, this.width);
+// We can only do things when image is in memory
+function initSpriteMap() {
+
+  let W = this.width;
+  let H = this.height;
+
+  // It's just an equally sized grid
+  let numCols = this.spriteInfo.numColumns;
+  let numRows = this.spriteInfo.numRows;
+
+  let colWid = W / numCols;
+  let colHei = H / numRows;
+
+  // For now, there is just 1 row possible
+  for( let j = 0; j < numCols; j ++ ) {
+      this.userData.filmStrip.push( 
+        new SpaceRectangle( 
+          j * colWid,0,colWid,colHei
+      ));  
+  }
+
+  // Test if the object's dimensions and position need to be set now
+  if( this.spriteInfo.setGeom ) {
+      this.userData.userData.setGeom(colWid, colHei);
+  }
+
+  // Load the image data to an offscreen canvas
+  this.userData.loadOffScreenCanvas();
+  imagesLoaded ++;
+
+  this.width = colWid;
+  this.height = colHei;
+  this.active = true;
+}
+
+function spriteCache( value, info, ref )
+{
+    img = new Image();
+    img.onload = initSpriteMap;
+    img.onerror = imageNotFound;
+    img.src = value;
+    img.userData = ref;
+    img.spriteInfo = info;
+    return img;
+}
+  
+function SpriteMap( value, info, ref, f ) {
+  this.filmStrip = [];
+  this.frameNo = 0;
+  this.frameTicker = 0;
+  this.framePeriod = 1;
+  this.width = 0;
+  this.height = 0;
+  this.userData = ref;
+  this.active = false;
+  this.img = spriteCache(value, info, this);
+}
+
+SpriteMap.prototype.getImage = function() {
+  return this.img;
+}
+
+SpriteMap.prototype.getROI = function() {
+  return this.filmStrip[ this.frameNo ];
+}
+
+SpriteMap.prototype.getROIofFrame = function(f) {
+  return this.filmStrip[ f ];
+}
+
+SpriteMap.prototype.setFrameNo = function(x) {
+  this.frameNo = x;
+  if( this.frameNo < 0 )
+    this.frameNo = 0;
+  else if (this.frameNo > this.filmStrip.length ) {
+    this.frameNo = 0;
+  }
+}
+
+SpriteMap.prototype.update = function( ) {
+  if( !this.active ) {
+    return;
+  }
+
+  if( (this.frameTicker % this.framePeriod) == 0 ) {
+    this.frameNo = (this.frameNo + 1) % this.filmStrip.length;
+  }
+
+  this.frameTicker ++;
+}
+
+SpriteMap.prototype.drawAtIndex = function( canvas, x, y,w,h, frame ) {
+  canvas.save();
+  let rect = this.getROIofFrame(frame);
+  canvas.drawImage( this.canvasOffscreen, rect.x , rect.y, rect.w, rect.h, x,y, w,h );
+  canvas.restore();
+}
+
+SpriteMap.prototype.drawSrcAtIndex = function( canvas, x1,y1,w1,h1, x,y,w,h  ) {
+  canvas.save();
+  ctx.drawImage( this.canvasOffscreen, x1, y1, w1, h1, x, y, w, h );
+  canvas.restore();
+}
+
+SpriteMap.prototype.draw = function( canvas, x, y,w,h, angle ) {
+  canvas.save();
+
+  if(!this.active) {
+    canvas.fillStyle = 'Gold';
+    canvas.font = '33px \"Press Start 2P\"';
+    canvas.textAlign = 'center';
+    canvas.fillText( "Loading", 0,0 );
   }
   else {
+    let rect = this.getROI();
+    canvas.drawImage( this.canvasOffscreen, rect.x , rect.y, rect.w, rect.h, x,y,w,h );
+  }
+  canvas.restore();
 
-    let img = this.img;
-    if( this.decaying ) {
-      img = effectList[ randomBetween(1, 2) ];
-      console.log(img);
+}
+
+SpriteMap.prototype.drawPreview = function( canvas, x, y,w,h, angle ) {
+  canvas.save();
+
+  if(!this.active) {
+    canvas.fillStyle = 'Gold';
+    canvas.font = '33px \"Press Start 2P\"';
+    canvas.textAlign = 'center';
+    canvas.fillText( "Loading", 0,h/2 );
+  }
+  else {
+    let rect = this.getROI();
+    canvas.drawImage( this.canvasOffscreen, rect.x , rect.y, rect.w, rect.h, x,y,w,h );
+  }
+  canvas.restore();
+
+}
+
+SpriteMap.prototype.loadOffScreenCanvas = function() {
+  this.canvasOffscreen = document.createElement( 'canvas' );
+  this.canvas2D = this.canvasOffscreen.getContext( '2d' );
+  this.canvasOffscreen.width = this.img.width;
+  this.canvasOffscreen.height = this.img.height;
+  this.canvas2D.drawImage( this.img, 0,0, this.img.width, this.img.height );
+  this.active = true;
+}
+
+
+// SVG Paths - We can use this, to animate some object's movement path
+// Online Editor is here: https://yqnn.github.io/svg-path-editor/
+function PathAnimation( objRef, myPath,  mw, mh, offset ) {
+  this.path = myPath;
+  this.startFromPercent = 0;
+  this.stopAtPercent = 100;
+  this.easing = function(t) { return t * (2-t) };
+  this.objRef = objRef;
+  this.max_wid = mw;
+  this.max_hei = mh;
+  let duration = 60 - (currentLevel * 2);
+  if( duration < 10 )
+    duration = 10; // boss does path in x seconds
+
+  this.pathAnimator = new PathAnimator( this.path, {
+    duration: duration,
+    speed: objRef.speed,
+    reverse: false,
+    offset: offset,
+    startOffset: 0,
+    max_width: this.max_wid,
+    max_height: this.max_hei,
+    step:   this.update,
+    easing: this.easing, 
+    onDone: this.finish,
+  } );
+  
+  this.pathAnimator.start( 0,100);
+}
+
+PathAnimation.prototype.calc = function() {
+  this.pathAnimator.calc(this.objRef);
+}
+
+PathAnimation.prototype.update = function(ref, x,y, angle ) {
+  ref.moveTo(x, y, angle);
+}
+
+function PathAnimator( path, settings ){
+    if( !path ) return;
+    this.max_wid = settings.max_width;
+    this.max_hei = settings.max_height;
+    this.len = this.updatePath( path );
+    this.timer = null;
+    this.settings = {
+        duration     : settings.duration,
+        step         : settings.step,
+        reverse      : (settings !== undefined && settings.reverse ? settings.reverse: false),
+        startPercent : settings.startPercent || 0,
+        easing       : settings.easing,
+        offset       : settings.offset,
+        fps          : 1000/30, // frames-per-second
+    }
+}
+
+PathAnimator.prototype.start = function( startFromPercent, stopAtPercent ){
+    this.stop();
+    
+    this.startFromPercent = startFromPercent || this.settings.startPercent || 0;
+    
+    this.percent = startFromPercent;
+    
+    if( this.settings.duration == 0 ) return false;
+    
+    this.startTime = new Date();
+    this.stopAtPercent = stopAtPercent || 100;
+   
+    this.matrix = this.path.getCTM();
+}
+
+PathAnimator.prototype.calc = function(objRef) {
+    let p       = [], angle,
+        now     = new Date(),
+        elapsed = (now-this.startTime)/1000,
+        t       = (elapsed/this.settings.duration),
+        newPercent;
+
+    // easing functions: https://gist.github.com/gre/1650294
+    if( typeof this.settings.easing == 'function' ){
+        t = this.settings.easing(t);
     }
 
-    ctx.drawImage( img, this.x, this.y, this.width, this.height );
+    newPercent = this.startFromPercent + t * (this.stopAtPercent - this.startFromPercent);
+
+    if( this.settings.reverse ){
+        newPercent = this.startFromPercent - t * (this.stopAtPercent - this.startFromPercent)
+        if( newPercent < 0 )
+            newPercent = this.stopAtPercent + newPercent;
+    }
+
+    this.running = true;
+    this.percent = newPercent;
+
+    // On animation end (from '0%' to '100%' or '100%' to '0%')
+    if( t > 0.999 ){
+        this.stop();
+        this.percent = this.stopAtPercent;
+        this.settings.reverse = (!this.settings.reverse);
+        this.start( this.startFromPercent, this.stopAtPercent );
+        this.calc( objRef );
+        return;
+    }
+    if( t < 0.0 ) {
+        this.stop();
+        this.percent = this.startFromPercent;
+        this.settings.reverse = (!this.settings.reverse);
+        this.start( this.startFromPercent, this.stopAtPercent );
+        this.calc( objRef );
+        return;
+    }
+
+    //  angle calculations
+    p[0] = this.pointAt( this.percent - 1 );
+    p[1] = this.pointAt( this.percent + 1 );
+    angle = Math.atan2(p[1].y-p[0].y,p[1].x-p[0].x)*180 / Math.PI;
+ 
+
+    let svgPoint = this.pointAt(this.percent);
+    
+    // What is different in our implementation is that we need to know the coordinates in game (approx)
+    // Map the coordinates back to screen
+    let pos = svgPoint.matrixTransform( this.path.getScreenCTM().inverse() );
+ 
+    // Determine the max available width and height
+    let sw = stage.width - backgrounds[1].width - this.settings.offset - backgrounds[0].width;
+    let sh = stage.height;
+    // And fuzzy scale the path coordinate
+    pos.x = backgrounds[0].width + ((pos.x / this.max_wid ) * sw);
+    pos.y = (pos.y / this.max_hei ) * sh;
+
+    this.settings.step( objRef,pos.x, pos.y, angle );   
+}
+
+PathAnimator.prototype.restart = function() {
+  this.startTime = new Date();
+}
+
+PathAnimator.prototype.stop = function() {
+    this.running = false;
+}
+
+PathAnimator.prototype.stopAt = function(percent){
+}
+
+PathAnimator.prototype.pointAt = function(percent){
+    return this.path.getPointAtLength( this.len * percent/100 );
+}
+
+PathAnimator.prototype.updatePath = function( path ){
+    if( !this.path && path ){
+        this.path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        this.path.setAttribute('d', path);
+    }
+    return this.path.getTotalLength();
+}
+
+// A Ship's Laser or a Boss' Death Ray
+function Laser(options) {
+  this.width = options.width || 23/3; //6;
+  this.height = options.height || 64/3; //20;   // FIXME probably needs to take in account screen orientation
+  //this.width =  scaleProportionalToScreen(stage.width, P_SIZE_LASER, L_SIZE_LASER);
+  //this.height = (64/23) * this.width;
+
+  this.speed = options.speed || playerLaserSpeed;
+  this.origin = (options.origin || ship);
+  this.ticker = 0;
+  this.cx = options.x;
+  this.cy = (this.origin.id == ENEMY_NONE ? Math.floor( options.y - (ship.height/2) ) : Math.floor( options.y - (boss.height/2)));
+  this.spriteExplosion = spriteExplosions; //new SpriteMap( "assets/pop/enemyexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50 }, this);
+  this.decaying = false;
+  this.decay = ENEMY_DECAY;
+  if(this.origin.id == ENEMY_NONE) {
+    if( ship.left )
+      this.cx -= ship.currentSpeed;
+    else if (ship.right)
+      this.cx += ship.currentSpeed;
+    this.power = 0;
+    this.isRay = false;
+  }
+  else { // It's a boss!
+    this.power = (stage.width > stage.height ? 80 : 40 );
+    this.isRay = true;
+  }
+  this.x = this.cx - (this.width/2); 
+  this.y = this.cy - (this.height/2);
+  this.guntype = 1;
+  this.color = options.color || 'white';
+  this.active = true;
+  this.laserMode = options.mode || 0;
+  this.radius = this.width/2;
+  this.runRadius = this.radius;
+  this.origHei = this.height;
+}
+
+Laser.prototype.updateCenter = function() {
+  this.cx = Math.floor( this.x + (this.width/2) );
+  this.cy = Math.floor( this.y + (this.height/2) );
+}
+
+Laser.prototype.setPosition = function(x,y) {
+  this.x = x;
+  this.y = y;
+  this.updateCenter();
+}
+
+Laser.prototype.update = function(y) {
+  let angle = 0;
+
+  switch( this.laserMode ) {
+    default:
+      this.y = y; //forward laser
+      this.updateCenter();
+      return;
+      break;
+    case 1:
+      angle = 0 * Math.PI / 180.0;
+      this.x += Math.cos(angle) * 3;
+      this.y += Math.sin(angle) * 3;
+
+      this.updateCenter();
+      return;
+      break;
+    case 2:
+      angle = 45 * Math.PI / 180.0;
+      this.x -= Math.sin(angle) * 3;
+      this.y += Math.cos(angle) * 3;
+      this.updateCenter();
+      return;
+      break;
+    case 99:
+      this.height = stage.height - boss.cy - (boss.height/2);
+      this.width = boss.width;
+      this.y = boss.cy + (boss.height/2);
+      this.x = boss.cx - (this.width/2);
+      break;
+    case 5:
+      let autoTargetedEnemy = updateTargetSystem();
+      if(autoTargetedEnemy != null ) {
+        let dx = autoTargetedEnemy.cx - this.x + (this.width/2);
+        let dy = autoTargetedEnemy.cy - this.y + (this.height/2);
+        this.angle = Math.atan2(dy,dx);
+        this.angle += ( -90.0 * Math.PI) / 180.0;
+        this.x -= Math.sin(angle) * 3;
+        this.y += Math.cos(angle) * 3;
+        this.updateCenter();
+      }
+      return;
+      break;
+  }
+
+  let r = (45 * Math.PI ) / 180.0;
+  this.x += Math.cos(r) * 3;
+  this.y += Math.sin(r) * 3;
+
+  let s = (this.origin.id == ENEMY_NONE ? ship.spriteLasers: boss.spriteLasers);
+  s.update();  
+
+  this.updateCenter();
+}
+
+Laser.prototype.draw = function() {
+  ctx.save();
+  let s = ship.spriteLasers;
+  if( this.origin.id != ENEMY_NONE ) {
+    s = boss.spriteLasers;
+  }
+
+  if(DEV_MODE) {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+
+    s.draw( ctx, this.x , this.y, this.width, this.height, 0 );
+
+    ctx.strokeRect (this.x, this.y, this.width, this.height );
+
+    ctx.strokeStyle = 'Orange';
+    drawCircle(ctx,this.cx,this.cy, this.runRadius, false, true, 1);
+  }
+  else {
+    if(this.decaying && this.decay > 0 && this.origin.id == ENEMY_NONE) {
+      s = spriteExplosions;
+      this.decay = this.decay - 1;
+      if (this.decay < 0 ) {
+        this.decay = 0;
+        this.active = false;
+      }
+    }
+    s.draw( ctx, this.x , this.y, this.width, this.height, 0 );
+  }
+
+  this.ticker ++;
+
+  if(this.isRay && this.power > 0)  
+    this.power --;
+
+  ctx.restore();
+}
+
+// A Bomb or a (Smart) Missile 
+function Bomb(options, tar, origin) {
+  this.width = scaleProportionalToScreen(  stage.width, P_SIZE_BOMB, L_SIZE_BOMB );
+  this.height = Math.floor( this.width * 2.75 );
+
+  if (origin.guntype == PLAYER_MISSILE_ID ) {
+    this.width *= 2;
+    this.height *= 2;
+  }
+
+  if( stage.width < stage.height ) {
+    this.width = this.width * 0.5;
+    this.height = this.height * 0.5;
+  }
+  
+  this.speed = options.speed;
+  this.oldSpeed = this.speed;
+  this.origin = origin;
+  this.radius = this.height / 2;
+  this.runRadius = this.radius;
+  this.x = options.x;
+  this.y = options.y; 
+  this.color = options.color || 'white';
+  this.active = true;
+  this.guntype = options.guntype;
+  this.decaying = false;
+  this.decay = BOMB_DECAY_TIME;
+  this.targetRef = tar;
+  this.velocityX = 0.0;
+  this.velocityY = 0.0;
+  this.targetLocked = false;
+  this.frame = 0;
+  this.aimAndFire = (options.aimAndFire || false);
+
+  // Calculate starting position of bomb or missile
+  if(origin.id == ENEMY_NONE) {
+    this.y = Math.floor( origin.cy + (this.height/2) - (options.height/2) );
+    this.x = Math.floor( origin.cx - (options.width/2));
+  }
+  else {
+    this.y = Math.floor( this.y + (options.height/2) );
+  }
+  
+  this.cx = this.x;
+  this.cy = this.y;
+
+  if( origin.id == ENEMY_NONE ) {
+    if( ship.left )
+      this.cx -= ship.currentSpeed;
+    else if (ship.right)
+      this.cx += ship.currentSpeed;
+  }
+
+  this.angle = 0;
+  this.timerid = 0;
+
+  let ms = 200 - (standingStillTimer > 200 ? 200 : 200 / standingStillTimer);
+  this.smartBomb = (options.smartBomb ? true : randomBetween( 0, 100) < (smartBombProbability + (ms * 0.25)) ? true: false);
+  if(this.smartBomb) {
+    if(!tar.active || !playing)
+      this.smartBomb = false;
+    this.target(tar);
+  }
+
+  let followTime = randomBetween( 1.75, 3.2);
+  if(origin.id == ENEMY_NONE)
+    followTime *= 2;
+  if(this.smartBomb) {
+    this.speed =  (origin.id == ENEMY_NONE ? incSpeed(origin.speed) + 2  : origin.speed < DEFAULTSPEED ? DEFAULTSPEED: origin.speed );
+    origin.rocketActive = true;
+    this.timerId = setTimeout(function(b) { 
+      b.decaying = true;
+      b.decay = BOMB_DECAY_TIME;
+       if(origin.id == ENEMY_NONE) {
+        origin.rocketActive = false;
+       }
+      clearInterval(b.interval);
+    }, followTime * 1000, this);
+    this.interval = setInterval( function(b) {
+      if( b.target(tar) == false ) {
+        targetLocked = true;
+      }
+
+   
+    }, 40, this );
+  }
+
+  if(this.aimAndFire) {
+    if(!tar.active || !playing)
+      this.aimAndFire = false;
+    this.aim(tar);
+  }
+
+  this.spriteExplosion = spriteExplosions;
+  this.ttl = gameClock + randomBetween(3000,7000);
+}
+
+Bomb.prototype.destruct = function() {
+    if(this.decaying)
+      return; // already done
+    this.decaying = true;
+    this.decay = 6;
+    if(this.origin.id == ENEMY_NONE) {
+      this.origin.rocketActive = false;
+    }
+    if(this.interval > 0)
+      clearInterval(this.interval);
+    if(this.timerId != 0)
+      clearTimeout( this.timerId );
+
+  //  playSound( explosionChoices[ randomBetween( 0, explosionChoices.length - 1 ) ] , false );
+
+}
+
+
+// Aim quick fire missiles
+Bomb.prototype.aim = function(tar) {
+ 
+ let dx,dy;
+ if(tar.active) {
+   dx = tar.cx - this.x + (this.width/2);
+   dy = tar.cy - this.y + (this.height/2);
+ }
+
+ this.angle = Math.atan2(dy,dx);
+ if(this.origin.id != ENEMY_NONE)
+   this.angle += ( -90.0 * Math.PI) / 180.0;
+ else
+   this.angle += ( +90.0 * Math.PI) / 180.0;
+ let distance = Math.sqrt( dx * dx + dy * dy );
+ this.velocityX = ( dx / distance ) * (this.speed );
+ this.velocityY = ( dy / distance ) * (this.speed );
+ if( this.origin.id == ENEMY_NONE )
+     this.frame = 1;
+ 
+}
+
+// Auto guiding smart missiles
+Bomb.prototype.target = function(tar) {
+ 
+  let dx,dy;
+  if(tar.active) {
+    dx = tar.cx - this.x + (this.width/2);
+    dy = tar.cy - this.y + (this.height/2);
+  }
+  else {
+    dx = this.x;
+    dy = this.y + stage.height;
+  }
+
+  let distance = Math.sqrt( dx * dx + dy * dy );
+  this.velocityX = ( dx / distance ) * this.speed;
+  this.velocityY = ( dy / distance ) * this.speed;
+
+   this.angle = Math.atan2(dy,dx);
+   if(this.origin.id != ENEMY_NONE)
+    this.angle += ( -90.0 * Math.PI) / 180.0;
+  else
+    this.angle += ( +90.0 * Math.PI) / 180.0;
+  // target in range, boost the rocket 
+  let range = ( this.origin.id == ENEMY_NONE ? 8.0 : 4.0 );
+  if( distance < (tar.radius * range) ) {
+    this.velocityX = ( dx / distance ) * (this.speed * 2);
+    this.velocityY = ( dy / distance ) * (this.speed * 2);
+    if( this.origin.id == ENEMY_NONE )
+      this.frame = 1;
+    return false;
+  }
+
+  return true;
+}
+
+Bomb.prototype.update = function() {
+
+  if(this.ttl < gameClock) {
+    this.destruct();
+
+  }
+
+  if(!this.decaying) {
+    if(this.smartBomb || this.aimAndFire) {
+        this.x += this.velocityX;
+        this.y += this.velocityY;
+    }
+    else {
+      this.y += this.speed;
+    }
+    this.cx = Math.floor( this.x + (this.width/2));
+    this.cy = Math.floor( this.y - (this.height/2));
   }
 }
+
+Bomb.prototype.draw = function() {
+
+  ctx.save();
+ 
+  let img = this.img;
+  let w = this.width;
+  let h = this.height;
+  let x = Math.floor(this.x);
+  let y = Math.floor(this.y);
+  
+  let f = this.frame;
+  let s = spriteProjectiles;
+
+  if( this.origin.id == ENEMY_NONE )
+    s = shipProjectiles;
+  else {
+    f = this.guntype;
+  }
+
+  if( this.decaying ) {
+    s = this.spriteExplosion;
+    ctx.translate( this.cx, this.cy );
+    ctx.rotate( this.angle );
+    ctx.translate( -this.cx, -this.cy );
+    s.drawAtIndex( ctx, this.cx, this.cy, w * 2, w * 2 , randomBetween(0,1) );
+  }
+  else {
+    ctx.translate( this.cx, this.cy );
+    ctx.rotate( this.angle );
+    ctx.translate( -this.cx, -this.cy );
+    s.drawAtIndex( ctx, this.cx, this.cy, w, h,f);
+  }
+
+  ctx.restore();
+}
+
+Bomb.prototype.setPosition = function(x,y) {
+  this.x = x;
+  this.y = y;
+  this.cx = Math.floor( this.x + ( this.width / 2) );
+  this.cy = Math.floor( this.y - ( this.height / 2) ); //FIXME?
+}
+
+// The boss fires and then , fires again
+function newLaser(objRef) {
+  // prevent recursion if any of the folling is true:
+  if(objRef.decaying || !objRef.active)
+    return;
+  if(!playing || !gameStarted) 
+    return;
+
+  let laser = new Laser({
+      color: '#00ff5c',
+      speed: 6,
+      mode: 99,
+      width: objRef.width/2,
+      height: stage.height,
+      x: boss.cx,
+      y: boss.cy,
+      origin: objRef,
+          });
+  
+  playSound("bosslaser", false);
+  lasers.push(laser);
+
+  setTimeout( function(b) {
+    if(objRef.active && !objRef.decaying)
+      newLaser(b);
+      }, 500 + randomBetween(1000,3000), objRef );
+}
+
+
+// The Boss "Mother"
+function BossEnemy(options) {
+  let enemyId = ENEMY_BOSS;
+  this.guntype = -1;
+  this.speed = (options != undefined && options.speed >= 0 ? options.speed : DEFAULTSPEED - 4 );
+  this.oldSpeed = this.speed;
+  this.decay = ENEMY_DECAY;  
+  this.decaying = false;
+  this.timing = 0;
+  this.bonusType = -1;
+  this.elasticPath = false;
+  this.timeStarted = gameClock;
+  this.duration = randomBetween( 1.0, 3.0 );
+  this.timeStarted = 0;
+  this.evasionDistance = 0.5;
+  this.evasionTiming = 0.0;
+  this.alpha = 1.0;
+  this.id = enemyId;
+  this.numRockets = Number.MAX_SAFE_INTEGER; // Lock & Load Ra8bits!
+  this.runRadius = this.radius;
+  this.spawnActive = false;
+  this.coinOffset = randomBetween(0, 5);
+  this.spawnBonusType = -1;
+  this.active = false;
+  this.width = 0;
+  this.height = 0;
+  this.power = 1000;
+  this.maxPower = 1000;
+  this.minions = [];
+  this.angleInc = 0;
+  this.isAsteroid = false;
+  this.parent = null;
+}
+
+BossEnemy.prototype.hit = function(x) {
+  if(!this.decaying) {
+    this.power -= x;
+    if( this.power < 0 ) { // The boss has no more power == dead
+      this.power = 0;
+      this.decaying = true;
+      this.decay = 6;
+      playSound( "explosion6", false);
+      stopMusic( "bosstheme2");
+      
+
+      //  The boss drops a lot of coins
+      let reward = randomBetween( (2 * currentLevel) / 2, (3 * currentLevel)/2 );
+      for( let r = 0; r < reward; r ++ ) {
+       setTimeout( function(options) {
+          newEnemy(options);
+        }, 
+          50 + (50 * r), 
+          { 
+              spawnType: BONUS_COIN, 
+              id: boss.id, 
+              guntype: -1, 
+              minRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN - 2, L_SIZE_COIN - 2 ), 
+              maxRadius: scaleProportionalToScreen(this.width,  P_SIZE_COIN + 2 , L_SIZE_COIN + 2 ), 
+              x: boss.cx, 
+              y: boss.cy, 
+              target: ship,
+              zigzag: false,
+              speed: randomBetween( ship.speed - 1, ship.speed + 2 )
+          } );  
+      }
+
+      // The boss drops some bonuses
+
+      newEnemy( {
+        id: BONUS_SHIELD_POWER,
+        guntype: -1,
+        minRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN, L_SIZE_COIN ), 
+        maxRadius: scaleProportionalToScreen(this.width, P_SIZE_COIN, L_SIZE_COIN), 
+        x: boss.cx, 
+        y: boss.cy, 
+        speed: boss.speed, 
+        zigzag: false,
+        target: ship,
+    });
+
+    let n = randomBetween(0,3);
+    for(let k = 0; k < n; k ++) {
+      newEnemy( {
+        id: randomBetween(BONUS_INDEX, BONUS_LAST),
+        guntype: -1,
+        minRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN, L_SIZE_COIN ), 
+        maxRadius: scaleProportionalToScreen(this.width, P_SIZE_COIN, L_SIZE_COIN), 
+        x: boss.cx, 
+        y: boss.cy, 
+        speed: boss.speed,
+        zigzag: false,
+        target: ship,
+    });
+    }
+
+    if( jukeBoxIndex == -1 ) {
+      setTimeout( function() { stopAndPlayLooping("spaceintro"); }, 3000 );
+    }
+
+    }
+  }
+}
+
+BossEnemy.prototype.moveTo = function(x, y, angle) {
+  this.x = x;
+  this.y = y;
+  this.cx = Math.floor(this.x + this.radius);
+  this.cy = Math.floor(this.y + this.radius);
+}
+
+BossEnemy.prototype.setPosition = function(x, y) {
+  moveTo(x,y,0);
+}
+
+BossEnemy.prototype.createSpawns = function() {
+  let distance = this.radius * 2; // increment rate to increase angle every step 
+  let placements = [
+    // no angle increments in update
+    [ 180, 0 ],                
+    [ 240, 300 ], 
+    [ 180,0,240,300 ],
+    [ 210,90,330 ],
+    [ 150,30,210,330 ],
+    [ 120,60,240,300 ],
+    // with angle increments in update
+    [ 150,30,210,330 ],
+    [ 120,60,240,300 ],
+    [ 90,0,180,270 ], 
+    // with 8:
+    [ 90,45,0,180,315,270,225, 135],
+  ];
+
+  let maxIdx = 1;
+  let minIdx = 0;
+  if( currentLevel < 4 ) {
+    maxIdx = 2;
+  } else if( currentLevel >= 4 && currentLevel < 8 ) {
+    maxIdx = 6;
+    minIdx = 2;
+    this.angleInc = 0.55;
+  } else if ( currentLevel >= 8 && currentLevel <= 12 ) {
+    maxIdx = 9;
+    minIdx = 6;
+    this.angleInc = 1.0 + ((currentLevel - 8)/4);
+  } else {
+    minIdx = 9;
+    maxIdx = 10;
+    this.angleInc = 2.0; 
+  }
+
+  let angles = placements[ randomBetween(minIdx , maxIdx - 1)];
+  let s = enemyIdChangeJammer;
+  let er = scaleProportionalToScreen(stage.width, P_SIZE_ENEMY, L_SIZE_ENEMY );
+  enemyIdChangeJammer = true;
+
+  let id = randomBetween(0, ENEMY_INDEX - 1 );
+  for( let a of angles ) {
+    let x = this.cx + Math.cos( -a * Math.PI/180.0) * distance;
+    let y = this.cy + Math.sin( -a * Math.PI/180.0) * distance;
+    let smartBomb = (currentLevel > 20 ? true : false);  
+    let e = newEnemy( { 
+      smartBomb: smartBomb, 
+      aimAndFire: (!smartBomb ? true: false), zigzag: 0,
+      aimAndFireDelay: 1000 + ( 1000 / currentLevel ) + (smartBomb ? 1500: 0 ),
+      id: id,
+      minRadius: er,
+      maxRadius: er,
+      x: x, 
+      y: y,
+      speed: this.speed,
+      spawnType: -1,
+    } );
+
+    e.angle = a;
+    e.distance = distance;
+    e.remoteControl = true;
+    e.lastShotDelay += 2500 - ( currentLevel * 15);
+
+    this.minions.push(e); 
+  }
+
+  for( let m of this.minions ) {
+    m.lastShot = gameClock;
+  }
+
+  enemyIdChangeJammer = s;
+}
+
+BossEnemy.prototype.updateSpawn = function() {
+
+  for( let e of this.minions ) {
+    if(!e.active || e.dacaying || !e.remoteControl)
+      continue;
+    if( this.angleInc > 0 )
+      e.angle  = (e.angle + this.angleInc) % 360;
+    let distance = this.radius * 2;
+    let x = this.cx + Math.cos( -e.angle * Math.PI/180.0) * distance;
+    let y = this.cy + Math.sin( -e.angle * Math.PI/180.0) * distance;
+    e.distance = distance;
+    x -= e.radius;
+    y -= e.radius;
+    
+    e.setPosition(x,y);
+  }
+}
+
+BossEnemy.prototype.enterValhalla = function() {
+  this.decay = this.decay -1;
+  if(this.decay <= 0 ) {
+    this.decaying = false;
+    this.active = false;
+    this.decay = 0;
+    stopSpawningEnemies = false;
+  
+     for( let e of enemies ) {
+      if( e.remoteControl ) {
+        e.remoteControl = false; // boss dont control them anymores
+        e.timeStarted = gameClock;
+        e.zigzag = true;
+        e.lastShot = e.timeStarted;
+      }
+     }
+
+     this.minions= [];
+     
+   }
+}
+
+function findMaxInPath(path) {
+  const p = path.split(" ");
+  let max = 0;
+  for(let c of p ) {
+    if( isNaN(c) ) 
+      continue;
+    let v = parseInt( c );
+    if( v > max )
+      max = v;
+  }
+  return max;
+}
+
+BossEnemy.prototype.setGeom = function(w,h) {
+  
+  let f = w / h;
+  this.radius = scaleProportionalToScreen(stage.width, P_SIZE_BOSS, L_SIZE_BOSS);
+  this.runRadius = this.radius;
+  this.width = Math.floor( this.radius * 2 );
+  this.height = Math.floor( this.width / f );
+
+  let left = Math.floor( backgrounds[0].width + this.radius );
+  let right = Math.floor( stage.width - backgrounds[1].width - this.radius );
+
+  this.x = 0;
+  this.y = 0;
+  this.cx = 0;
+  this.cy = 0;
+
+  this.paths = [
+    "m 112 25 l 712 0 l -233 57 l -34 -29 l -121 -6 l -217 3 L 95 98 L 2 45 L 27 26",
+    "m 106 1 l 712 0 l -216 45 l -34 -29 l -121 -6 l -217 3 L 158 90 L 2 45 L 27 1",
+    "m 106 1 l 712 0 l -17 25 l -728 10 l 58 50 l 783 0 L 733 108 L 91 118 L 13 145 L 741 159 L 27 1",
+    "M 2 50 C 28 245 417 -105 739 77 C 281 -65 132 313 74 179 C -151 -99 368 241 738 2",
+    "M 20 28 C 28 245 7 445 739 77 C 188 -26 586 232 42 41 C -151 -99 193 450 753 16"
+  ];
+  
+}
+//m 866 343 L 1311 345 l 923 0 l -218 113 l -561 -19 l -632 52 l -622 3 L 259 556 L 2026 539 L 2279 604 L 2068 678 L 2077 860 L 1623 842 L 127 914 L 37 1019 L 282 1073 L 2129 1096 L 1580 1307 L 448 338 L 122 714 L 160 399 L 448 341
+// Activate the boss. Take the SVG path and start walking
+BossEnemy.prototype.activate = function() {
+  //let path2 = "m 866 343 L 1311 345 l 923 0 l -218 113 l -561 -19 l -632 52 l -622 3 L 259 556 L 2026 539 L 2279 604 L 2068 678 L 2077 860 L 1623 842 L 127 914 L 37 1019 L 282 1073 L 2129 1096 L 1580 1307 L 448 338 L 122 714 L 160 399 L 448 341";
+  let pathIndex = randomBetween(0, this.paths.length - 1);
+
+  this.pathAnimation = new PathAnimation(this,  this.paths[ pathIndex ], findMaxInPath(this.paths[ pathIndex ]), stage.height*0.5, this.radius); //225
+  
+  if(currentLevel >= 1 ) {
+    this.createSpawns();
+  }
+
+  setTimeout( function(b) {
+      newLaser(b);
+    }, 
+    1000 * randomBetween(1,5), this );
+
+  this.active = true;
+  this.decaying = false;
+  this.decay = ENEMY_DECAY; 
+  this.spawnActive = false;
+  this.power = 100 * currentLevel;
+  if(this.power > this.maxPower) 
+    this.maxPower = this.power;
+  this.timeStarted = gameClock;
+  this.targetObject = this;
+}
+
+BossEnemy.prototype.update = function() {
+  if(!this.active) {
+    return;
+  }
+  
+  this.updateSpawn();
+
+  this.pathAnimation.calc();
+  this.spriteMap.update();
+  
+  this.minions = this.minions.filter(enemy => {
+      return !enemy.decaying;
+    });
+
+}
+
+BossEnemy.prototype.draw = function() {
+  if(!this.active) {
+    return;
+  }
+ 
+  if(!this.spriteMap.active) {
+    return;
+  }
+
+  let sM = this.spriteMap;
+
+  if( !this.spawnActive && this.decaying ) {
+    sM = spriteExplosions;
+
+    let d1 = (ENEMY_DECAY + 0.5)/2;
+    if(this.decay < d1)
+      sM.setFrameNo(1);
+    else
+      sM.setFrameNo(0);
+
+    sM.drawAtIndex( ctx, this.x, this.y, this.width, this.height, sM.frameNo );  
+  }
+
+
+  if(DEV_MODE) {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.width, this.height );
+    ctx.strokeRect(this.cx, this.cy, 10, 10);
+    ctx.strokeStyle = 'Yellow';
+    drawCircle(ctx,this.cx,this.cy, this.runRadius, false, true, 1);
+  }
+
+  if( this.spawnActive ) {
+    this.coinTick = (this.coinTick ++) % this.coinTickInterval;
+    if(this.coinTick == 0) {
+      this.coinOffset = (this.coinOffset + 1) % spriteCoins.filmStrip.length;
+    }
+    spriteCoins.drawAtIndex( ctx, this.x, this.y, this.width, this.height, this.coinOffset );
+  }
+  else if(!this.decaying) {
+    sM.draw( ctx, this.x,this.y, this.width, this.height, 0 );
+  }
+
+  let nw = 32;
+  // Power bar
+  ctx.beginPath();
+  ctx.fillStyle = '#5f6262';
+  ctx.rect( this.x +  nw , this.y - (this.height/2 ), (this.width - nw - nw), 10);
+  ctx.closePath();
+  ctx.fill();
+  ctx.beginPath();
+
+
+  ctx.rect( this.x + nw , this.y - (this.height/2 ), (this.width - nw - nw) *  ( this.power / 1000 ), 10);
+  if(this.power > 66) {
+    ctx.fillStyle = 'Green';
+  } else if (this.power > 33) {
+    ctx.fillStyle = 'Gold'; 
+  } else if (this.power < 15 ) {
+    ctx.fillStyle = 'Red';
+  }
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.restore(); 
+
+  if(this.decaying && !ship.decaying && !this.spawnActive) {
+    let tmpScore = (this.spawnActive ? 1 : calcScore(this.radius));
+    ctx.fillStyle = (this.spawnActive ? 'Gold' :  '#f80194' );
+    ctx.font = '33px \"Press Start 2P\"';
+    ctx.textAlign = 'center';
+    ctx.fillText( "" + tmpScore, this.x + (this.width/2), this.y );
+  }
+}
+
+//FIXME: game starts in landscape or portrait mode. In landscape, it's a side scroller. In portrait, its a vertical scoller
+
+// An Enemy or an Object
+function Enemy(options) {
+
+  // bonus type have lower drop rate. ~ 10%
+  let dice = randomBetween( 1, 10 );
+  let enemyId = ( options !== undefined && options.id >= 0 ? options.id :  randomBetween(0, ENEMY_INDEX - 1 ));
+  if(  (dice == 1 || stopSpawningEnemies ) && !enemyIdChangeJammer) {
+    enemyId = randomBetween(BONUS_INDEX, images.length -1 );
+  }
+
+  this.spawnBonusType = (options !== undefined && options.spawnType >= 0 ? options.spawnType : -1 );
+
+  if(enemyId >= BONUS_INDEX ) {
+      this.guntype = -1;
+      this.radius = scaleProportionalToScreen(stage.width, P_SIZE_BONUS, L_SIZE_BONUS);
+  } else if (enemyId >= ENEMY_INDEX) {
+    this.guntype = -1;
+    this.radius = (options !== undefined && options.minRadius && options.maxRadius ? randomBetween(options.minRadius, options.maxRadius) : scaleProportionalToScreen(stage.width, P_SIZE_ENEMY, L_SIZE_ENEMY));
+  } else {
+     this.guntype = (options !== undefined && options.guntype >= 0 ? options.guntype  : randomBetween(0, spriteProjectiles.filmStrip.length - 3) );// PLAYER_MISSILE_IDs excluded and last 2 excluded
+     this.radius = (options !== undefined && options.minRadius && options.maxRadius ? randomBetween(options.minRadius, options.maxRadius) : scaleProportionalToScreen(stage.width, P_SIZE_ENEMY, L_SIZE_ENEMY));
+  }
+
+  this.img = images[ enemyId ];
+  this.width = this.radius * 2;
+  this.height = this.width;
+
+  let left = backgrounds[0].width;
+  let right = stage.width - backgrounds[1].width - this.width;  
+
+  
+  this.x = (options !== undefined && options.x ? options.x : randomBetween( left, right) );
+  this.y = (options !== undefined && options.y ? options.y : 0.0 - this.radius * ( randomBetween(2, 8)  ));
+  this.cx = Math.floor(this.x + (this.width/2));
+  this.cy = Math.floor(this.y + (this.height/2));
+
+  let mr = 3;
+  while( !placementOkay(this) && mr > 0 ) {
+    this.x =  randomBetween( left, right);
+    this.y = randomBetween(2, 8);
+    this.cx = Math.floor(this.x + (this.width/2));
+    this.cy = Math.floor(this.y + (this.height/2));
+    mr = mr - 1;
+  }
+
+  this.mass = 1;
+  this.restitution = 1;
+  if( options != undefined  && options.spawnType >= 0 ) {
+    this.x -= this.radius;
+  }
+
+
+  this.color = options !== undefined && options.color ? options.color : 'white';
+  this.speed = options !== undefined && options.speed >= 0 ? options.speed : calcSpeed( DEFAULTSPEED );
+  this.oldSpeed = this.speed;
+  this.active = true;
+  this.decay = ENEMY_DECAY;  
+  this.decaying = false;
+  this.timing = 0;
+  this.bonusType = (options !== undefined && options.spawnType >= 0 ? -1: bonusTypes[ enemyId ]);
+  this.elasticPath = false;
+  this.timeStarted = gameClock
+  this.duration = randomBetween( 1.0, 3.0 );
+  this.timeStarted = 0;
+  this.evasionDistance = 0.5;
+  this.evasionTiming = randomBetween( 0.01, 5.0  );
+  this.alpha = 1.0;
+  this.id = enemyId;
+  this.numRockets = Number.MAX_SAFE_INTEGER; // Lock & Load Ra8bits!
+  this.runRadius = this.radius;
+  this.spawnActive = false;
+  this.coinOffset = randomBetween(0, 5);
+  this.lastShot = this.timeStarted;
+  this.aimAndFire = (options !== undefined && options.aimAndFire ? true: false );
+  this.aimAndFireGunType = randomBetween( spriteProjectiles.filmStrip.length - 3 , spriteProjectiles.filmStrip.length - 1); 
+  this.lastShotDelay = 2500 - ( currentLevel * 15);
+  if(this.lastShotDelay < 500 )
+    this.lastShotDelay = 500;
+  
+  this.ttl = 0;
+  this.angle = (this.onTarget ? 90 : options !== undefined && options.angle ? options.angle: 0);
+  this.isAsteroid = (this.id == ENEMY_R1 || this.id == ENEMY_R2 || this.id == ENEMY_R3 );
+  this.respawns = (this.isAsteroid ?  3: 0);
+  this.zigzag = (options !== undefined && options.zigzag == 0 ? false : (this.isAsteroid ? false: true));
+  if( this.spawnBonusType >= 0) {
+    this.spawnActive = true;
+    this.coinTickInterval = randomBetween(5, 11);
+    this.coinTick = 0;
+    this.ttl = gameClock + randomBetween(3000,6000);
+  }
+  this.spawnGeneration = 0;
+  this.targetObject = (options !== undefined && options.target || undefined );
+  this.velocityX = 0;
+  this.velocityY = 0;
+  this.onTarget = (this.targetObject === undefined ? false: true);
+  this.remoteControl = false;
+  this.aimAndFireDelay = (options !== undefined && options.aimAndFireDelay ? options.aimAndFireDelay : 1500 );
+  this.parent = (options !== undefined && options.parent ? options.parent : null );
+  this.mass = 1;
+}
+
+Enemy.prototype.autofire = function() {
+  let now = gameClock;
+  if( (now - this.lastShot) > this.lastShotDelay) {
+    // Not faster than every aimAndFireDelay ms and not within aimAndFireDelay ms after spawning
+    createBomb(this, ship);
+    this.lastShot = now;
+    this.lastShotDelay = this.aimAndFireDelay;
+  }
+}
+
+Enemy.prototype.setGeom = function(w,h) {
+  this.active = true;
+}
+
+Enemy.prototype.getWhatAmI = function() {
+  return this.img;
+}
+
+Enemy.prototype.distanceToPlayer = function() {
+  let dx = ship.x  - this.x;
+  let dy = ship.y  - this.y;
+  let d = Math.sqrt( dx * dx + dy * dy );
+  let result = new Object();
+  result.d = d;
+  result.e = this;
+  return result;
+}
+
+Enemy.prototype.moveTo = function(x, y, angle) {
+  this.x = Math.floor(x);
+  this.y = Math.floor(y);
+}
+
+Enemy.prototype.target = function(tar) {
+  let dx,dy;
+  if(tar.active) {
+    dx = tar.cx - this.x + (this.width/2);
+    dy = tar.cy - this.y + (this.height/2);
+  }
+  else {
+    dx = this.x;
+    dy = this.y + stage.height;
+  }
+
+  let distance = Math.sqrt( dx * dx + dy * dy );
+
+  this.velocityX = ( dx / distance ) * (ship.speed * 2);
+  this.velocityY = ( dy / distance ) * (ship.speed * 2);
+  
+}
+
+Enemy.prototype.setPosition = function(x,y) {
+  this.x = Math.floor(x);
+  this.y = Math.floor(y);
+  this.cx = Math.floor( this.x + ( this.width / 2) );
+  this.cy = Math.floor( this.y + ( this.height / 2) );
+}
+
+Enemy.prototype.update = function(x, y) {
+ 
+  if( this.remoteControl ) {
+    if( ship !== undefined && ship.active )
+      this.autofire();
+
+      this.spriteMap.update();
+      
+    return;
+  }
+  
+  if(this.onTarget) {
+    this.target(this.targetObject);
+    this.x += this.velocityX;
+    this.y += this.velocityY;
+
+    if(gameClock > this.ttl && !this.decaying && this.ttl > 0) {
+      takeDown(this);
+      return;
+    }
+  }
+  else if(this.isAsteroid) {
+    this.x += this.velocityX;
+    this.y += this.velocityY;
+    //this.angle =  Math.atan2(this.cy, this.cx) * 180 / Math.PI;
+  }
+  else
+  {
+    this.x = x;
+    this.y = y;
+  }
+
+  if( ship !== undefined && ship.active && this.id < ENEMY_R1 )
+      this.autofire();
+
+  if( this.elasticPath ) {
+    let delta = gameClock - this.timeStarted;
+    if( delta > (this.duration*1000))
+      this.elasticPath = false;
+    else {
+      let timeFraction = delta / (this.duration * 1000);
+      let v = elastic( this.evasionTiming * speedMultiplier , timeFraction);
+      this.x = this.x + ( this.radius * this.evasionDistance * v);
+    }
+    
+  }
+  else {
+    if(this.zigzag) {
+      if( randomBetween(0,100) <= 15 ) {
+        let v = this.speed * speedMultiplier;
+
+      if(randomBetween(0,50) > 25) 
+        this.x += v;
+      else
+        this.x -= v;  //FUXNE/l wobbly ?
+      }
+    }
+    
+  } 
+  this.cx = Math.floor( this.x + (this.width/2) ); //FIXME wobblty ?
+  this.cy = Math.floor( this.y + (this.height/2) );
+
+  this.spriteMap.update();
+}
+
+Enemy.prototype.draw = function() {
+
+  let sM = this.spriteMap;
+
+  if(!sM.active) {
+    return;
+  }
+
+  if( !this.spawnActive && this.decaying ) {
+    sM = spriteExplosions;
+
+    let d1 = (ENEMY_DECAY + 0.5)/2;
+    if(this.decay < d1)
+      sM.setFrameNo(1);
+    else
+      sM.setFrameNo(0);
+  
+    sM.drawAtIndex( ctx, this.x, this.y, this.width, this.height, sM.frameNo );  
+  }
+ 
+
+  if(DEV_MODE) {
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(this.x, this.y, this.width, this.height );
+    ctx.strokeRect(this.cx, this.cy, 10, 10);
+    ctx.strokeStyle = 'Red';
+    drawCircle(ctx,this.cx,this.cy, this.runRadius, false, true, 1);
+  }
+
+  if( this.spawnActive ) {
+    this.coinTick = (this.coinTick + 1 ) % this.coinTickInterval;
+    if(this.coinTick == 0) {
+      this.coinOffset = (this.coinOffset + 1) % spriteCoins.filmStrip.length;
+    }
+
+    spriteCoins.drawAtIndex( ctx, this.x, this.y, this.width, this.height, this.coinOffset );
+  }
+  else  if(!this.decaying) {
+
+    if(this.isAsteroid) {
+    let tx = this.cx;
+    let ty = this.cy;
+    ctx.save();
+    ctx.translate( tx , ty);
+    ctx.rotate( this.angle );
+    ctx.translate(-tx , -ty ); 
+    }
+    sM.draw( ctx, this.x,this.y, this.width, this.height, this.angle );
+    ctx.restore();
+  }
+
+  if(this.decaying && !ship.decaying && !this.spawnActive) {
+    let tmpScore = (this.spawnActive ? 1 : calcScore(this.radius));
+    ctx.fillStyle = (this.spawnActive ? 'Gold' :  '#f80194' );
+    ctx.font = '33px \"Press Start 2P\"';
+    ctx.textAlign = 'center';
+    ctx.fillText( "" + tmpScore, this.x + (this.width/2), this.y );
+  }
+
+}
+    
 
 function hitTest(item1, item2) {
-  let collision = true;
-  if (
-    item1.x > item2.x + item2.width ||
-    item1.y > item2.y + item2.height ||
-    item2.x > item1.x + item1.width ||
-    item2.y > item1.y + item1.height
-  ) {
-    collision = false;
-  }
-  return collision;
+  let dx = item1.cx  - item2.cx;
+  let dy = item1.cy  - item2.cy;
+
+  let d  = Math.sqrt( dx * dx + dy * dy );
+ 
+  if( d < ( item1.runRadius + item2.runRadius ) ) 
+    return true;
+  return false;
 }
 
-function handleLaserCollision() {
-  for (let enemy of enemies) {
-    for (let laser of lasers) {
-      let collision = hitTest(laser, enemy);
-      if (collision && laser.active) {
-        console.log('you destroyed an enemy');
-        playSound( randomBoom(), true );
+function hitTestIsInside(item1, item2) {
+  let r = item2.radius;
+  if( item1.cx < (item2.cx-r) || item1.cx > (item2.cx + r))
+    return false;
+  return true;
+}
 
-        enemy.decaying = true;
-        //enemy.active = false;
-        laser.active = false;
-        
-        // increase enemy speed and frequency of enemy spawns
-        speedMultiplier += .025;
-        if (enemySeedFrameInterval > 20) {
-          enemySeedFrameInterval -= 2;
-        }
-        if( speedMultiplier == 2.0 ||speedMultiplier == 3.0 ||speedMultiplier == 4.0 ||speedMultiplier == 5.0 || speedMultiplier == 6.0 ) {
-          playSound("level");
-        }
-        
-        // increase score
-        score += calcScore(enemy.radius);
-        if( score > highScore ) {
-          highScoreNode.textContent = score;
-        }
-        scoreNode.textContent = score;
-             }
+function hitTestCircle(e1,e2) {
+ 	let dx = e1.cx - e2.cx;
+ 	let dy = e1.cy - e2.cy;
+ 	let distance = (dx * dx + dy * dy);
+	if (distance <= (e1.radius + e1.radius) * (e2.radius + e2.radius) ) {
+ 	  return true;
+  }
+ 	return false;
+}
+
+
+function updateSpeed(bg) {
+  bg.setSpeed(ship.currentSpeed);
+}
+
+// Bonus Type, buff slows all current enemies
+function slowMotion() {
+
+  for( let b of bombs ) {
+    if( b.origin.id == ENEMY_NONE ) {
+      continue;
+    }
+
+    b.oldSpeed = b.speed;
+    b.speed = 1.0;
+
+    setTimeout( function() {  b.speed = b.oldSpeed; } , 3 * 1000 ); 
+  }
+
+  for( let e of enemies) {
+
+    e.oldSpeed = e.speed;
+    e.speed = 1.0;
+
+    setTimeout( function() {  e.speed = e.oldSpeed; } , 3 * 1000 ); 
+
+  }
+
+}
+
+// Bonus Type, buff kills all current enemies
+function instantKill() {
+  playSound( "massexplosion1", false);
+  setTimeout( function() { playSound("massexplosion2", false); for( let e of enemies ) {
+    if(e.id >= ENEMY_INDEX || e.spawnActive)
+      continue;
+    takeDown(e);
+    e.decay = 6;
+  } 
+  for( let b of bombs ) {
+    if(b.origin.id == ENEMY_NONE )
+      continue;
+    b.decaying = true;
+    b.decay = BOMB_DECAY_TIME;
+  }
+} , 200 );
+  
+}
+
+function buffOn(id, ttl) {
+  for( let b of bonusBuffs ) {
+    if( b.bonusType == id ) {
+      b.startedAt = gameClock;
+      return;
     }
   }
+  bonusBuffs.push( 
+    new BonusBuff( { src: images[id], bonusType: id , ttl: ttl})
+  );
+}
+
+function buffOff(id) {
+  for( let b of bonusBuffs ) {
+    if( b.bonusType == id) {
+      b.active = false;
+    }
+  }
+}
+
+function calcSpeed(speed) {
+  //let f = stage.width/stage.height;
+  //return speed / f;
+  let f = stage.height / stage.width;
+  let s = speed * f;
+      f = stage.width/stage.height;
+  if(isPortrait()) {
+    return s * (f * 0.35);
+  }
+  return s * f;
+}
+function incSpeed(speed) {
+  let i = currentLevel * 0.1;
+  let s = speed + i;
+  if( speed > 7.0 )
+  speed = 7.0;
+  return s;
+}
+
+
+// Handle the differnent buffs when enemy / object is destroyed
+function handleBonus(enemy) {
+  
+  switch( enemy.bonusType ) {
+    case LASER_SPEED:
+      buffOn( enemy.bonusType, 20 ); 
+      playSound( "powerUp13", false);
+      playerLaserSpeed += 1.0; 
+      setTimeout(function(q) { playerLaserSpeed -= 1.0; buffOff(q); }, 20 * 1000, enemy.bonusType); break;
+    case LASER_QUICKFIRE:
+      buffOn( enemy.bonusType, 30 ); 
+      playSound( "powerUp12", false);
+      laserTickMax = 15; playerLaserSpeed *= 2; 
+      setTimeout(function(q) { laserTickMax = 20; playerLaserSpeed *= 0.5;buffOff(q); }, 30 * 1000, enemy.bonusType); break;
+    case BONUS_PL: 
+      buffOn( enemy.bonusType, 60 );
+      playSound( "powerUp11", false);
+      ship.piercingLaser = true; 
+      setTimeout(function(q) { 
+        ship.piercingLaser = false;buffOff(q);
+      }, 60 * 1000, enemy.bonusType ); break;
+    case MOREENEMIES: 
+      break;
+    case BONUS_A:
+      slowMotion();
+      playSound( "powerUp4", false);
+      break;
+    case BONUS_B:
+      instantKill();
+      playSound( "powerUp5", false);
+      break;
+    case BONUS_R:
+      ship.numRockets += 12;
+      playSound( "powerUp9", false);
+      break;
+
+    case BONUS_L:
+      ship.numLasers = 3; 
+      buffOn( enemy.bonusType, 10 );
+      setTimeout(function(q) { ship.numLasers = 1; buffOff(q); }, 10 * 1000, enemy.bonusType); break;
+      playSound( "powerUp5", false);
+      break;
+
+    case BONUS_S:
+      ship.shieldUp(ship.shield.maxPower/2, false); // shield up 50%
+      ship.shield.shieldType = 0;
+      playSound( "powerUp1", false);
+      break;
+    case BONUS_S2:
+      ship.shieldUp(ship.shield.maxPower, false); // shield back to 100%
+      ship.shield.shieldType = 1;
+      playSound( "powerUp2", false);
+      break;
+    case BONUS_EXTRA_LIVE:
+      currentLives++;
+      playSound( "powerUp6", false);
+      break;
+    case BONUS_1UP: //@FIXME stacking buff
+      buffOn( enemy.bonusType, 20 );
+      laserTickMax = 15; playerLaserSpeed *= 2; 
+      playSound( "powerUp8", false);
+      setTimeout(function(q) { 
+        laserTickMax = 20; playerLaserSpeed *= 0.5; buffOff(q); }, 20 * 1000, enemy.bonusType); 
+      break;
+    case BONUS_2UP: //@ FIXME stacking buff
+      buffOn( enemy.bonusType, 20 );
+      laserTickMax = 10; playerLaserSpeed *= 2;
+      playSound( "powerUp3", false);
+      setTimeout(function(q) { 
+        laserTickMax = 20; playerLaserSpeed *= 0.5; buffOff(q); }, 20 * 1000, enemy.bonusType); 
+      break;
+    case BONUS_SHIELD_POWER:
+        if( boss.active ) {
+          ship.shield.maxPower += 10;
+          ship.shield.power += ship.shield.maxPower * ( (1.0 / ship.shield.maxPower) * 10);
+          playSound( "powerUp10", false);
+        }
+        else {
+          buffOn( enemy.bonusType, 30 );
+          ship.shield.maxPower += 10;
+          ship.shield.power += 10;
+          playSound( "powerUp10", false);
+          setTimeout( function(q) {
+            ship.shield.maxPower -= 10; 
+            if( ship.shield.power > ship.shield.maxPower) 
+              ship.shield.power = ship.shield.maxPower;
+              buffOff(q);
+          }, 30 * 1000, enemy.bonusType );
+        }
+      break;
+    case BONUS_V:
+      buffOn( enemy.bonusType , 10);
+      playSound( "powerUp14", false);
+      ship.speed += 2.0;
+      if(ship.speed > 8) {
+        ship.speed = 8;
+      }
+      setTimeout(function(q) {
+        ship.speed -= 2.0;
+        if(ship.speed < ship.options.speed ) {
+          ship.speed = ship.options.speed;
+        }
+        buffOff(q);
+      }, 10 * 1000, enemy.bonusType );
+      break;
+      case 0: // normal enemies
+      case -1: // bonus objects
+        break;
+    default:
+      console.log( "Not handled: " + enemy.bonusType);
+      break;
+  }
+
+  // spawn a coin
+  if( enemy.id >= 0 && enemy.id < ENEMY_INDEX && enemy.spawnActive == false ) {
+
+    setTimeout( function(options) {
+      newEnemy(options);
+
+    }, 50, { 
+      zigzag: false, 
+      spawnType: BONUS_COIN, 
+      id: enemy.id, 
+      guntype: -1, 
+      minRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN,L_SIZE_COIN ), 
+      maxRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN, L_SIZE_COIN), 
+      x: enemy.cx, 
+      y: enemy.cy, 
+      speed: randomBetween( ship.speed + 0.55, ship.speed + 2.25 ) 
+    } );
+
+  }
+
+  backgrounds.forEach( updateSpeed );
+}
+
+// Bezier for smooth curves
+function bezier(t, p0, p1, p2, p3){
+    var cX = 3 * (p1.x - p0.x),
+        bX = 3 * (p2.x - p1.x) - cX,
+        aX = p3.x - p0.x - cX - bX;
+          
+    var cY = 3 * (p1.y - p0.y),
+        bY = 3 * (p2.y - p1.y) - cY,
+        aY = p3.y - p0.y - cY - bY;
+          
+    var x = (aX * Math.pow(t, 3)) + (bX * Math.pow(t, 2)) + (cX * t) + p0.x;
+    var y = (aY * Math.pow(t, 3)) + (bY * Math.pow(t, 2)) + (cY * t) + p0.y;
+          
+    return {x: x, y: y};
+}
+
+function isIntersecting(x1, y1, r1, x2, y2, r2) {
+    let distance = (x2-x1)*(x2-x1) + (y2-y1)*(y2-y1);
+    return distance <= ((r1 + r2) * (r1 + r2));
+}
+
+function collideBalls(ball1,ball2, setPos) {
+	
+ 		let dx = ball1.cx - ball2.cx;
+		let dy = ball1.cy - ball2.cy;
+ 
+		let collisionAngle = Math.atan2(dy, dx);
+ 
+		let speed1 = Math.sqrt(ball1.velocityX * ball1.velocityX + ball1.velocityY * ball1.velocityY);
+		let speed2 = Math.sqrt(ball2.velocityX * ball2.velocityX + ball2.velocityY * ball2.velocityY);
+ 
+		let direction1 = Math.atan2(ball1.velocityY, ball1.velocityX);
+		let direction2 = Math.atan2(ball2.velocityY, ball2.velocityX);
+ 
+		let velocityx_1 = speed1 * Math.cos(direction1 - collisionAngle);
+		let velocityy_1 = speed1 * Math.sin(direction1 - collisionAngle);
+		let velocityx_2 = speed2 * Math.cos(direction2 - collisionAngle);
+		let velocityy_2 = speed2 * Math.sin(direction2 - collisionAngle);
+		
+		let final_velocityx_1 = ((ball1.mass - ball2.mass) * velocityx_1 + (ball2.mass + ball2.mass) * velocityx_2)/(ball1.mass + ball2.mass);
+		let final_velocityx_2 = ((ball1.mass + ball1.mass) * velocityx_1 + (ball2.mass - ball1.mass) * velocityx_2)/(ball1.mass + ball2.mass);
+ 
+		let final_velocityy_1 = velocityy_1;
+		let final_velocityy_2 = velocityy_2;
+ 
+		ball1.velocityX = Math.cos(collisionAngle) * final_velocityx_1 + Math.cos(collisionAngle + Math.PI/2) * final_velocityy_1;
+		ball1.velocityY = Math.sin(collisionAngle) * final_velocityx_1 + Math.sin(collisionAngle + Math.PI/2) * final_velocityy_1;
+		ball2.velocityX = Math.cos(collisionAngle) * final_velocityx_2 + Math.cos(collisionAngle + Math.PI/2) * final_velocityy_2;
+		ball2.velocityY = Math.sin(collisionAngle) * final_velocityx_2 + Math.sin(collisionAngle + Math.PI/2) * final_velocityy_2;
+ 
+
+    ball1.setPosition( ball1.x + ball1.velocityX, ball1.y + ball1.velocityY );
+    if(speed1 > 0 ) ball1.speed = speed1;
+
+    if(setPos) {
+      ball2.setPosition( ball2.x + ball2.velocityX, ball2.y + ball2.velocityY );
+      if(speed2 > 0) ball2.speed = speed2;
+    }
+	}
+
+  function testWalls() {
+		let ball;
+		let testBall;
+		
+		for (let i =0; i <enemies.length; i++) {
+			ball = enemies[i];
+			
+			if (ball.cx+ball.radius > (stage.width - backgrounds[0].width)) {
+				ball.velocityX = ball.velocityX*-1;
+				ball.cx = stage.width - ball.radius - backgrounds[0].width;
+				
+			} else if (ball.cx-ball.radius < backgrounds[1].width ) {
+				ball.velocityX = ball.velocityX*-1;
+				ball.cx =  ball.radius;
+			
+			} else if (ball.cy+ball.radius > stage.height ) {
+				ball.velocityY = ball.velocityY*-1;
+				ball.cy = stage.height - ball.radius;
+				
+			} else if(ball.cy-ball.radius < 0) {
+				ball.velocityY = ball.velocityY*-1;
+				ball.cy =  ball.radius;
+			}
+			
+			
+		}
+	
+	}
+
+function handleEnemyCollisions() {
+
+  testWalls();
+  for ( let i = 0; i < enemies.length ; i ++ ) {
+    let e1 = enemies[i];
+    for( let j = i + 1; j < enemies.length; j ++ ) {
+      let e2 = enemies[j];
+
+      if(e2.parent != null && e2.parent == e1 )
+        continue;
+
+      if(e1.spawnActive || e2.spawnActive)
+        continue;
+  
+      if( hitTestCircle(e1,e2)) {
+        collideBalls(e1,e2, true);
+      }
+
+    }
+  }
+
 }
 
 function handleShipCollision() {
+
   // check for collisions between ship and enemies
   if (enemies.length) {
     for (let enemy of enemies) {
       let collision = hitTest(ship, enemy);
-      if (collision) {
-        playSound("explosion", false);
-        ship.decaying = true;
-        setTimeout(() => {
-          playSound("spawn", true);
-          ship.active = true;
-          ship.decaying = false;
-          ship.decay = SHIPDECAY;
-          speedMultiplier = 1;
-          enemySeedFrameInterval = 100;
-          if( score > highScore ) {
-            highScore = score;
-            highScoreNode.textContent = score;
+      if (collision && !enemy.decaying) 
+      {
+        if( enemy.id >= BONUS_INDEX || enemy.spawnActive ) {
+          // slightly charge the shield using the coins
+          if( enemy.spawnBonusType == BONUS_COIN ) {
+            ship.shield.power += 2;
           }
 
-          score = 0;
-          scoreNode.textContent = score;
+          enemy.decaying = true;
+
+          handleBonus(enemy);
+          if(enemy.spawnActive) {
+            playSound( randomCoin(), false );
+            ship.shieldUp(2,false);
+            score += 1;
+          }
+        }
+        else {
+          if(!ship.isIndestructable()) {
+            ship.hit( enemy.radius ); //@ Enemy hits ship
+            playSound( randomBoom(enemy), true );
+          }
           
-        }, 2000);
+          if(!enemy.isAsteroid) {
+            enemy.decaying = true; // asteroids dont destroy on impact with ship
+          }
+          else {
+            collideBalls(enemy,ship, false);
+          }
+        }
+      }
+    }
+  }
+
+  if(boss.active) {
+    let collision = hitTest(ship, boss);
+    if(collision && !boss.decaying) {
+      if(!ship.isIndestructable()) {
+              ship.hit(20);
       }
     }
   }
 }
 
-function drawShip(xPosition) {
-  
-  if (ship.decaying  ) {
-    ship.decay = ship.decay -1;
-    if(ship.decay == 0 ) {
-      ship.decaying = false;
-      ship.active = false;
+function handleBombCollisions() {
+  for( let bomb of bombs ) {
+    let collision = false;
+    let targetRef = bomb.targetRef;
+
+    if( bomb.origin.id == ENEMY_NONE ) { // if the bomb is fired from the ship
+      collision = hitTest( bomb, bomb.targetRef ); // it may hit something 
+      if(!collision) { // it didn't hit the target
+        for( let e of enemies ) { // but did it hit anything else
+          collision = hitTest( bomb, e ); // like enemies
+          if(collision) {
+            targetRef = e; // yes
+            break;
+          }
+        }
+      }
+     
+    }
+    else {
+      collision = hitTest( bomb, ship );
+      
+      if(!collision) { // it didnt hit the ship
+        for( let e of enemies ) { // but did it hit anything else
+          if(!e.isAsteroid)
+             continue;
+          collision = hitTestCircle( bomb, e ); // like enemies
+          if(collision) {
+            targetRef = e; // yes
+            //console.log("Enemy rocket hits asteroid");
+            //takeDown(e);
+            break;
+          }
+        }
+        
+      }
+      else {
+        if( bomb.origin.id != ENEMY_NONE ) {
+          if(!ship.isIndestructable()) {
+           ship.hit(20);
+          }
+        }
+      }
+    }
+
+    if(collision && !bomb.decaying) {
+
+      bomb.destruct();
+             
+      if(!targetRef.decaying && targetRef.id != ENEMY_NONE) {
+        let enemy = targetRef;
+        if( enemy.id >= BONUS_INDEX ) {
+          
+          playSound("take", true); 
+
+          handleBonus(enemy);
+        }
+        takeDown(enemy);
+      }  
+    } // if collsion
+ } 
+} 
+
+function handleBuffs() {
+  if( bonusBuffs.length == 0 )
+    return;
+
+  let seq = 0;
+  for( let b of bonusBuffs) {
+    b.draw(seq);
+    seq = seq + 1;
+  }
+
+  bonusBuffs = bonusBuffs.filter(b => {
+      return b.active;
+  });
+}
+
+function placementOkay(c) {
+  for( let e of enemies ) {
+    if( hitTestCircle(c, e) )
+        return false;
+  }
+  return true;
+}
+
+function handleLaserCollision() {
+
+  for( let bomb of bombs) {
+    for (let laser of lasers) {
+      let collision = hitTest(laser, bomb);
+      if (collision && laser.active && !bomb.decaying) {
+
+        if( laser.origin.id == ENEMY_NONE && !ship.piercingLaser) 
+          laser.active = false;
+       
+        bomb.destruct();
+        if( laser.origin.id == ENEMY_NONE)
+          score += 1;
+      }
+    }
+
+  }
+
+  for (let enemy of enemies) {
+    for (let laser of lasers) {
+      if( laser.origin.id == ENEMY_BOSS ) 
+        continue; 
+
+      let collision = hitTest(laser, enemy);
+      
+      if (collision && laser.active && !enemy.decaying && enemy.spawnBonusType == -1) {
+
+        if( laser.origin.id == ENEMY_NONE && !ship.piercingLaser)
+          laser.decaying = true;
+        if( enemy.onTarget && enemy.targetObject.id == ship.id )
+          continue;
+        
+        handleBonus(enemy);
+
+        playSound( randomBoom(enemy), true );
+        
+        takeDown(enemy);  
+      }
     }
   }
 
-  if (ship.active) {
-    ship.update(xPosition);
-    ship.draw();
+  for( let laser of lasers) {
+    
+    if(laser.active) {
+      
+      if( laser.origin.id == boss.id && (boss.decaying || !boss.active))
+        laser.active = false; 
+        
+      // for now, only boss has laser death ray
+      if( laser.isRay && laser.power == 0 && laser.origin.id == boss.id)
+      {      
+        laser.active = false;
+        continue;
+      }
+
+      if( laser.origin.id == ENEMY_NONE ) {
+          let bosHit = hitTest( laser, boss );
+          if(bosHit && !boss.decaying) {
+              boss.hit(10);
+              playSound( explosionChoices[ randomBetween( 0, explosionChoices.length - 1 ) ] , false );
+              laser.decaying = true;
+          }
+      }
+      else {
+        let shipHit = hitTestIsInside( laser, ship );
+        if( shipHit && !ship.decaying) {
+          if(!ship.isIndestructable()) {
+              let dmg = 1.0 + (0.15 * currentLevel);
+              if(dmg > 15)
+                dmg = 15; // damage inflicted every tick, not second!
+              ship.hit(dmg);
+              boss.power += 1; // boss leaches hp 
+              if(boss.power > boss.maxPower ) {
+                boss.power = boss.maxPower;
+              }
+            }
+        }
+        for( let e of enemies ) {
+          if(!e.isAsteroid) 
+            continue;
+          let asteroidHit = hitTestIsInside( laser, e );
+          if(asteroidHit && !e.decaying) {
+            playSound( randomBoom(e), true );
+            takeDown(e);
+          }
+        }
+      }
+    }
   }
+
+}
+
+function takeDown(enemy) {
+  enemy.decaying = true;
+  enemy.decay = 6;
+  
+  // increase enemy speed and frequency of enemy spawns with each kill
+  if(enemy.enemyId < BONUS_INDEX && !enemy.spawnActive ) {
+    speedMultiplier += .0001;
+    
+    if(speedMultiplier > 1.75) {
+      speedMultiplier = 1.75;
+    }
+  }
+
+  //enemySeedFrameInterval -= 0.5;  
+  //if( enemySeedFrameInterval < 20 ) {
+  // enemySeedFrameInterval = 20;
+  //}
+  
+  // increase score
+  score += calcScore(enemy.radius);
+  
+  if( enemy.bonusType < ENEMY_INDEX && !enemy.spawnActive )
+    ra8bitCount ++;
+
+
+  if(enemy.isAsteroid && enemy.respawns > 0) {
+
+      let nx1 = enemy.x - enemy.radius;
+      let nx2 = enemy.x + enemy.radius;
+
+      newAsteroid( { x: nx1, y: enemy.y, radius: enemy.radius, respawns: enemy.respawns - 1, parent: enemy, speed: 1  });
+      newAsteroid( { x: nx2, y: enemy.y + enemy.radius, radius: enemy.radius, respawns: enemy.respawns - 1, parent: enemy, speed: 1 });
+  
+  }  
+}
+
+function cleanupText(text) {
+  let str = text.substring(0, text.indexOf('.'));
+  return str.replace(/[_-]/g, ' ');
+}
+
+function displayText(text) {
+
+  // display text
+  showText = true;
+  showTextContent = text;
+
+  setTimeout( function() {
+    showText = false;
+    showTextContent = "";
+  }, 3000);
+}
+
+function bossActivation() {
+  if(!boss.active) {
+   boss.activate();
+  }
+  
+}
+
+function levelUp() {
+
+  instantKill();
+
+  /*
+   enemySeedFrameInterval = enemySeedFrameInterval - 10; 
+   if( enemySeedFrameInterval < 20 ) {
+    enemySeedFrameInterval = 20;
+   } */
+
+
+   // and they will get smarter by 1%
+   smartBombProbability ++; 
+
+   ra8bitCount = 0;
+   currentLevel ++;
+   ship.speed = incSpeed(ship.speed);   
+
+   playSound("level"); 
+   displayText( "GET READY!\nLEVEL " + currentLevel);
+
+
+   stopSpawningEnemies = true;
+
+   let obj = new Object();
+   obj.smp = speedMultiplier;
+   obj.esfi = enemySeedFrameInterval;
+   
+   speedMultiplier = 2;
+   
+   setTimeout( function(v) {
+     
+    if( jukeBoxIndex == -1 ) { 
+      stopAndPlay( "bosstheme2" );
+    }
+     setTimeout( function(v) {
+       
+      
+     bossActivation();
+      
+     speedMultiplier = v.smp;
+     
+     //@ add spawns 
+     setTimeout( function(v) {
+         stopSpawningEnemies = false;
+         enemySeedFrameInterval = obj.esfi;
+
+         // now slightly decrease enemySeedFrameInterval
+         if(enemySeedFrameInterval > MIN_INTERVAL) {
+          enemySeedFrameInterval -= 1;
+         }
+
+         if(enemySeedFrameInterval >= 100) {
+          enemySeedFrameInterval -= 10;
+         }
+
+         if(enemySeedFrameInterval >= 200) {
+          enemySeedFrameInterval -= 50;
+         }
+
+         if(enemySeedFrameInterval > 300) {
+          enemySeedFrameInterval -= 100;
+         }
+
+
+         if(enemySeedFrameInterval < MIN_INTERVAL )
+           enemySeedFrameInterval = MIN_INTERVAL;
+
+
+       }, (1000 * 180 / currentLevel) , obj ); // after 3 minutes into boss fight we add spawns
+    
+   }, 7000,v );
+
+  }, 3000, obj );
+ 
+
+
+
+   
+}
+
+function destroyShip() {
+  if(DEV_MODE)
+    return;
+
+  if(ship.decaying)
+    return;
+    
+  playSound("explosion", false);
+
+  ship.decaying = true;
+  currentLives --;
+  standingStillTimer = 0;
+  
+  if(currentLives <= 0) {
+    setTimeout( () =>  {
+      if(gameStarted)
+        stopGame();
+     }, 3000 );
+    currentLives = 0;
+  }
+  else {
+    setTimeout(() => {
+      playSoundOnce("spawn", true);
+      spawnShip();   
+    }, 3000);
+
+  }
+  bonusBuffs = [];
+  stopSpawningEnemies = true;
+
+}
+
+function spawnShip() {
+  
+  ship.active = true;
+  ship.decaying = false;
+  ship.decay = SHIPDECAY;
+  
+  speedMultiplier = 1;
+  playerLaserSpeed = calcSpeed(8);
+  standingStillTimer = 0;
+  scoreNode.textContent = score;
+  stopSpawningEnemies = false;
+  ship.numRockets = ship.options.rockets;
+  ship.speed = ship.options.speed;
+  ship.oldSpeed = ship.speed;
+  ship.power = ship.options.power;
+  ship.firespeed = ship.options.firespeed;
+  ship.launchedAt = gameClock;
+
+  //if(boss.active) {
+    ship.shieldUp( ship.power / 2 , true ); // return with half shield power remaining
+  //}
+
+}
+
+
+function drawShip(xPosition, yPosition) {
+
+
+  if (ship.active && ship.ready && playing) {
+    //ship.update(xPosition,yPosition);
+    ship.draw();
+
+
+    speedNode.textContent = (ship.active ? ship.numRockets: 0);
+  }
+ 
 }
 
 function drawEnemies() {
-  if (enemies.length) {
-
-    for (let enemy of enemies) {
-      // draw an enemy if it's active
-      if (enemy.active) {
-
-        if (enemy.decaying  ) {
-          enemy.decay = enemy.decay -1;
-          if(enemy.decay == 0 ) {
-            enemy.decaying = false;
-            enemy.active = false;
-          }
-        }
-        if(enemy.active) {
-
-          if( randomBetween(0,100) <= 15 ) {
-            let v = enemy.speed * speedMultiplier;
-            if(randomBetween(0,50) > 25) 
-              enemy.x += v;
-            else
-              enemy.x -= v;
-          }
-
-          enemy.update(enemy.x, enemy.y += enemy.speed * speedMultiplier);
-          enemy.draw();
-        }
-
+  for (let enemy of enemies) {
+    // draw an enemy if it's active
+    if (enemy.active) {
+      
+      enemy.update(enemy.x, enemy.y += enemy.speed * speedMultiplier);
+      enemy.draw();
         
+      if (enemy.decaying  ) {
+        enemy.decay = enemy.decay -1;
+        if(enemy.decay <= 0 ) {
+          enemy.decaying = false;
+          enemy.active = false;
+          enemy.decay = 0;
+        }
       }
-       
     }
   }
 }
@@ -431,9 +3881,17 @@ function drawEnemies() {
 function enemyCleanup() {
   if (enemies.length) {
     enemies = enemies.filter(enemy => {
-      let visible = enemy.y < stage.height + enemy.width;
+      let visible = true;
+      if( enemy.x < (0 - enemy.radius))
+        visible = false;
+      if( enemy.x > (stage.width + enemy.radius))
+        visible = false;
+      if( enemy.y > stage.height + (2 * enemy.radius))
+        visible = false;
+
       let active = enemy.active === true;
-      return visible && active;
+
+      return visible && active || enemy.remoteControl;
     });
   }
 }
@@ -441,165 +3899,994 @@ function enemyCleanup() {
 function drawLasers() {
   if (lasers.length) {
     for (let laser of lasers) {
-      if (laser.active) {
+
+         
+      if (laser.decaying  ) {
+        laser.decay = laser.decay -1;
+          if(laser.decay <= 0 ) {
+            laser.decaying = false;
+            laser.active = false;
+            laser.decay = 0;
+          }
+        }
+
+      if (laser.active && !laser.decaying) {
         laser.update(laser.y -= laser.speed);
+      }
+      if( laser.active) {
         laser.draw();
       }
     }
   }
 }
 
+function drawBombs() {
+  for(let i = (bombs.length - 1); i > 0; i -- )
+  {
+      let b = bombs[i];
+      if (!b.active) 
+        continue;
+      
+      if (b.decaying  ) {
+        b.decay = b.decay - 1;
+        if(b.decay <= 0 ) {
+          b.decaying = false;
+          b.active = false;
+          b.decay = 0;
+        }
+        else {
+          b.update();
+          b.draw();
+        }
+        b.origin.rocketActive = false;
+      }
+      else {
+        b.update();
+        b.draw();
+      }
+  } 
+}
+
+function updateTargetSystem() {
+  
+  distanceToPlayer = [];
+
+  for( let e of enemies ) {
+    if(e === undefined)
+      continue;
+    if(!e.active) 
+      continue;
+    if(e.decaying)
+      continue;
+    if(e.spawnBonusType == BONUS_COIN)
+      continue;
+    distanceToPlayer.push( e.distanceToPlayer() );
+  }
+
+  distanceToPlayer.sort( function(a,b) { return a.d - b.d; });
+  
+  for( let o of distanceToPlayer ) {
+    if( o.e.active && !o.e.decaying) { // .bonusType == NONE
+      return o;
+    }
+  }
+
+  return null;
+}
+
+
 function laserCleanup() {
   lasers = lasers.filter(laser => {
     let visible = laser.y > -laser.height;
     let active = laser.active === true;
-    return visible && active;
+    return (visible && active);
   });
 }
 
+function bombCleanup() {
+  bombs = bombs.filter(bomb => {
+    visible = true;
+    if( bomb.y > screen.height + bomb.height ) 
+      visible = false;
+    if( bomb.y < 0 - bomb.height )
+      visible = false;
+    if( bomb.x < 0 - bomb.width )
+      visible = false;
+    if( bomb.x > screen.width + bomb.width )
+      visible = false;
+    
+    return visible && bomb.active;
+  });
+}
+
+function insaneLaser() {
+  let p = ship.spriteLasers.getROI();
+  for( let i = 0; i < ship.numLasers; i ++ ) {
+    let laser = new Laser({
+          color: '#00ff5c',
+          speed: ship.firespeed,
+          mode: i,
+          width: (isPortrait() ? p.w * 0.5: p.w), 
+          height: (isPortrait() ? p.h * 0.5 : p.h),
+          x: ship.cx,
+          y: ship.cy,
+         });
+       
+    lasers.push(laser);
+  }
+
+  playSound("laser", true);
+}
+
+function newEnemy(options) {
+  let enemy;
+
+  
+  if( options !== undefined) 
+    enemy = new Enemy( options );
+  else
+    enemy = new Enemy();
+
+  enemy.spriteExplosion = spriteExplosions;// new SpriteMap( "assets/pop/enemyexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50 }, enemy);
+  enemy.spriteMap = new SpriteMap(  enemy.getWhatAmI(), { numColumns: 1, numRows: 1, frameDelay:  1000, setGeom: true}, enemy );
+  
+  /* 
+      allocate something specific: 
+      { spawnType: BONUS_COIN, id: 0, guntype: 0, minRadius: 15, maxRadius: 30, x: 500, y: 100, speed: 1.0}
+      */
+  enemies.push(enemy);
+
+  return enemy;
+}
+
+function newAsteroid(options) {
+  
+
+    let r = (options !== undefined ? options.radius * 0.75 : scaleProportionalToScreen(stage.width, P_SIZE_ENEMY, L_SIZE_ENEMY ) );
+    let e = new Enemy(
+      {  minRadius: r, maxRadius: r,  id: randomBetween(ENEMY_INDEX , BONUS_INDEX -1 ), parent:
+          ( options !== undefined && options.parent != null ? options.parent : null ),
+          speed: 1 } 
+    
+    );
+    e.respawns = (options !== undefined ? options.respawns: 3);
+    e.spriteExplosion = spriteExplosions;
+    e.spriteMap = new SpriteMap(  e.getWhatAmI(), { numColumns: 1, numRows: 1, frameDelay:  1000, setGeom: true}, e );
+
+    e.angle = Math.floor( Math.random() * 360 );
+    e.velocityX = Math.cos( e.angle ) * e.speed;
+    e.velocityY = Math.sin( e.angle ) * e.speed;
+
+    if(options !== undefined) {
+      e.setPosition(options.x, options.y);
+    }
+    e.spawnGeneration = e.spawnGeneration + 1;
+    
+    enemies.push(e);
+  
+}
+
+
+function updateScore() {
+  if( score > highScore ) {
+    highScoreNode.textContent = score;
+    highScore = score;
+  }
+  scoreNode.textContent = score;
+
+
+  livesNode.textContent = currentLives;
+}
+
+function drawBoss() {
+  boss.update();
+  boss.draw();
+  
+  if(boss.decaying)
+    boss.enterValhalla();
+
+}
+
+function enemySpawns(pairs, type, same) {
+
+  let radius = scaleProportionalToScreen(stage.width, P_SIZE_ENEMY, L_SIZE_ENEMY);
+  let spawning = enemyIdChangeJammer;
+  // set new x and use timer functions for different 
+  let sameId = randomBetween(0, BONUS_INDEX - 1);
+  let left,right,upm, speed, offset_x = 0, offset_y = 0, inc_size = 0 , x_freedom, v;
+
+  enemyIdChangeJammer = true;
+
+
+  x_freedom = (stage.width/2) - backgrounds[0].width - (3 * radius);
+  v = randomBetween( 0, x_freedom );
+  if( type == 1 ) {
+    offset_x = (3 * radius );
+  }
+
+  right = Math.floor( backgrounds[0].width + v );
+  left = stage.width - backgrounds[1].width - (3 *radius) - right;
+  up = Math.floor( radius * 2 ) + (radius/2);
+  
+  let smartBombers = randomBetween(0,50) > currentLevel ? false: true;
+
+  for( let k = 0; k < pairs; k ++ ) {
+
+    newEnemy( { smartBomb: smartBombers, aimAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: left, y: 0 - ((k+1) * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
+    newEnemy( { smartBomb: smartBombers, andAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: right,y: 0 - ((k+1) * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
+
+    left += offset_x;
+    right -= offset_x;
+
+    if( right < (backgrounds[0].width ) )
+      right = backgrounds[0].width;
+    if( left > (stage.width - backgrounds[1].width - (2*radius)))
+      left = stage.width - backgrounds[1].width - (2 * radius);
+  }
+  enemyIdChangeJammer = spawning;
+
+}
+
+
+let lines = [
+  "",
+  "",
+  "(C) 2022 by Project Moonshot",
+  "(C) 2022 by Ra8bits",
+  "Written by @c0ntrolzero",
+  "Artwork by @Pixel8it and @luisqsm",
+  "Sound by @DandyBanger",
+  "Music from ...",
+  "Stone Oakvalley's SID Collection",
+  "Ra8bit Raiders",
+  "A playable demo",
+  "In plain javascript",
+  "Free to play",
+  "Open Source",
+  "Join us to determine the next outcome!",
+  "Fight bears, FUD and rugpulls!",
+  "",
+  ];
+let lineIndex = 0;
+let lineStarted = gameClock;
+
+function showCredits() {
+
+  if(connected) 
+    return;
+
+  let lh = (stage.height/20);
+  ctx.fillStyle = 'White';
+  ctx.font = '24px \"Press Start 2P\"';
+  ctx.textAlign = 'center';
+  
+  ctx.fillText( lines[ lineIndex ], 
+      stage.width/2,stage.height - (2 * lh) , stage.width - backgrounds[0].width - backgrounds[1].width);
+  
+  if( gameClock > (lineStarted + 1000)) {
+    lineStarted = gameClock;
+    lineIndex = (lineIndex+1) % (lines.length -1 );
+  } 
+ 
+}
+
+// Main render loop
 function render(delta) {
+
+  if( paused ) {
+    drawText("Rotate your device");
+    requestAnimationFrame(render);
+    return;
+  }
+
+  updateGamePad();
+
+  updateGameClock();
+
+  drawBackground();
+
+ // seed new enemies
+  if (tick % enemySeedFrameInterval == 0) {
+     //enemySpawns( (1 + (currentLevel/2) ) % 8,  randomBetween(0,2) == 0 ? 1: 0 , currentLevel < 15 ? false : true);
+    
+    if( currentLevel > 2) { // level 3 and up adds asteroids
+      for( let z = 0;  z < 2; z ++ ) {
+        setTimeout( function() { newAsteroid(); } , randomBetween(250, 3000));
+      }
+    }
+
+    let q = randomBetween( 0, 50 );
+    if( q <= currentLevel && !stopSpawningEnemies ) {
+      enemySpawns( (1 + (currentLevel/2) ) % 8,  randomBetween(0,2) == 0 ? 1: 0 , currentLevel < 15 ? false : true);
+    }
+    else {
+    if(enemySeedFrameInterval > 100) {
+      let cV = currentLevel;
+      if( stopSpawningEnemies && cV > 2 )
+        cV = 2;
+      let v = randomBetween(0, currentLevel > 6  ? 6 : cV );
+      for( let q = 0; q <= v; q ++ ) {
+        newEnemy();
+      }
+    }
+    else if(enemySeedFrameInterval > 50) {
+      newEnemy();
+      let v = randomBetween(0,2);
+      if( stopSpawningEnemies ) {
+        for( let q = 0; q < v; q ++ )
+          newEnemy();
+      }
+    }
+    else {
+      newEnemy();
+    } 
+  }
+
+
+
+
+
+  
+  }
+  
+  handleEnemyCollisions();
+
   if (playing) {
     let xPos = ship.x;
+    let yPos = ship.y;
     
-    // seed new enemies
-    if (tick % enemySeedFrameInterval === 0 && ship.active) {
-      const enemy = new Enemy();
-      enemies.push(enemy);
-    //  console.log({enemySeedFrameInterval, speedMultiplier})
-    }
-  
-    // background
-    ctx.save();
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(0, 0, stage.width, stage.height);
-    ctx.restore();
-
+    let oldXpos = xPos;
+    let oldYpos = yPos;
     // ship movement
     if (ship.left) 
       xPos = ship.x -= ship.speed;
     else if (ship.right) 
       xPos = ship.x += ship.speed;
-
+    
+    if (ship.down)
+      yPos = ship.y += ship.speed;
+    else if (ship.up) 
+      yPos = ship.y -= ship.speed;
+    
     // stage boundaries
-    if (gameStarted) {
-      if (xPos < 0) 
-        xPos = 0;
-      else if (xPos > stage.width - ship.width) 
-        xPos = stage.width - ship.width;  
+    if (xPos < backgrounds[0].width) 
+      xPos = backgrounds[0].width;
+    else if (xPos > stage.width - backgrounds[1].width - ship.width) 
+      xPos = stage.width - backgrounds[1].width - ship.width;
+
+
+    if (yPos < 0) {
+      yPos = 0;
+    }
+    else if( yPos > stage.height ) {
+      yPos = stage.height;
     }
     
+    if (ship.active && ship.ready && playing) {
+      
+      ship.velocityX = oldXpos - xPos;
+      ship.velocityY = oldYpos - yPos;
+
+      ship.update(xPos,yPos);
+      
+      if( ra8bitCount >= NEXT_LEVEL && !boss.active ) {
+        levelUp();
+        ra8bitCount = 0;
+
+        NEXT_LEVEL += (MISSION_TARGET/2) 
+      }
+    }
+
+    if( ship.secundaryWeaponFire ) {
+     if ( ship.active && !ship.rocketActive ) {
+      let autoTargetedEnemy = updateTargetSystem();
+      if(autoTargetedEnemy != null ) {
+        createBomb(ship, autoTargetedEnemy.e ); 
+        ship.secundaryWeaponFire = false;
+      }
+    }
+  }
+
     // create lasers, if shooting
     if (ship.active && ship.shooting) {
-       if (laserTick === 0 || laserTick % 20 === 0) {
-         let laser = new Laser({
-           color: '#00ff5c',
-           x: ship.x  - (ship.radius * 0.5),
-         });
-         lasers.push(laser);
-         playSound("laser", true);
+       if (laserTick === 0 || laserTick % laserTickMax === 0) {
+         insaneLaser();
        }
+
+       if( randomBetween( 0, 100) < ( (5 * currentLevel) % 12) ) {
+        e = enemies[ randomBetween(0,enemies.length - 1)];
+        if( e !== undefined && e.id <= ENEMY_INDEX  && e.spawnBonusType == -1 && e.zigzag) { 
+          e.duration = randomBetween( 2.5, 5.0 );
+          e.elasticPath = true;
+          e.timeStarted = gameClock;
+         }
+        }
     }
-    
-    drawShip(xPos);
-    
+  
+    drawShip(xPos, yPos);
+
+
+
     handleShipCollision();
     handleLaserCollision();
-    
+    handleBombCollisions();
+      
+    if(boss.active) {
+      drawBoss();
+    }
+
     drawLasers();
-    drawEnemies();
-    
-    enemyCleanup();
-    laserCleanup();
-    
+
+   
+    debugNode.textContent = currentLevel;
+
     if (ship.shooting) laserTick++;
-    tick++;
+
+      
+    if (ship.decaying && !DEV_MODE ) {
+      ship.decay = ship.decay -1;
+      if(ship.decay == 0 ) {
+        ship.decaying = false;
+        ship.active = false;
+      }
+    }
+    if( playing && ship.active ) {
+      handleBuffs();
+    }
   }
+
+  drawEnemies();
+  drawBombs();
+
   
+  if(!playing) {
+    showCredits();
+  }
+
+  if( showText ) {
+    ctx.fillStyle = 'Gold';
+    ctx.font = '33px \"Press Start 2P\"';
+    ctx.textAlign = 'center';
+    ctx.fillText( showTextContent, stage.width/2,stage.height/2 , (isPortrait()? stage.width * 0.8 : stage.width*0.5));
+  }
+
+  for( let g of gamepadButtons) {
+    g.draw();
+  }
+
+  enemyCleanup();
+  laserCleanup();
+  bombCleanup();
+
+  if( (tick%5) == 0 ) {
+    updateScore();
+  }
+
+  tick++;
   requestAnimationFrame(render);
 }
 
-function startGame(e) {
-  console.log('starting game'); 
-
-  dialogue.classList.add('dialogue--hidden');
-  hud.classList.remove('hud--hidden');
-  e.currentTarget.blur();
-  
-  playMusic("spaceintro");
-
-  // reset the demo/intro to the actual game settings:
-  speedMultiplier = 1;
-  enemySeedFrameInterval = 100;
-  ship.x = stage.width * .5 - ship.radius - .5;
-  ship.y = stage.height - ship.radius - playerOffsetY;
-  enemies = [];
-  gameStarted = true;
+// Elastic function for shaky and evasive Ra8bits 
+function elastic(x, timeFraction) {
+  return Math.pow(2, 2.5 * (timeFraction - 1)) * Math.cos(20 * Math.PI * x / 3 * timeFraction);
 }
-
-function onResize() {
-  stage.width = window.innerWidth;
-  stage.height = window.innerHeight;
-}
-
-function imageLoaded() {
-  imagesLoaded ++;
-}
-
-function imageNotFound() {
-  console.log("Image not found");
-}
-
-function loadImage(value,index,array) {
-  let img = new Image();
-  img.onload = imageLoaded;
-  img.onerror = imageNotFound;
-  img.src = value;
-  imageList.push(img);
-}
-
-function newImage(value) {
-  let img = new Image();
-  img.onload = imageLoaded;
-  img.onerror = imageNotFound;
-  img.src = value;
-  playerList.push(img);
-  return img;
-}
-function newFXImage(value) {
-  let img = new Image();
-  img.onload = imageLoaded;
-  img.onerror = imageNotFound;
-  img.src = value;
-  effectList.push(img);
-  return img;
-}
-
-images.forEach(loadImage);
-playerImages.forEach(newImage);
-effects.forEach(newFXImage);
-
-startBtn.addEventListener('click', startGame);
-window.addEventListener('resize', onResize);
-
-document.body.appendChild(stage);
-onResize();
-
-// start the ship off-screen:
-ship = new Ship({ color:'#c3a17b', x: -100, y: -100});
-
-// set up some ridiculous enemy speeds for the intro:
-speedMultiplier = 6,
-enemySeedFrameInterval = 20;
-
-var myLoader = setInterval( loading, 1000 );
-
-function loading() {
-  if( imagesLoaded == ( playerList.length + images.length + effectList.length) ) {
-    playing = true;
-    clearInterval(myLoader);
-    render();
+function bounce(timeFraction) {
+  for (let a = 0, b = 1; 1; a += b, b /= 2) {
+    if (timeFraction >= (7 - 4 * a) / 11) {
+      return -Math.pow((11 - 6 * a - 11 * timeFraction) / 4, 2) + Math.pow(b, 2);
+    }
   }
 }
 
+// Create a new missile or bomb
+function createBomb(value,tar) {
+  if( value === undefined || value.guntype == -1  || value.spawnBonusType >= 0) {
+    return;
+   }
+
+   if( value.numRockets <= 0 ) {
+    if( value.id == ENEMY_NONE ) {
+      playSound( "blip",false);
+    }
+    value.numRockets = 0;
+    return; // no rockets to fire
+   }
+
+   let bomb = new Bomb({
+     speed: 2 + (value.speed * speedMultiplier), 
+     x: value.cx,
+     y: value.cy,
+     width: value.width,
+     height: value.height,
+     guntype: value.aimAndFire ? value.aimAndFireGunType : value.guntype,
+     aimAndFireDelay: value.aimAndFireDelay ? value.aimAndFireDelay : 1500,
+     aimAndFire: value.aimAndFire,
+     smartBomb: (value.id == ENEMY_NONE ?  true: false ),
+   }, tar, value);
+
+   bombs.push(bomb);
+   value.numRockets = value.numRockets - 1;
+   if( value.id == ENEMY_NONE ) {
+     playSound( "launch", false);
+   }
+   
+}
+
+
+function startGame(e) {
+
+  if(ship === undefined ) {
+    console.log("No spaceship selected yet");
+    return;
+  }
+
+  //FIXME: clubcard like entry to the game. No MSHOT, no fun
+  if( !canPlay() ) {
+    return;
+  }
+
+  openFullscreen();
+
+  if( boss.active ) {
+    boss.active = false;
+  }
+
+  dialogue.classList.add('dialogue--hidden');
+  hud.classList.remove('hud--hidden');
+
+  e.currentTarget.blur();
+  
+  if( jukeBoxIndex == -1 )
+    stopAndPlayLooping("spaceintro");
+
+  // reset the demo/intro to the actual game settings:
+  speedMultiplier = 1;
+  enemySeedFrameInterval = START_INTERVAL;
+
+  ship.x = stage.width * .5 - ship.radius - .5;
+  ship.y = stage.height - ship.radius - playerOffsetY;
+  
+  spawnShip();
+  //ship.shieldUp( ship.power, true ); 
+
+  currentLives = LIVES;
+  currentLevel = 1;
+  score = 0;
+  standingStillTimer = 0;
+  lastStandingX = 0;
+
+  enemies = [];
+  gameStarted = true;
+  playing = true;
+}
+
+function stopGame(e) {
+
+  exitFullscreen();
+
+  gameover.classList.remove( 'hidden' );
+  stopAndPlay( "gameover");
+
+  enemies = [];
+
+  setTimeout( function() {
+    gameover.classList.add('hidden');
+    dialogue.classList.remove('dialogue--hidden');
+    hud.classList.add('hud--hidden');
+    if( jukeBoxIndex == -1 ) {
+      stopAndPlayLooping("sid0");
+    }
+  }, 5000);
+ 
+  currentLives = 0;
+  destroyShip();
+  laserCleanup();
+  enemyCleanup();
+  bombCleanup();
+
+  speedMultiplier = 3,
+  enemySeedFrameInterval = 50;
+
+  ship.x = -100;
+  ship.y = -100;
+   
+  gameStarted = false;
+  touchEnabled = false;
+  playing = false;
+  stopSpawningEnemies = false;
+  currentLevel = 1;
+  
+  bombs = [];
+}
+
+
+function drawText(text) {
+  ctx.fillStyle = 'rgba(255,255,255, ' + "1.0" + ')';
+  ctx.font = '45px \"Press Start 2P\"';
+  ctx.textAlign = 'center';
+  ctx.fillText( text,  (screen.width/2), (screen.height/2) );
+}
+
+
+function drawBackground() {
+  let cur =   ctx.globalAlpha;
+  
+  ctx.save();
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, stage.width, stage.height);
+
+  backgrounds[0].draw1();
+  backgrounds[1].draw2();
+
+  ctx.restore();
+ 
+  backgrounds[0].update();
+  backgrounds[1].update();
+
+}
+
+function scale( a,b1, b2 ) {
+  let d = 1.0 / b1 * a;
+  return d * b2;
+}
+
+function translate( obj ) {
+  let ox = obj.x;
+  let oy = obj.y;
+  let x = scale( obj.x, stage.width, window.innerWidth );
+  let y = scale( obj.y, stage.height, window.innerHeight );
+ // obj.width = scale( obj.width, stage.width, window.innerWidth );
+ // obj.height = scale( obj.height, stage.height, window.innerHeight );
+  obj.setPosition(x,y);
+}
+
+function onResize() {
+/*
+  for( let s of shipyard ) {
+    translate(s);
+  }
+  
+  for( let e of enemies ) {
+    translate(e);
+  }
+  for( let l of lasers ) {
+    translate(l);
+  }
+  for( let b of bombs ) {
+    translate(b);
+  }
+
+  if( boss !== undefined && boss != null ) {
+    translate(boss);
+  } 
+
+  // its a lot of work to resize / reposition everything
+
+
+if( ship !== undefined)
+    translate(ship);
+  
+ 
+
+*/
+
+  stage.width = window.innerWidth;
+  stage.height = window.innerHeight;
+  
+  gamepadButtons[0].setPosition(stage.width, stage.height, stage.width, stage.height,0,0);
+  gamepadButtons[1].setPosition(stage.width, stage.height, stage.width, stage.height,1,1);
+  gamepadButtons[2].setPosition(0, stage.height, stage.width, stage.height,0,0);
+  gamepadButtons[3].setPosition(0, stage.height, stage.width, stage.height,1,0);
+  
+
+}
+
+function imageNotFound() {
+  console.log("Image not found: " + this.src);
+}
+
+function loadBackground(value) {
+  let img = new Image();
+  img.onerror = imageNotFound;
+  img.src = value;
+  return img;
+}
+/*
+function loadDefaultSpaceShip() {
+
+   let demo = [ "1-blue.webp", "1-green.webp", "1-orange.webp", "1-purple.webp", "1-red.webp", "2-blue.webp", "2-green.webp", "2-orange.webp", "2-purple.webp", "2-red.webp", "3-blue.webp", "3-green.webp",
+                "3-orange.webp", "3-purple.webp", "3-red.webp", "4-blue.webp", "4-green.webp", "4-orange.webp", "4-purple.webp", "4-red.webp", "5.webp" ];
+
+
+  for( let d of demo ) {
+    loadSpaceShipExternal( { spaceship: "assets/ships/"+ d , lasers: "assets/weapons/lasers.webp"}, 1);
+  }   
+
+   loadSpaceShipExternal(  { spaceship: "assets/ships/Blue_burning.webp", moveLeft: "assets/ships/Blue_left.webp", idle: "assets/ships/Blue_idle.webp", moveRight: "assets/ships/Blue_right.webp",  warning: "assets/ships/Blue_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
+   loadSpaceShipExternal(  { spaceship: "assets/ships/Green_burning.webp", moveLeft: "assets/ships/Green_left.webp", idle: "assets/ships/Green_idle.webp", moveRight: "assets/ships/Green_right.webp",  warning: "assets/ships/Green_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
+   loadSpaceShipExternal(  { spaceship: "assets/ships/Red_burning.webp", moveLeft: "assets/ships/Red_left.webp",idle: "assets/ships/Red_idle.webp", moveRight: "assets/ships/Red_right.webp",  warning: "assets/ships/Red_warning.webp", lasers: "assets/weapons/lasers.webp" } , 10);
+   loadSpaceShipExternal(  { spaceship: "assets/ships/Yellow_burning.webp", moveLeft: "assets/ships/Yellow_left.webp", idle: "assets/ships/Yellow_idle.webp",  moveRight: "assets/ships/Yellow_right.webp",  warning: "assets/ships/Yellow_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
+
+
+   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Blue_burning.webp", moveLeft: "assets/ships/02_Blue_left.webp", idle: "assets/ships/02_Blue_idle.webp", moveRight: "assets/ships/02_Blue_right.webp",  warning: "assets/ships/02_Blue_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
+   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Green_burning.webp", moveLeft: "assets/ships/02_Green_left.webp", idle: "assets/ships/02_Green_idle.webp", moveRight: "assets/ships/02_Green_right.webp",  warning: "assets/ships/02_Green_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
+   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Red_burning.webp", moveLeft: "assets/ships/02_Red_left.webp",idle: "assets/ships/02_Red_idle.webp", moveRight: "assets/ships/02_Red_right.webp",  warning: "assets/ships/02_Red_warning.webp", lasers: "assets/weapons/lasers2x.webp" } , 10);
+   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Yellow_burning.webp", moveLeft: "assets/ships/02_Yellow_left.webp", idle: "assets/ships/02_Yellow_idle.webp",  moveRight: "assets/ships/02_Yellow_right.webp",  warning: "assets/ships/02_Yellow_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
+}
+*/
+
+function launchShip(w,h) {
+  
+
+}
+
+function loadSpaceShipExternal(options, nc) {
+
+  let s = new Ship({ 
+    x: -100, y: -100, 
+    width: 256, height: 256,
+    speed: calcSpeed( options.speed ),
+    firespeed: 2 + calcSpeed( options.firespeed ),
+    power: options.power,
+    rockets: options.rockets,
+    radius: scaleProportionalToScreen(this.width, P_SIZE_PREVIEW_SHIP,L_SIZE_PREVIEW_SHIP),
+  });
+
+  s.spriteExplosion = new SpriteMap( "assets/pop/shipexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50, isSquare: true }, s);
+  s.spriteMoveLeft = new SpriteMap( options.moveLeft || options.spaceship, { numColumns: nc, numRows: 1, frameDelay: 1 }, s );
+  s.spriteMoveRight = new SpriteMap( options.moveRight || options.spaceship, { numColumns: nc, numRows: 1, frameDelay: 1 }, s );
+  s.spriteWarn = new SpriteMap( options.warning || options.spaceship,  { numColumns: nc, numRows: 1, frameDelay: 1 }, s );
+  s.spriteIdle = new SpriteMap( options.idle || options.spaceship, { numColumns: 1, numRows: 1, frameDelay: 0 }, s );
+
+  // A ship is not a ship if it at least not have these two spritemaps! The others fallback to options.spaceship
+  s.spriteLasers = new SpriteMap( options.lasers, { numColumns: 3, numRows: 1, frameDelay: 0 }, s );
+  s.spriteMap = new SpriteMap( options.spaceship, {  numColumns: nc, numRows: 1, frameDelay: 3, setGeom: true}, s );
+  s.spriteMap.framePeriod = 5;
+
+
+  shipyard.push(s);  
+}
+
+
+var lastDrawTime = 0;
+function drawSpaceship(timestamp) {
+  if(ship === undefined || !ship.ready) {
+    setTimeout( function() { drawSpaceship(timestamp);}, 500, timestamp);
+    return;
+  }
+
+  if( timestamp - lastDrawTime > 25 ) {
+    lastDrawTime = timestamp;
+  }
+  else {
+    requestAnimationFrame(drawSpaceship);
+    return;
+  }
+
+  let showroomitem = shipyard[currentShip];
+  let elem = document.getElementById('shippreview');
+
+  let canvas = elem.getContext('2d');
+
+  canvas.clearRect(0, 0, elem.width, elem.height);
+
+  if(!showroomitem.spriteMap.active) {
+    canvas.fillStyle = 'Gold';
+    canvas.font = '33px \"Press Start 2P\"';
+    canvas.textAlign = 'center';
+    canvas.fillText( "Loading", 0,0 );
+  }
+  else
+  {
+    let s = (elem.height > showroomitem.height ? elem.height/showroomitem.height: 1);
+    let bw = showroomitem.width * s * 0.9;
+    let bh = showroomitem.height * s * 0.9;
+    let cx = (elem.width/2) - ( bw/2 );
+    let cy = (elem.height/2) - ( bh/2 );
+    
+    showroomitem.spriteMap.drawPreview(canvas, cx,cy, bw , bh, 0 );
+    //showroomitem.spriteMap.draw(canvas, (elem.width/2) - (showroomitem.width/2),
+    //                                    (elem.height/2) - (showroomitem.height/2),
+    //                                    elem.width, elem.height, 0);
+    showroomitem.spriteMap.update();
+  }
+  requestAnimationFrame(drawSpaceship);
+}
+
+function selectSpaceShip() {
+  ship = shipyard[currentShip];
+  if(!playing)
+  requestAnimationFrame(drawSpaceship);
+
+}
+
+function cycleShips(inc) {
+  let oldShip = ship;  
+  currentShip += inc;
+  if(currentShip < 0)
+   currentShip = shipyard.length - 1;
+  else if (currentShip >= shipyard.length) {
+    currentShip = 0;
+  }
+  ship = shipyard[  currentShip ];
+
+  if( oldShip !== undefined) {
+    oldShip.deactivate();
+  }
+
+  ship.activate();
+
+}
+
+function selectPrevShip() {
+  cycleShips(-1);
+  selectSpaceShip();
+}
+
+function selectNextShip() {
+  cycleShips(1);
+  selectSpaceShip();
+}
+
+function openFullscreen() {
+  if(!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  }
+}
+
+function exitFullscreen() {
+  if(document.exitFullscreen)
+    document.exitFullscreen();
+}
+
+function isPortrait() {
+  return ( window.innerHeight > window.innerWidth );
+}
+
+function loadBackgroundSprites() {
+
+backgrounds = [];
+
+  if( isPortrait() ) {
+  backgrounds.push( new Background( {
+    speed_y: DEFAULTSPEED,
+    img: 'assets/leftp.webp'
+  } ) );
+  backgrounds.push( new Background( {
+    speed_y: DEFAULTSPEED,
+    img: 'assets/rightl.webp'
+  } ) );
+}
+else {
+  backgrounds.push( new Background( {
+    speed_y: DEFAULTSPEED,
+    img: 'assets/left.webp'
+  } ) );
+
+  backgrounds.push( new Background( {
+    speed_y: DEFAULTSPEED,
+    img: 'assets/right.webp'
+  } ) );
+}
+
+}
+
+DEFAULTSPEED = calcSpeed(5);
+
+loadBackgroundSprites();
+
+startBtn.addEventListener('click', startGame);
+
+prevShip.addEventListener('click', selectPrevShip);
+nextShip.addEventListener('click', selectNextShip)
+
+window.addEventListener('resize', onResize);
+window.addEventListener( 'orientationchange', function() {
+  if(window.orientation == 90 || window.orientation == -90) {
+    paused = true;
+  }
+  else {
+    paused = false;
+  }
+  console.log( "Orientation changed to " + window.orientation + " and game is " + (paused ? "paused": "unpaused"));
+  loadBackgroundSprites();
+})
+
+document.body.appendChild(stage);
+
+gamepadButtons.push( new GamePadButton({img: "assets/buttonA.webp", x: 0, width: 0, y: 0, height: 0, 
+stop: function() {
+  if(ship.shooting)
+    ship.shooting = false; 
+},
+handler: function() {
+  if(!ship.shooting) {
+    ship.shooting = true;
+    laserTick = 0;
+  }
+
+  }}));
+
+gamepadButtons.push( new GamePadButton({img: "assets/buttonX.webp", x: 0, width: 0, y: 0, height: 0,
+stop: function() {
+  if(ship.secundaryWeaponFire)
+    ship.secundaryWeaponFire = false;
+},
+handler: function() {
+  ship.secundaryWeaponFire = true;
+}}));
+
+gamepadButtons.push( new GamePadButton({img: "assets/dirLeft.webp", x: 0, width: 0, y: 0, height: 0,
+stop: function() {
+  if(ship.jukePressed) {
+    ship.jukePressed = false;
+    jukeBox(-1);
+  }
+},
+handler: function() {
+  ship.jukePressed = true;
+}}));
+
+gamepadButtons.push( new GamePadButton({img: "assets/dirRight.webp", x: 0, width: 0, y: 0, height: 0,
+stop: function() {
+  if(ship.jukePressed) {
+    ship.jukePressed = false;
+    jukeBox(1);
+  }
+},
+handler: function() {
+  ship.jukePressed = true;
+}}));
+
+
+boss = new BossEnemy();
+
+boss.spriteExplosion = spriteExplosions; //new SpriteMap( "assets/pop/enemyexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50 }, boss);
+boss.spriteLasers = new SpriteMap( "assets/boss/laser.webp", { numColumns: 6, numRows: 1, frameDelay: 20 }, boss );       
+boss.spriteLasers.framePeriod = 60;  
+boss.spriteMap = new SpriteMap( "assets/boss/mother.webp", { numColumns: 2, numRows: 1, frameDelay:  5, setGeom: true}, boss );
+
+// start the ship off-screen:
+//ship = new Ship({ color:'#c3a17b', x: -100, y: -100, speed: 5, radius: 40});
+
+// set up some ridiculous enemy speeds for the intro:
+speedMultiplier = 3,
+enemySeedFrameInterval = 50;
+
+
+var myLoader = 0;
+document.addEventListener( "DOMContentLoaded", function() {
+   myLoader = setInterval( loading, 1000 );
+
+});
+
+onResize();
+
+  let elem = document.getElementById('shippreview');
+  elem.addEventListener('keydown', this.handleJukeboxPressed.bind(this));
+  elem.addEventListener('keyup', this.handleJukeboxRelease.bind(this));
+
+function loading() {
+  if( imagesLoaded >= 9  ) {
+    backgrounds[0].configure(0,0);
+    backgrounds[1].configure(screen.width,0);
+    clearInterval(myLoader);
+
+    let doneLoading = document.getElementById( "loading-data");
+    doneLoading.classList.add('hidden');
+
+    let startConnect = document.getElementById( "readyToConnect" );
+    startConnect.classList.remove( "hidden");
+
+    let mb = document.getElementById( "moonboxes" );
+    mb.classList.remove( 'hidden' );
+
+
+    render();
+  }
+  
+}
+
 </script>
+
 </html>
