@@ -9,7 +9,7 @@ let nftContract;
 
 let provider;
 let web3Modal;
-let selectedAccount;
+let selectedAccount = null;
 var web3;
 var myTimeout;
 
@@ -18,7 +18,7 @@ function init() {
 
   if(location.protocol !== 'https:') {
     console.log("Do not connect with your wallet in a non secure environment.");
-    //return;
+    return;
   }
 
   const providerOptions = {
@@ -77,21 +77,6 @@ const balanceOfABI = [
   },
 ];
 
-
-async function canPlay() {
-
-  let contract = new web3.eth.Contract(balanceOfABI, "0x5298AD82dD7C83eEaA31DDa9DEB4307664C60534");
-  let result = await contract.methods.balanceOf(selectedAccount).call();
-  if( result > 0 )
-    return true;
-    contract = new web3.eth.Contract(balanceOfABI, "0x27424eE307488cA414f430b84A10483344E6d80a");
-  result = await contract.methods.balanceOf(selectedAccount).call();
-  if(result > 0 )
-    return true;
-
-  return false;
-}
-
 async function newRequest() {
   let url = 'https://moonboxes.io/api/api/userData?NSFW=undefined&userAddress=' + selectedAccount;
 
@@ -108,6 +93,7 @@ async function newRequest() {
   }).then( (response) => {
     if( response.status >= 400 && response.status < 600) {
       displayText("Oops try again later");
+      playSound( errorSound(0) );
       return null;
     }
     return response;
@@ -115,6 +101,7 @@ async function newRequest() {
     return returnedResponse.json();
   }).catch( (error) => {
      displayText("Oops try again much later");
+     playSound( errorSound(1) );
   });
   return response;
   //return response.json();
@@ -154,7 +141,7 @@ function resolveSpriteMap( info, name , uri ) {
 }
 
 async function getMyNFTs() {
-  let loadingShip = false;
+
 
   shipyard = [];
   ship = undefined;
@@ -165,12 +152,12 @@ async function getMyNFTs() {
       return;
     let arr = data.data;
     let options = new Object();
+    let loadingShip = false;
     for( const d of arr.data ) {
       if( d.ArtistNFTAddress !== '0x36BB868f0D65E73fCBA05cc0D7771a8b4CBe4E3e' ) {
         continue;
       }
 
-    
       let props = d.properties;
       let info = getMetadata( d.logo_path );
 
