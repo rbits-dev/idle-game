@@ -127,7 +127,7 @@
         <li>👇 Mint a starfighter 👇</li>
       </ul>
       <div class="buttons" style="padding-top:20px;">
-        <a id="btn-mint" target="_blank" href="https://moonboxes.io" >MoonBoxes</a>
+        <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
       </div>
     </div>
    
@@ -744,13 +744,13 @@ function handleOrientationEvent(event) {
       ship.left = true;
     }
   }
-
-  if( fy > 0.2 ) {
+//FIXME for mobile, lets do just left and right for now
+ /* if( fy > 0.2 ) {
     if( y > 0 )
       ship.up = true;
     else if ( y < 0 )
       ship.down = true;
-  }
+  } */
 
   motionX = event.gamma;
   motionY = event.beta;
@@ -911,6 +911,10 @@ function randomCoin() {
 // The ship was hit
 function randomHit() {
   return hitHurtChoices[ randomBetween( 0, hitHurtChoices.length - 1 ) ];
+}
+
+function errorSound(v) {
+  return hitHurtChoices[ v ];
 }
 
 // GamePadButtons
@@ -4417,11 +4421,6 @@ function startGame(e) {
 
   if(ship === undefined ) {
     console.log("No spaceship selected yet");
-    return;
-  }
-
-  //FIXME: clubcard like entry to the game. No MSHOT, no fun
-  if( !canPlay() ) {
     return;
   }
 
