@@ -178,6 +178,7 @@ async function getMyNFTs() {
       options.speed = info.speed;
       options.rockets = info.rockets;
       options.firespeed = info.firespeed;
+      options.title = info.title;
 
       loadSpaceShipExternal( options, cols );
       loadingShip = true;

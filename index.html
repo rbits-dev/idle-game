@@ -36,6 +36,8 @@
   <script type="text/javascript" src="js/metadata.js"></script>
   <script type="text/javascript" src="js/howler.js"></script>
   <script type="text/javascript" src="js/gamepad.js"></script>
+  <script type="text/javascript" src="js/joy.js"></script>
+  
   
 </head>
 <body>
@@ -43,9 +45,12 @@
 
   <div class="gameover__content hidden">
     <div class="gameover__overlay">
-      <h1>GAME OVER</h1>
+      <h1>GAME</h1>
+      <h1>OVER</h1>
       <ul>
         <li>Ra8bits invaded Earth!</li>
+        <li>You slowly die of<li>
+        <li>nuclear radiation poisoning</li>
       </ul>
     </div>
   </div>
@@ -406,16 +411,16 @@ const SLOW_SPEED = 3;
 const NONE = 0;
 
 const BOMB_DECAY_TIME = 6;
-const MISSION_TARGET = 2;           // 40;
+const MISSION_TARGET = 40;           // 40;
 var NEXT_LEVEL = MISSION_TARGET;     // How many enemies to kill before leveling up
 
-const P_SIZE_BONUS = 40;
-const P_SIZE_ENEMY = 20;
-const P_SIZE_COIN  = 28;
+const P_SIZE_BONUS = 30; //40
+const P_SIZE_ENEMY = 16; //20
+const P_SIZE_COIN  = 20; //28
 const P_SIZE_PREVIEW_SHIP = 9;
-const P_SIZE_SHIP = 18;
-const P_SIZE_BOMB = 50;
-const P_SIZE_BOSS = 10;
+const P_SIZE_SHIP = 12; //18
+const P_SIZE_BOMB = 32; //bomb
+const P_SIZE_BOSS = 6;
 /*
 const L_SIZE_BONUS = 80;
 const L_SIZE_ENEMY = 48;
@@ -433,7 +438,7 @@ const L_SIZE_BOMB = 200;
 const L_SIZE_BOSS = 22;
 
 
-const P_SIZE_LASER = 25;
+let P_SIZE_LASER = 42;
 const L_SIZE_LASER = 75;
 //  this.width = options.width || 23/3; //6;
 //  this.height = options.height || 64/3; //20;   // FIXME probably needs to take in account screen orientation
@@ -565,6 +570,7 @@ const PLAYER_MISSILE_BOOSTER = 7;
 // Virtual gamepad buttons
 const gamepadButtons = [];
 let touchEnabled = false;
+let joystickEnabled = false;
 
 //TODO: loot drop table for enemies, some are more rare than others
 
@@ -599,11 +605,9 @@ const stage = document.createElement('canvas'),
       
 // Setup touch event listeners
 stage.addEventListener( "touchend", touchEnd, { passive: false }); 
-stage.addEventListener( "touchmove", touchMove, { passive: false }); 
 stage.addEventListener( "touchstart", touchStart, { passive: false }); 
 window.addEventListener( "deviceorientation", handleOrientationEvent, true);
 //window.addEventListener( "devicemotion", handleMotionEvent, true );
-  
 
 let ship, lasers = [], enemies = [], bombs = [], backgrounds = [], distanceToPlayer = [], bonusBuffs = [],
     playing = false,
@@ -616,7 +620,7 @@ let ship, lasers = [], enemies = [], bombs = [], backgrounds = [], distanceToPla
     highScore = 0,
     tick = 0,
     laserTickMax = 20,
-    playerLaserSpeed = 8,
+    playerLaserSpeed = 12,
     currentLevel = 1,
     currentLives = LIVES,
     ra8bitCount = 0,
@@ -643,11 +647,6 @@ let lastTouch = new Object();
     lastTouch.y = -1;
 
 function touchEnd(event) {
-  ship.right = false;
-  ship.left = false;
-  ship.up = false;
-  ship.down = false;
-  
   for( let g of gamepadButtons) {
       g.doStop();
   }
@@ -658,7 +657,7 @@ function touchStart(event) {
   lastTouch.y = event.targetTouches[0].clientY;
 
   if(!touchEnabled) {
-    touchEnabled = true;
+    enableVirtualJoystick(true);
   }
   
   for( let g of gamepadButtons) {
@@ -744,47 +743,9 @@ function handleOrientationEvent(event) {
       ship.left = true;
     }
   }
-//FIXME for mobile, lets do just left and right for now
- /* if( fy > 0.2 ) {
-    if( y > 0 )
-      ship.up = true;
-    else if ( y < 0 )
-      ship.down = true;
-  } */
 
   motionX = event.gamma;
   motionY = event.beta;
-
-}
-
-function touchMove(event) {
- 
-  if( lastTouch.x == -1 || lastTouch.y == -1 ) {
-    lastTouch.x = event.targetTouches[0].clientX;
-    lastTouch.y = event.targetTouches[0].clientY;
-    return;
-  }
-  
-  let dx = lastTouch.x - event.targetTouches[0].clientX;
-  let dy = lastTouch.y - event.targetTouches[0].clientY;
-
-  ship.right = false;
-  ship.left = false;
-  ship.up = false;
-  ship.down = false;
-
-  // figure out touch direction and adjust ship accordingly
-  if( dx < 0 ) {
-    ship.right = true;
-  }
-  else if ( dx > 0 ) {
-    ship.left = true;
-  }
-
-  if( dy > 0 )
-    ship.up = true;
-  else if ( dy < 0 )
-    ship.down = true;
 
 }
 
@@ -937,7 +898,7 @@ GamePadButton.prototype.onResize = function(w,h,i) {
 GamePadButton.prototype.setPosition = function(x1,y1,w,h,i,j) {
   let bw = (isPortrait() ? w / 8 : w / 16);
   
-  let x = ( x1 <= 0 ? x1 + bw + (i*bw) : x1 - bw - (i * bw));
+  let x = ( x1 <= 0 ? w/2 + (i*bw) : x1 - bw - (i * bw));
   let y = y1 - bw - (bw*0.5) - (j * bw);
   this.x = Math.floor(x);
   this.y = Math.floor(y);
@@ -1219,6 +1180,7 @@ function Ship(options) {
   this.mass = 1;
   this.velocityX = 0.0;
   this.velocityY = 0.0;
+  this.laserSize = options.laserSize;
 }
 
 function scaleProportionalToScreen(w, portrait, landscape) {
@@ -1980,8 +1942,8 @@ PathAnimator.prototype.updatePath = function( path ){
 
 // A Ship's Laser or a Boss' Death Ray
 function Laser(options) {
-  this.width = options.width || 23/3; //6;
-  this.height = options.height || 64/3; //20;   // FIXME probably needs to take in account screen orientation
+  this.width = scaleProportionalToScreen(stage.width, ship.laserSize, ship.laserSize);
+  this.height = this.width * (64/23);
   //this.width =  scaleProportionalToScreen(stage.width, P_SIZE_LASER, L_SIZE_LASER);
   //this.height = (64/23) * this.width;
 
@@ -2352,7 +2314,7 @@ Bomb.prototype.setPosition = function(x,y) {
   this.x = x;
   this.y = y;
   this.cx = Math.floor( this.x + ( this.width / 2) );
-  this.cy = Math.floor( this.y - ( this.height / 2) ); //FIXME?
+  this.cy = Math.floor( this.y - ( this.height / 2) );
 }
 
 // The boss fires and then , fires again
@@ -2990,7 +2952,7 @@ Enemy.prototype.update = function(x, y) {
     }
     
   } 
-  this.cx = Math.floor( this.x + (this.width/2) ); //FIXME wobblty ?
+  this.cx = Math.floor( this.x + (this.width/2) );
   this.cy = Math.floor( this.y + (this.height/2) );
 
   this.spriteMap.update();
@@ -3831,7 +3793,7 @@ function spawnShip() {
   ship.decay = SHIPDECAY;
   
   speedMultiplier = 1;
-  playerLaserSpeed = calcSpeed(8);
+  playerLaserSpeed = isPortrait() ? 12: 8;
   standingStillTimer = 0;
   scoreNode.textContent = score;
   stopSpawningEnemies = false;
@@ -4174,6 +4136,20 @@ function showCredits() {
  
 }
 
+function enableVirtualJoystick(enabled) {
+  joystickEnabled = enabled;
+  touchEnabled = enabled;
+}
+
+function updateJoystick() {
+  if(!joystickEnabled || !playing) 
+    return;
+
+  let size = isPortrait() ? stage.width/3: stage.width/8;
+
+  joystick.draw(ctx, 0, stage.height - size, size, size );  
+}
+
 // Main render loop
 function render(delta) {
 
@@ -4365,6 +4341,8 @@ function render(delta) {
   if( (tick%5) == 0 ) {
     updateScore();
   }
+
+  updateJoystick();
 
   tick++;
   requestAnimationFrame(render);
@@ -4621,14 +4599,22 @@ function launchShip(w,h) {
 
 function loadSpaceShipExternal(options, nc) {
 
+  let laserSize = (isPortrait() ? P_SIZE_LASER: L_SIZE_LASER);
+  if( options.title === 'Moonshooter' || options.title === 'Moonblaster' ) { 
+    //this game only has game objects, consisting of one texture (and not a clear seperation between solids and geoms)
+    //so, instead of defining the size and position of the laser of the ship in the template like we should, we hack around it
+    laserSize = (isPortrait() ? 24 : 48 );
+  }
+
   let s = new Ship({ 
     x: -100, y: -100, 
     width: 256, height: 256,
     speed: calcSpeed( options.speed ),
-    firespeed: 2 + calcSpeed( options.firespeed ),
+    firespeed: (isPortrait() ? 6 : 2) + calcSpeed( options.firespeed ),
     power: options.power,
     rockets: options.rockets,
     radius: scaleProportionalToScreen(this.width, P_SIZE_PREVIEW_SHIP,L_SIZE_PREVIEW_SHIP),
+    laserSize: laserSize
   });
 
   s.spriteExplosion = new SpriteMap( "assets/pop/shipexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50, isSquare: true }, s);
@@ -4852,6 +4838,27 @@ boss.spriteMap = new SpriteMap( "assets/boss/mother.webp", { numColumns: 2, numR
 speedMultiplier = 3,
 enemySeedFrameInterval = 50;
 
+
+var joystick = new JoyStick('', {
+    "width": isPortrait() ? stage.width/3: stage.width/8,
+    "height": isPortrait() ? stage.width/3: stage.width/8
+
+  }, function(event) {
+  if(!playing) 
+    return;
+
+  let direction = event.cardinalDirection;
+
+  ship.up = false; ship.down = false; ship.left = false; ship.right = false;
+
+  switch( direction ) {
+    case 'N': case 'NE': case 'NW': ship.up = true; break;
+    case 'S': case 'SE': case 'SW': ship.down = true; break;
+    case 'E': ship.right = true; break;
+    case 'W': ship.left = true; break;
+  }
+
+});
 
 var myLoader = 0;
 document.addEventListener( "DOMContentLoaded", function() {

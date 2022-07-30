@@ -5,11 +5,13 @@ var gamepadAPI = {
         gamepadAPI.controller = e.gamepad;
         gamepadAPI.active = true;
         console.log('Gamepad connected.');
+        enableVirtualJoystick(false);
     },
     disconnect() {
         gamepadAPI.active = false;
         delete gamepadAPI.controller;
         console.log('Gamepad disconnected.');
+        enableVirtualJoystick(true);
     },
     update() {
         // clear the buttons cache
