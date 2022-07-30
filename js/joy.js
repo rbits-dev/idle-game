@@ -121,9 +121,9 @@
      // Check if the device support the touch or not
      if("ontouchstart" in document.documentElement)
      {
-         document.addEventListener("touchstart", onTouchStart, false);
-         document.addEventListener("touchmove", onTouchMove, false);
-         document.addEventListener("touchend", onTouchEnd, false);
+         document.addEventListener("touchstart", onTouchStart, true);
+         document.addEventListener("touchmove", onTouchMove, true);
+         document.addEventListener("touchend", onTouchEnd, true);
      }
      else
      {
@@ -132,21 +132,9 @@
          document.addEventListener("mouseup", onMouseUp, false);
      }
      // Draw the object
-     drawExternal();
      drawInternal();
  
-     /******************************************************
-      * Private methods
-      *****************************************************/
- 
-     /**
-      * @desc Draw the external circle used as reference position
-      */
-     function drawExternal()
-     {
-      
-     }
- 
+
      /**
       * @desc Draw the internal stick in the current position the user have moved it
       */
@@ -175,19 +163,17 @@
  
      function onTouchMove(event)
      {
-         if(pressed == 1) // && event.targetTouches[0].target === jcanvas)
-         {
+     //    if(pressed == 1) 
+      //   {
              movedX = event.targetTouches[0].pageX;
              movedY = event.targetTouches[0].pageY;
 
-
-             movedX -= offsetLeft;
-             movedY -= offsetTop;
+             movedX -= offsetLeft + internalRadius;
+             movedY -= offsetTop + internalRadius;
                
              // Delete jcanvas
              context.clearRect(0, 0, jcanvas.width, jcanvas.height);
              // Redraw object
-             drawExternal();
              drawInternal();
  
              // Set attribute of callback
@@ -197,7 +183,7 @@
              StickStatus.y = ((100*((movedY - centerY)/maxMoveStick))*-1).toFixed();
              StickStatus.cardinalDirection = getCardinalDirection();
              callback(StickStatus);
-         }
+       //  }
      } 
  
      function onTouchEnd(event) 
@@ -212,7 +198,6 @@
          // Delete jcanvas
          context.clearRect(0, 0, jcanvas.width, jcanvas.height);
          // Redraw object
-         drawExternal();
          drawInternal();
  
          // Set attribute of callback
@@ -247,7 +232,6 @@
              // Delete jcanvas
              context.clearRect(0, 0, jcanvas.width, jcanvas.height);
              // Redraw object
-             drawExternal();
              drawInternal();
  
              // Set attribute of callback
@@ -272,7 +256,6 @@
          // Delete jcanvas
          context.clearRect(0, 0, jcanvas.width, jcanvas.height);
          // Redraw object
-         drawExternal();
          drawInternal();
  
          // Set attribute of callback
@@ -339,7 +322,7 @@
 
         offsetTop = y;
         offsetLeft = x;
-      //  drawExternal();
+     
         canvas.save();
         canvas.drawImage( jcanvas, 0, 0, jcanvas.width, jcanvas.height, x,y, w,h );
         canvas.restore();

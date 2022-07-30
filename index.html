@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no" />
+  <meta name="HandheldFriendly" content="true" />
   <meta name="description" content="Press start to play and fight Whales, DIPS and FUD" />
   <title>RA8BIT RAIDERS</title>
   <link rel="stylesheet" href="css/style-min.css" />
@@ -45,8 +46,7 @@
 
   <div class="gameover__content hidden">
     <div class="gameover__overlay">
-      <h1>GAME</h1>
-      <h1>OVER</h1>
+      <h1>GAME OVER</h1>
       <ul>
         <li>Ra8bits invaded Earth!</li>
         <li>You slowly die of<li>
@@ -92,7 +92,7 @@
           <li>(Max 32 ships per wallet)</li>
         </ul>
         <div class="buttons" style="padding-top:1vmin;">
-          <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >Mint Starfighter</a>
+          <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
         </div>
         <div class="spacer-small"></div>
       </div>        
@@ -606,7 +606,7 @@ const stage = document.createElement('canvas'),
 // Setup touch event listeners
 stage.addEventListener( "touchend", touchEnd, { passive: false }); 
 stage.addEventListener( "touchstart", touchStart, { passive: false }); 
-window.addEventListener( "deviceorientation", handleOrientationEvent, true);
+//window.addEventListener( "deviceorientation", handleOrientationEvent, true);
 //window.addEventListener( "devicemotion", handleMotionEvent, true );
 
 let ship, lasers = [], enemies = [], bombs = [], backgrounds = [], distanceToPlayer = [], bonusBuffs = [],
@@ -641,11 +641,6 @@ spriteExplosions = new SpriteMap( "assets/pop/enemyexplodes.webp", { numColumns:
 let stopSpawningEnemies = false;
 let enemyIdChangeJammer = false;
 
-// Simple touch controller event handlers
-let lastTouch = new Object();
-    lastTouch.x = -1;
-    lastTouch.y = -1;
-
 function touchEnd(event) {
   for( let g of gamepadButtons) {
       g.doStop();
@@ -653,16 +648,16 @@ function touchEnd(event) {
 }
 
 function touchStart(event) {
-  lastTouch.x = event.targetTouches[0].clientX;
-  lastTouch.y = event.targetTouches[0].clientY;
-
+  
   if(!touchEnabled) {
     enableVirtualJoystick(true);
   }
   
   for( let g of gamepadButtons) {
-    if(g.isInside(lastTouch.x, lastTouch.y)) {
+    for( let i = 0; i < event.targetTouches.length; i ++ ) {
+    if(g.isInside(event.targetTouches[i].clientX, event.targetTouches[i].clientY)) {
       g.fireEvent(); // when screen resizes update the gamepad button locations
+    }
     }
   }
 }
@@ -4145,7 +4140,7 @@ function updateJoystick() {
   if(!joystickEnabled || !playing) 
     return;
 
-  let size = isPortrait() ? stage.width/3: stage.width/8;
+  let size = Math.floor( isPortrait() ? stage.width/2.5: stage.width/8 );
 
   joystick.draw(ctx, 0, stage.height - size, size, size );  
 }
@@ -4330,8 +4325,10 @@ function render(delta) {
     ctx.fillText( showTextContent, stage.width/2,stage.height/2 , (isPortrait()? stage.width * 0.8 : stage.width*0.5));
   }
 
-  for( let g of gamepadButtons) {
-    g.draw();
+  if(playing) {
+    for( let g of gamepadButtons) {
+      g.draw();
+    }
   }
 
   enemyCleanup();
@@ -4859,6 +4856,19 @@ var joystick = new JoyStick('', {
   }
 
 });
+
+document.addEventListener('gesturestart', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gesturechange', function(e) {
+    e.preventDefault();
+});
+
+document.addEventListener('gestureend', function(e) {
+    e.preventDefault();
+});
+
 
 var myLoader = 0;
 document.addEventListener( "DOMContentLoaded", function() {

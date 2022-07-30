@@ -18,6 +18,8 @@ function init() {
 
   if(location.protocol !== 'https:') {
     console.log("Do not connect with your wallet in a non secure environment.");
+    window.location.href = 'https://moonarcade.games';
+    window.location.reload(); 
     return;
   }
 
