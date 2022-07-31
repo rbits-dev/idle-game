@@ -142,6 +142,17 @@ function resolveSpriteMap( info, name , uri ) {
   return m.uri;
 }
 
+function printError(err, printAddress) {
+  if(printAddress) {
+    let walletAddress = document.getElementById("selectedAccount");
+    walletAddress.textContent = selectedAccount;
+  }
+  let errorMsg = document.getElementById("errormsg");
+  errorMsg.textContent = err;
+  noShips.classList.remove('hidden');
+  haveShips.classList.add('hidden');
+}
+
 async function getMyNFTs() {
 
 
@@ -150,8 +161,10 @@ async function getMyNFTs() {
 
 
   newRequest().then( data => { 
-    if( data == null )
+    if( data == null ) {
+      printError("Server Error. Please try again later.");
       return;
+    }
     let arr = data.data;
     let options = new Object();
     let loadingShip = false;
@@ -208,10 +221,7 @@ async function getMyNFTs() {
 
      }
      else {
-      let walletAddress = document.getElementById("selectedAccount");
-      walletAddress.textContent = selectedAccount;
-      noShips.classList.remove('hidden');
-      haveShips.classList.add('hidden');
+       printError("Error: No starfighters found for", true);
      }
   });
 

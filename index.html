@@ -11,10 +11,6 @@
   <link rel="shortcut icon" href="assets/ra8bits/r.webp" type="image/x-icon" />
   <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-
   <meta name="twitter:card" content="summary">
   <meta name="twitter:description" content="Press start to play and fight Whales, DIPS and FUD">
   <meta name="twitter:title" content="Ra8bits">
@@ -38,7 +34,7 @@
   <script type="text/javascript" src="js/howler.js"></script>
   <script type="text/javascript" src="js/gamepad.js"></script>
   <script type="text/javascript" src="js/joy.js"></script>
-  
+  <script type="text/javascript" src="js/wallet.js"></script>
   
 </head>
 <body>
@@ -64,10 +60,10 @@
       <li>Protect space from raiding Ra8bits</li>
     </ul>
 
-    <ul id="starttext" style="display:none;"">
+    <ul id="starttext" style="display:none;">
       <li> Use <span class="key">CURSOR</span> or <span class="key">WASD</span> keys to move. </li>
       <li> Use <span class="key">spacebar</span> to fire lasers. </li>
-      <li> Use <span class="key">Enter</span> to fire smart missiles.</span> </li>
+      <li> Use <span class="key">Enter</span> to fire smart missiles.</li>
       <li> Or use touchpad. </li>
       <li> Use <span class="key">N</span> and <span class="key">P</span> to cycle the SID JukeBox. </li>
       <li> Use <span class="key">ESC</span> to quit. </li>
@@ -116,7 +112,7 @@
       <div id="noships" class="hidden">  
         <div class="spacer-small"></div>
         <ul>
-          <li>Error: No starfighters found for</li>
+          <li id="errormsg"></li>
           <li id="selectedAccount"></li>
         </ul>
         <div class="spacer-small"></div>
@@ -132,11 +128,11 @@
         <li>👇 Mint a starfighter 👇</li>
       </ul>
       <div class="buttons" style="padding-top:20px;">
-        <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
+        <a id="btn-mint2" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
       </div>
     </div>
    
-    <h3 id="txHash"></h3>
+    <h3 id="txHash">&nbsp;</h3>
   </div>
 
   </div>
@@ -152,9 +148,6 @@
   
 </ul>
 
-</body>
-
-<script type="text/javascript" src="js/wallet.js"></script>
 
 <script>
 
@@ -496,7 +489,6 @@ var images = [
 ];
 
 const ENEMY_NONE = -1;                         // Our ship has this ID
-const ENEMY_COIN = 0;                          // The enemy dropped a coin 
 const ENEMY_BOSS = 999;                        // Boss id 
 
 const ENEMY_R1 = 18;
@@ -892,9 +884,16 @@ GamePadButton.prototype.onResize = function(w,h,i) {
 
 GamePadButton.prototype.setPosition = function(x1,y1,w,h,i,j) {
   let bw = (isPortrait() ? w / 8 : w / 16);
-  
   let x = ( x1 <= 0 ? w/2 + (i*bw) : x1 - bw - (i * bw));
-  let y = y1 - bw - (bw*0.5) - (j * bw);
+  
+  let size = Math.floor( isPortrait() ? stage.width/2.5: stage.width/8 );
+  if(x1 == 0)
+  size = 0;
+
+  let y = y1 - (size/2) - bw - (bw*0.5) - (j * bw);
+
+
+
   this.x = Math.floor(x);
   this.y = Math.floor(y);
   this.width = Math.floor(bw);
@@ -2395,7 +2394,7 @@ BossEnemy.prototype.hit = function(x) {
           50 + (50 * r), 
           { 
               spawnType: BONUS_COIN, 
-              id: boss.id, 
+              id: 1, 
               guntype: -1, 
               minRadius: scaleProportionalToScreen(stage.width, P_SIZE_COIN - 2, L_SIZE_COIN - 2 ), 
               maxRadius: scaleProportionalToScreen(this.width,  P_SIZE_COIN + 2 , L_SIZE_COIN + 2 ), 
@@ -3689,6 +3688,8 @@ function levelUp() {
    playSound("level"); 
    displayText( "GET READY!\nLEVEL " + currentLevel);
 
+   jukeBox(0);
+
 
    stopSpawningEnemies = true;
 
@@ -3802,7 +3803,8 @@ function spawnShip() {
   //if(boss.active) {
     ship.shieldUp( ship.power / 2 , true ); // return with half shield power remaining
   //}
-
+  jukeBox(0);
+  
 }
 
 
@@ -4099,6 +4101,9 @@ let lines = [
   "Sound by @DandyBanger",
   "Music from ...",
   "Stone Oakvalley's SID Collection",
+  "SID 6581 that is",
+  "That soundchip in your C64",
+  "Here is",
   "Ra8bit Raiders",
   "A playable demo",
   "In plain javascript",
@@ -4140,9 +4145,9 @@ function updateJoystick() {
   if(!joystickEnabled || !playing) 
     return;
 
-  let size = Math.floor( isPortrait() ? stage.width/2.5: stage.width/8 );
+  let size = Math.floor( isPortrait() ? stage.width/4: stage.width/16 );
 
-  joystick.draw(ctx, 0, stage.height - size, size, size );  
+  joystick.draw(ctx, 0, stage.height - size - (size/2), size, size );  
 }
 
 // Main render loop
@@ -4410,8 +4415,8 @@ function startGame(e) {
 
   e.currentTarget.blur();
   
-  if( jukeBoxIndex == -1 )
-    stopAndPlayLooping("spaceintro");
+  //if( jukeBoxIndex == -1 )
+   // stopAndPlayLooping("spaceintro");
 
   // reset the demo/intro to the actual game settings:
   speedMultiplier = 1;
@@ -4447,9 +4452,8 @@ function stopGame(e) {
     gameover.classList.add('hidden');
     dialogue.classList.remove('dialogue--hidden');
     hud.classList.add('hud--hidden');
-    if( jukeBoxIndex == -1 ) {
-      stopAndPlayLooping("sid0");
-    }
+    stopAndPlayLooping("sid0");
+    
   }, 5000);
  
   currentLives = 0;
@@ -4549,8 +4553,8 @@ if( ship !== undefined)
   
   gamepadButtons[0].setPosition(stage.width, stage.height, stage.width, stage.height,0,0);
   gamepadButtons[1].setPosition(stage.width, stage.height, stage.width, stage.height,1,1);
-  gamepadButtons[2].setPosition(0, stage.height, stage.width, stage.height,0,0);
-  gamepadButtons[3].setPosition(0, stage.height, stage.width, stage.height,1,0);
+ // gamepadButtons[2].setPosition(0, stage.height, stage.width, stage.height,0,0);
+ // gamepadButtons[3].setPosition(0, stage.height, stage.width, stage.height,1,0);
   
 
 }
@@ -4711,14 +4715,14 @@ function selectNextShip() {
 }
 
 function openFullscreen() {
-  if(!document.fullscreenElement) {
-    document.documentElement.requestFullscreen();
-  }
+ // if(!document.fullscreenElement) {
+ //   document.documentElement.requestFullscreen();
+ // }
 }
 
 function exitFullscreen() {
-  if(document.exitFullscreen)
-    document.exitFullscreen();
+ // if(document.exitFullscreen)
+  //  document.exitFullscreen();
 }
 
 function isPortrait() {
@@ -4797,7 +4801,7 @@ stop: function() {
 handler: function() {
   ship.secundaryWeaponFire = true;
 }}));
-
+/*
 gamepadButtons.push( new GamePadButton({img: "assets/dirLeft.webp", x: 0, width: 0, y: 0, height: 0,
 stop: function() {
   if(ship.jukePressed) {
@@ -4819,7 +4823,7 @@ stop: function() {
 handler: function() {
   ship.jukePressed = true;
 }}));
-
+*/
 
 boss = new BossEnemy();
 
@@ -4878,9 +4882,9 @@ document.addEventListener( "DOMContentLoaded", function() {
 
 onResize();
 
-  let elem = document.getElementById('shippreview');
-  elem.addEventListener('keydown', this.handleJukeboxPressed.bind(this));
-  elem.addEventListener('keyup', this.handleJukeboxRelease.bind(this));
+let elem = document.getElementById('shippreview');
+elem.addEventListener('keydown', this.handleJukeboxPressed.bind(this));
+elem.addEventListener('keyup', this.handleJukeboxRelease.bind(this));
 
 function loading() {
   if( imagesLoaded >= 9  ) {
@@ -4897,12 +4901,13 @@ function loading() {
     let mb = document.getElementById( "moonboxes" );
     mb.classList.remove( 'hidden' );
 
-
     render();
   }
   
 }
 
 </script>
+
+</body>
 
 </html>
