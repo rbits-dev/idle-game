@@ -4768,13 +4768,16 @@ document.body.appendChild(stage);
 
 gamepadButtons.push( new GamePadButton({img: "assets/buttonA.webp", x: 0, width: 0, y: 0, height: 0, 
 stop: function() {
-  if(ship.shooting)
-    ship.shooting = false; 
+ // if(ship.shooting)
+   // ship.shooting = false; 
 },
 handler: function() {
   if(!ship.shooting) {
     ship.shooting = true;
     laserTick = 0;
+  }
+  else {
+    ship.shooting = false;
   }
 
   }}));
