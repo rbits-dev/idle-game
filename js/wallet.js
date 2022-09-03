@@ -117,9 +117,10 @@ async function fetchAccountData() {
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
-  //demoMode();
+  demoMode();
 
-  getMyNFTs();
+ 
+  //getMyNFTs();
 }
 
 async function refreshAccountData() {
