@@ -117,6 +117,7 @@ async function fetchAccountData() {
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
+  //demoMode();
 
   getMyNFTs();
 }
@@ -152,6 +153,67 @@ function printError(err, printAddress) {
   noShips.classList.remove('hidden');
   haveShips.classList.add('hidden');
 }
+
+async function demoMode() {
+
+  let options = new Object();
+  let loadingShip = false;
+
+  shipyard = [];
+  ship = undefined;
+
+  let nships = getNumShips();
+  for( let i = 1 ; i < nships; i ++ ) {
+    let lp = "https://moonboxes.io/api/nft/images/raiders/" + i + ".webp";
+
+    let info = getMetadata( lp );
+
+    console.log( "NFT: " + lp );
+
+    let cols = getMetadataSpriteMap( info, "spaceship").columns;
+    // spaceship and lasers are always present
+    options.spaceship = getMetadataSpriteMap( info, "spaceship").uri;
+    options.lasers = getMetadataSpriteMap(info, "lasers").uri;
+
+    // optional elements
+    options.moveLeft = resolveSpriteMap( info, "left", options.spaceship.uri );
+    options.moveRight = resolveSpriteMap( info, "right", options.spaceship.uri);
+    options.warning = resolveSpriteMap(info, "warn", options.spaceship.uri);
+    options.idle = resolveSpriteMap(info, "idle", options.spaceship.uri );
+
+    options.power = info.power;
+    options.speed = info.speed;
+    options.rockets = info.rockets;
+    options.firespeed = info.firespeed;
+    options.title = info.title;
+    options.scale = info.scale;
+
+    loadSpaceShipExternal( options, cols );
+    loadingShip = true;
+  }
+
+  let haveShips = document.getElementById("shipyard");
+  let noShips = document.getElementById("noships");
+  let selectShip = document.getElementById("moreships2");
+  let pager = document.getElementById("moreships");
+
+  if( loadingShip ) {
+   cycleShips(0);
+   selectSpaceShip();
+   haveShips.classList.remove('hidden');
+   noShips.classList.add('hidden');
+
+   if( shipyard.length > 1 ) {
+     pager.classList.remove("hidden");
+     selectShip.classList.remove("hidden");
+   }
+   else {
+     pager.classList.add("hidden");
+     selectShip.classList.add("hidden");
+   }
+  }
+}
+
 
 async function getMyNFTs() {
 

@@ -9,6 +9,7 @@ var spaceShipMetadata = [ {
   "title" : "V-Wing",
   "callsign" : "Blue Leader",
   "color" : "Blue",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -30,6 +31,7 @@ var spaceShipMetadata = [ {
   "title" : "V-Wing",
   "callsign" : "Green Leader",
   "color" : "Green",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -51,6 +53,7 @@ var spaceShipMetadata = [ {
   "title" : "V-Wing",
   "callsign" : "Orange Leader",
   "color" : "Orange",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -72,6 +75,7 @@ var spaceShipMetadata = [ {
   "title" : "V-Wing",
   "callsign" : "Purple Leader",
   "color" : "Purple",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -93,6 +97,7 @@ var spaceShipMetadata = [ {
   "title" : "V-Wing",
   "callsign" : "Red Leader",
   "color" : "Red",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -114,6 +119,7 @@ var spaceShipMetadata = [ {
   "title" : "A-Wing",
   "callsign" : "Blue Leader",
   "color" : "Blue",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -135,6 +141,7 @@ var spaceShipMetadata = [ {
   "title" : "A-Wing",
   "callsign" : "Green Leader",
   "color" : "Green",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -156,6 +163,7 @@ var spaceShipMetadata = [ {
   "title" : "A-Wing",
   "callsign" : "Orange Leader",
   "color" : "Orange",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -177,6 +185,7 @@ var spaceShipMetadata = [ {
   "title" : "A-Wing",
   "callsign" : "Purple Leader",
   "color" : "Purple",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -198,6 +207,7 @@ var spaceShipMetadata = [ {
   "title" : "A-Wing",
   "callsign" : "Red Leader",
   "color" : "Red",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -219,6 +229,7 @@ var spaceShipMetadata = [ {
   "title" : "X-Wing",
   "callsign" : "Blue Leader",
   "color" : "Blue",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -240,6 +251,7 @@ var spaceShipMetadata = [ {
   "title" : "X-Wing",
   "callsign" : "Green Leader",
   "color" : "Green",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -261,6 +273,7 @@ var spaceShipMetadata = [ {
   "title" : "X-Wing",
   "callsign" : "Orange Leader",
   "color" : "Orange",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -282,6 +295,7 @@ var spaceShipMetadata = [ {
   "title" : "X-Wing",
   "callsign" : "Purple Leader",
   "color" : "Purple",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -303,6 +317,7 @@ var spaceShipMetadata = [ {
   "title" : "X-Wing",
   "callsign" : "Red Leader",
   "color" : "Red",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -324,6 +339,7 @@ var spaceShipMetadata = [ {
   "title" : "Y-Wing",
   "callsign" : "Blue Leader",
   "color" : "Blue",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -345,6 +361,7 @@ var spaceShipMetadata = [ {
   "title" : "Y-Wing",
   "callsign" : "Green Leader",
   "color" : "Green",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -366,6 +383,7 @@ var spaceShipMetadata = [ {
   "title" : "Y-Wing",
   "callsign" : "Orange Leader",
   "color" : "Orange",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -387,6 +405,7 @@ var spaceShipMetadata = [ {
   "title" : "Y-Wing",
   "callsign" : "Purple Leader",
   "color" : "Purple",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -408,6 +427,7 @@ var spaceShipMetadata = [ {
   "title" : "Y-Wing",
   "callsign" : "Red Leader",
   "color" : "Red",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -428,6 +448,7 @@ var spaceShipMetadata = [ {
   "title" : "T/F",
   "callsign" : "Black Leader",
   "color" : "Black",
+  "scale" : 1,
   "sprites" : [ {
     "columns" : 1,
     "name" : "spaceship",
@@ -449,6 +470,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonshooter",
   "callsign" : "Blue Leader",
   "color" : "Blue",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -486,6 +508,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonshooter",
   "callsign" : "Green Leader",
   "color" : "Green",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -523,6 +546,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonshooter",
   "callsign" : "Red Leader",
   "color" : "Red",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -560,6 +584,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonshooter",
   "callsign" : "Yellow Leader",
   "color" : "Yellow",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -597,6 +622,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonblaster",
   "callsign" : "02_Blue Leader",
   "color" : "Blue",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -634,6 +660,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonblaster",
   "callsign" : "02_Green Leader",
   "color" : "Green",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -671,6 +698,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonblaster",
   "callsign" : "02_Red Leader",
   "color" : "Red",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -708,6 +736,7 @@ var spaceShipMetadata = [ {
   "title" : "Moonblaster",
   "callsign" : "02_Yellow Leader",
   "color" : "Yellow",
+  "scale" : 1.5,
   "sprites" : [ {
     "columns" : 10,
     "name" : "spaceship",
@@ -734,7 +763,107 @@ var spaceShipMetadata = [ {
     "uri" : "assets/weapons/lasers2x.webp"
   } ],
   "logopath" : "https://moonboxes.io/api/nft/images/raiders/28.webp"
-} ];
+},
+{
+  "power" : 100,
+  "speed" : 5,
+  "firespeed" : 9,
+  "rockets" : 3,
+  "poster" : "cat1.webp",
+  "box" : "Wood",
+  "maxSupply" : 100,
+  "title" : "CatsBank UFO",
+  "callsign" : "Red Leader",
+  "color" : "Red",
+  "scale" : 1.25,
+  "sprites" : [ {
+    "columns" : 1,
+    "name" : "spaceship",
+    "uri" : "assets/ships/cat1.webp"
+  }, {
+    "columns" : 1,
+    "name" : "lasers",
+    "uri" : "assets/weapons/lasers.webp"
+  } ],
+  "logopath" : "https://moonboxes.io/api/nft/images/raiders/29.webp"
+},
+{
+  "power" : 100,
+  "speed" : 5,
+  "firespeed" : 9,
+  "rockets" : 3,
+  "poster" : "cat2.webp",
+  "box" : "Wood",
+  "maxSupply" : 100,
+  "title" : "CatsBank UFO",
+  "callsign" : "Yellow Leader",
+  "color" : "Yellow",
+  "scale" : 1.25,
+  "sprites" : [ {
+    "columns" : 1,
+    "name" : "spaceship",
+    "uri" : "assets/ships/cat2.webp"
+  }, {
+    "columns" : 1,
+    "name" : "lasers",
+    "uri" : "assets/weapons/lasers.webp"
+  } ],
+  "logopath" : "https://moonboxes.io/api/nft/images/raiders/30.webp"
+},
+
+{
+  "power" : 100,
+  "speed" : 5,
+  "firespeed" : 9,
+  "rockets" : 3,
+  "poster" : "cat3.webp",
+  "box" : "Wood",
+  "maxSupply" : 100,
+  "title" : "CatsBank UFO",
+  "callsign" : "Bruce",
+  "color" : "Brown",
+  "scale" : 1.25,
+  "sprites" : [ {
+    "columns" : 1,
+    "name" : "spaceship",
+    "uri" : "assets/ships/cat3.webp"
+  }, {
+    "columns" : 1,
+    "name" : "lasers",
+    "uri" : "assets/weapons/lasers.webp"
+  } ],
+  "logopath" : "https://moonboxes.io/api/nft/images/raiders/31.webp"
+},
+{
+  "power" : 100,
+  "speed" : 5,
+  "firespeed" : 9,
+  "rockets" : 3,
+  "poster" : "cat4.webp",
+  "box" : "Wood",
+  "maxSupply" : 100,
+  "title" : "CatsBank UFO",
+  "callsign" : "Purple Leader",
+  "color" : "Purple",
+  "scale" : 1.25,
+  "sprites" : [ {
+    "columns" : 1,
+    "name" : "spaceship",
+    "uri" : "assets/ships/cat4.webp"
+  }, {
+    "columns" : 1,
+    "name" : "lasers",
+    "uri" : "assets/weapons/lasers.webp"
+  } ],
+  "logopath" : "https://moonboxes.io/api/nft/images/raiders/32.webp"
+},
+
+
+];
+
+function getNumShips() {
+  return spaceShipMetadata.length;
+}
 
 function getMetadata(logo_path) {
   for( let m of spaceShipMetadata ) {

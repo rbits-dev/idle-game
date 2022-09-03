@@ -426,7 +426,9 @@ const L_SIZE_BONUS = 110;
 const L_SIZE_ENEMY = 56;
 const L_SIZE_COIN  = 70;
 const L_SIZE_PREVIEW_SHIP = 25;
-const L_SIZE_SHIP = 52;
+
+const L_SIZE_SHIP_DEFAULT = 48;
+let L_SIZE_SHIP = L_SIZE_SHIP_DEFAULT;
 const L_SIZE_BOMB = 200;
 const L_SIZE_BOSS = 22;
 
@@ -1174,7 +1176,9 @@ function Ship(options) {
   this.mass = 1;
   this.velocityX = 0.0;
   this.velocityY = 0.0;
+  this.scale = options.scale;
   this.laserSize = options.laserSize;
+
 }
 
 function scaleProportionalToScreen(w, portrait, landscape) {
@@ -1270,6 +1274,8 @@ Ship.prototype.setGeom = function(w,h) {
   let f = w / h;
 
   this.width = scaleProportionalToScreen(stage.width, P_SIZE_SHIP , L_SIZE_SHIP );
+
+  this.width *= this.scale;
   
   this.height = Math.floor( this.width/f );
 
@@ -4569,43 +4575,21 @@ function loadBackground(value) {
   img.src = value;
   return img;
 }
-/*
-function loadDefaultSpaceShip() {
-
-   let demo = [ "1-blue.webp", "1-green.webp", "1-orange.webp", "1-purple.webp", "1-red.webp", "2-blue.webp", "2-green.webp", "2-orange.webp", "2-purple.webp", "2-red.webp", "3-blue.webp", "3-green.webp",
-                "3-orange.webp", "3-purple.webp", "3-red.webp", "4-blue.webp", "4-green.webp", "4-orange.webp", "4-purple.webp", "4-red.webp", "5.webp" ];
-
-
-  for( let d of demo ) {
-    loadSpaceShipExternal( { spaceship: "assets/ships/"+ d , lasers: "assets/weapons/lasers.webp"}, 1);
-  }   
-
-   loadSpaceShipExternal(  { spaceship: "assets/ships/Blue_burning.webp", moveLeft: "assets/ships/Blue_left.webp", idle: "assets/ships/Blue_idle.webp", moveRight: "assets/ships/Blue_right.webp",  warning: "assets/ships/Blue_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
-   loadSpaceShipExternal(  { spaceship: "assets/ships/Green_burning.webp", moveLeft: "assets/ships/Green_left.webp", idle: "assets/ships/Green_idle.webp", moveRight: "assets/ships/Green_right.webp",  warning: "assets/ships/Green_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
-   loadSpaceShipExternal(  { spaceship: "assets/ships/Red_burning.webp", moveLeft: "assets/ships/Red_left.webp",idle: "assets/ships/Red_idle.webp", moveRight: "assets/ships/Red_right.webp",  warning: "assets/ships/Red_warning.webp", lasers: "assets/weapons/lasers.webp" } , 10);
-   loadSpaceShipExternal(  { spaceship: "assets/ships/Yellow_burning.webp", moveLeft: "assets/ships/Yellow_left.webp", idle: "assets/ships/Yellow_idle.webp",  moveRight: "assets/ships/Yellow_right.webp",  warning: "assets/ships/Yellow_warning.webp", lasers: "assets/weapons/lasers.webp" }, 10 );
-
-
-   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Blue_burning.webp", moveLeft: "assets/ships/02_Blue_left.webp", idle: "assets/ships/02_Blue_idle.webp", moveRight: "assets/ships/02_Blue_right.webp",  warning: "assets/ships/02_Blue_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
-   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Green_burning.webp", moveLeft: "assets/ships/02_Green_left.webp", idle: "assets/ships/02_Green_idle.webp", moveRight: "assets/ships/02_Green_right.webp",  warning: "assets/ships/02_Green_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
-   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Red_burning.webp", moveLeft: "assets/ships/02_Red_left.webp",idle: "assets/ships/02_Red_idle.webp", moveRight: "assets/ships/02_Red_right.webp",  warning: "assets/ships/02_Red_warning.webp", lasers: "assets/weapons/lasers2x.webp" } , 10);
-   loadSpaceShipExternal(  { spaceship: "assets/ships/02_Yellow_burning.webp", moveLeft: "assets/ships/02_Yellow_left.webp", idle: "assets/ships/02_Yellow_idle.webp",  moveRight: "assets/ships/02_Yellow_right.webp",  warning: "assets/ships/02_Yellow_warning.webp", lasers: "assets/weapons/lasers2x.webp" }, 10 );
-}
-*/
 
 function launchShip(w,h) {
-  
+ 
 
 }
 
 function loadSpaceShipExternal(options, nc) {
 
   let laserSize = (isPortrait() ? P_SIZE_LASER: L_SIZE_LASER);
-  if( options.title === 'Moonshooter' || options.title === 'Moonblaster' ) { 
-    //this game only has game objects, consisting of one texture (and not a clear seperation between solids and geoms)
-    //so, instead of defining the size and position of the laser of the ship in the template like we should, we hack around it
+  laserSize = (isPortrait() ? 48 : 196 );
+ 
+  if( options.title === 'Moonblaster' ) { 
     laserSize = (isPortrait() ? 24 : 48 );
   }
+ 
 
   let s = new Ship({ 
     x: -100, y: -100, 
@@ -4614,8 +4598,9 @@ function loadSpaceShipExternal(options, nc) {
     firespeed: (isPortrait() ? 6 : 2) + calcSpeed( options.firespeed ),
     power: options.power,
     rockets: options.rockets,
-    radius: scaleProportionalToScreen(this.width, P_SIZE_PREVIEW_SHIP,L_SIZE_PREVIEW_SHIP),
-    laserSize: laserSize
+    radius: scaleProportionalToScreen(256, P_SIZE_PREVIEW_SHIP,L_SIZE_PREVIEW_SHIP),
+    laserSize: laserSize,
+    scale: options.scale,
   });
 
   s.spriteExplosion = new SpriteMap( "assets/pop/shipexplodes.webp", { numColumns: 2, numRows: 1 , frameDelay: 50, isSquare: true }, s);
@@ -4631,6 +4616,7 @@ function loadSpaceShipExternal(options, nc) {
 
 
   shipyard.push(s);  
+
 }
 
 
@@ -4850,13 +4836,16 @@ var joystick = new JoyStick('', {
 
   let direction = event.cardinalDirection;
 
-  ship.up = false; ship.down = false; ship.left = false; ship.right = false;
-
   switch( direction ) {
-    case 'N': case 'NE': case 'NW': ship.up = true; break;
-    case 'S': case 'SE': case 'SW': ship.down = true; break;
-    case 'E': ship.right = true; break;
-    case 'W': ship.left = true; break;
+    case 'N': ship.up = true; ship.left = false; ship.right = false; ship.down = false; break;
+    case 'NE': ship.up = true; ship.left = false; ship.right = true; ship.down = false; break;
+    case 'NW': ship.up = true; ship.left = true; ship.right = false; ship.down = false; break;
+    case 'S': ship.up = false; ship.left = false; ship.right = false; ship.down = true; break;
+    case 'SE': ship.up = false; ship.left = false; ship.right = true; ship.down = true; break;
+    case 'SW': ship.up = false; ship.left = true; ship.right = false; ship.down = true; break;
+    case 'E': ship.right = true; ship.up = false; ship.left = false; ship.down = false; break;
+    case 'W': ship.left = true; ship.up=false; ship.right = false; ship.down = false; break;
+    case 'C': ship.up = false; ship.down = false; ship.left = false; ship.right = false; break;
   }
 
 });
