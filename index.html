@@ -1183,13 +1183,21 @@ function Ship(options) {
 
 function scaleProportionalToScreen(w, portrait, landscape) {
   
+  
   if( stage.width < stage.height ) {
     if( w > (stage.width/portrait))
       return Math.floor( w / portrait );
     return w;
   }
-  if( w > (stage.width/landscape))
-    return Math.floor(w / landscape);
+
+  if( w > (stage.width/landscape)) {
+    
+    let s1 = 2500 / (stage.width * 1.25); // little tricks
+ 
+    return Math.floor(w / landscape) * s1;
+  
+  }
+
   return w;
 }
 
@@ -3119,15 +3127,17 @@ function buffOff(id) {
 }
 
 function calcSpeed(speed) {
-  //let f = stage.width/stage.height;
-  //return speed / f;
   let f = stage.height / stage.width;
   let s = speed * f;
       f = stage.width/stage.height;
+  
   if(isPortrait()) {
     return s * (f * 0.35);
   }
-  return s * f;
+
+  let s1 = 2500 / stage.width; // little tricks
+
+  return (s * f ) / s1;
 }
 function incSpeed(speed) {
   let i = currentLevel * 0.1;
@@ -4383,7 +4393,7 @@ function createBomb(value,tar) {
    }
 
    let bomb = new Bomb({
-     speed: 2 + (value.speed * speedMultiplier), 
+     speed: 3 + (value.speed * speedMultiplier), 
      x: value.cx,
      y: value.cy,
      width: value.width,

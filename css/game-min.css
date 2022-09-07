@@ -7,3 +7,7 @@
     li{color:#ec008c;font-size:0.75vmax;margin-bottom:1em;text-transform:uppercase;list-style:none}
     .buttons a { height:4vh; line-height:4vh;}
 }
+
+@media (max-width: 12450px) and (orientation: landscape ) {
+  .dialogue__overlay { zoom: 0.7;  -moz-transform: scale(0.7); }
+}
