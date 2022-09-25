@@ -1910,10 +1910,15 @@ PathAnimator.prototype.calc = function(objRef) {
  
 
     let svgPoint = this.pointAt(this.percent);
-    
+
+    let m = this.path.getScreenCTM();
+    if (!m) {
+      m = new DOMMatrix(); //firefox
+    }
+
     // What is different in our implementation is that we need to know the coordinates in game (approx)
     // Map the coordinates back to screen
-    let pos = svgPoint.matrixTransform( this.path.getScreenCTM().inverse() );
+    let pos = svgPoint.matrixTransform( m.inverse() );
  
     // Determine the max available width and height
     let sw = stage.width - backgrounds[1].width - this.settings.offset - backgrounds[0].width;
