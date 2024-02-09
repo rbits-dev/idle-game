@@ -18,9 +18,7 @@ function init() {
 
   if(location.protocol !== 'https:') {
     console.log("Do not connect with your wallet in a non secure environment.");
-    window.location.href = 'https://moonarcade.games';
-    window.location.reload(); 
-    return;
+    //return;
   }
 
   const providerOptions = {
@@ -80,7 +78,7 @@ const balanceOfABI = [
 ];
 
 async function newRequest() {
-  let url = 'https://moonboxes.io/api/api/userData?NSFW=undefined&userAddress=' + selectedAccount;
+  let url = 'https://rbits.xyz/boxes/api/api/userData?NSFW=undefined&userAddress=' + selectedAccount;
 
   const response = await fetch( url, {
     method: 'GET',
@@ -117,7 +115,7 @@ async function fetchAccountData() {
   document.querySelector("#prepare").style.display = "none";
   document.querySelector("#connected").style.display = "block";
 
-  demoMode();
+  //demoMode();
 
  
   //getMyNFTs();
@@ -165,7 +163,7 @@ async function demoMode() {
 
   let nships = getNumShips();
   for( let i = 1 ; i < nships; i ++ ) {
-    let lp = "https://moonboxes.io/api/nft/images/raiders/" + i + ".webp";
+    let lp = "https://rbits.xyz/boxes/api/nft/images/raiders/" + i + ".webp";
 
     let info = getMetadata( lp );
 

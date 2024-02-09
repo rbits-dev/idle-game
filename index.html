@@ -6,20 +6,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0 user-scalable=no" />
   <meta name="HandheldFriendly" content="true" />
   <meta name="description" content="Press start to play and fight Whales, DIPS and FUD" />
-  <title>RA8BIT RAIDERS</title>
+  <title>A space shooter in the crypto space.</title>
   <link rel="stylesheet" href="css/style-min.css" />
   <link rel="shortcut icon" href="assets/ra8bits/r.webp" type="image/x-icon" />
   <link href='https://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
   <meta name="twitter:card" content="summary">
   <meta name="twitter:description" content="Press start to play and fight Whales, DIPS and FUD">
-  <meta name="twitter:title" content="Ra8bits">
+  <meta name="twitter:title" content="RBITS">
   <meta name="twitter:image" content="assets/logo.webp">
-  <meta name="twitter:site" content="@Ra8bitsNFT">
+  <meta name="twitter:site" content="@RBitsOfficial">
 
-  <meta property="og:title" content="RA8BIT RAIDERS" />
-  <meta property="og:site_name" content="Ra8bits"/>
-  <meta property="og:description" content="Ra8bits" />
+  <meta property="og:title" content="RBITS" />
+  <meta property="og:site_name" content="RBITS"/>
+  <meta property="og:description" content="Press start to play and fight Whales, DIPS and FUD" />
   <meta property="og:image" content="assets/logo.webp" />
 
   <link rel="stylesheet" href="css/game-min.css">
@@ -44,7 +48,7 @@
     <div class="gameover__overlay">
       <h1>GAME OVER</h1>
       <ul>
-        <li>Ra8bits invaded Earth!</li>
+        <li>Rabbits invaded Earth!</li>
         <li>You slowly die of<li>
         <li>nuclear radiation poisoning</li>
       </ul>
@@ -54,10 +58,10 @@
 <div class="dialogue">
   <div class="dialogue__content">
     <div class="dialogue__overlay">
-      <img src="assets/logo.webp" alt="RA8BIT RAIDERS" style="width:90vw;max-width:800px;"/>
+      <img src="assets/logo.webp" alt="RBIT RAIDERS" style="width:90vw;max-width:800px;"/>
 
     <ul id="introtext">
-      <li>Protect space from raiding Ra8bits</li>
+      <li>Protect space from raiding rabbits</li>
     </ul>
 
     <ul id="starttext" style="display:none;">
@@ -77,18 +81,25 @@
       </div>
       <div id="readyToConnect" class="buttons hidden">
         <ul>
-          <li>Connect your wallet to play</li>
+          <li>Connect your wallet to select ship</li>
         </ul>
         <a id="btn-connect">Connect</a>
       </div>
-      <div id="moonboxes" class="hidden">
+      <div id="readyToPlay" class="buttons hidden">
         <ul>
-          <li>Starfighters are available on MoonBoxes</li>
+          <li>Or press START to play now</li>
+        </ul>
+        <a onclick="startGame()">START</a>
+      </div>
+      <div id="rabbitboxes" class="hidden">
+        <ul>
+          <li>Starfighters soon available on RabbitBoxes</li>
           <li>You can get one below 👇 #FreeMint</li>
           <li>(Max 32 ships per wallet)</li>
         </ul>
         <div class="buttons" style="padding-top:1vmin;">
-          <a id="btn-mint" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
+          <a id="btn-mint" target="_blank" href="https://rbits.xyz" >RabbitBoxes</a>
+          <!--<a id="btn-mint" target="_blank" href="https://rbits.xyz/boxes/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >RabbitBoxes</a>-->
         </div>
         <div class="spacer-small"></div>
       </div>        
@@ -128,7 +139,8 @@
         <li>👇 Mint a starfighter 👇</li>
       </ul>
       <div class="buttons" style="padding-top:20px;">
-        <a id="btn-mint2" target="_blank" href="https://moonboxes.io/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >MoonBoxes</a>
+        <a id="btn-mint2" target="_blank" href="https://rbits.xyz/" >RabbitBoxes</a>
+        <!--<a id="btn-mint2" target="_blank" href="https://rbits.xyz/boxes/artist/0x59cf59D3F4259766fA218F1F2F29375ca31451Fd" >RabbitBoxes</a>-->
       </div>
     </div>
    
@@ -286,24 +298,25 @@ function toggleMute() {
 }
 
 // JukeBox function
-var jukeBoxIndex = -1;
+var jukeBoxIndex = 0;
 function jukeBox(dir) {
-  if( dir == 1 ) { // Next song, cycle to start
-    jukeBoxIndex = (jukeBoxIndex + 1) % (sidSongs.length-1);
-  }
-  else if( dir == -1) { // Previous song, cycle to end
-    if( jukeBoxIndex <= 0 ) {
-      jukeBoxIndex = sidSongs.length - 1;
-    }
-    else {
-      jukeBoxIndex = jukeBoxIndex - 1;
-    }
-  }
-  else { // Random song
-    jukeBoxIndex = randomBetween( 0, sidSongs.length - 1 );  
+  const totalSongs = sidSongs.length;
+
+  if (dir === 1) { // Next song, cycle to start
+    jukeBoxIndex = (jukeBoxIndex + 1) % totalSongs;
+  } else if (dir === -1) { // Previous song, cycle to end
+    jukeBoxIndex = (jukeBoxIndex - 1 + totalSongs) % totalSongs;
+  } else { // Random song
+    jukeBoxIndex = randomBetween(0, totalSongs - 1);
   }
 
-  playSidSong();
+  let name = sidSongs[jukeBoxIndex].split("/").pop();
+ 
+  console.log( "Play "  + name );
+
+  displayText( cleanupText(name) );
+
+  stopAndPlayLooping( "sid" + jukeBoxIndex);
 }
 
 function playSidSong() {
@@ -389,7 +402,7 @@ const DEV_MODE = false;      // Set to true for dev mode
 const playerOffsetY = 180;   
 const SHIPDECAY = 6;         // in ticks
 const ENEMY_DECAY = 6;
-let DEFAULTSPEED = 0;
+let DEFAULTSPEED = 3;
 
 // Bonus Types
 const MOVE_SPEED = 1;        
@@ -439,7 +452,7 @@ const L_SIZE_LASER = 75;
 //  this.height = options.height || 64/3; //20;   // FIXME probably needs to take in account screen orientation
 
 
-// If you are standing still too long, Ra8bits will fire smart missiles at you
+// If you are standing still too long, Rabbits will fire smart missiles at you
 var standingStillTimer = 0;
 var lastStandingX = 0;
 var paused = false;
@@ -609,7 +622,7 @@ let ship, lasers = [], enemies = [], bombs = [], backgrounds = [], distanceToPla
     gameStarted = false,
     speedMultiplier,
     enemySeedFrameInterval,
-    smartBombProbability = 5,
+    smartBombProbability = 75,
     score = 0,
     highScore = 0,
     tick = 0,
@@ -1263,6 +1276,8 @@ function spriteLoader(ref) {
   if( isReady ) {
     ref.ready = true;
     clearInterval(ref.loader);
+
+    console.log("Loaded sprite map");
   }
 }
 
@@ -1283,7 +1298,7 @@ Ship.prototype.setGeom = function(w,h) {
 
   this.width = scaleProportionalToScreen(stage.width, P_SIZE_SHIP , L_SIZE_SHIP );
 
-  this.width *= this.scale;
+  this.width *= (this.scale === undefined ? 1.0 : this.scale);
   
   this.height = Math.floor( this.width/f );
 
@@ -1376,7 +1391,7 @@ Ship.prototype.changeSpeed = function(x) {
 }
 
 Ship.prototype.update = function(x,y) {
-  
+
   this.x = x;
   this.y = y;
 
@@ -1561,12 +1576,13 @@ function updateGamePad() {
     }
 
     if( gamepadAPI.buttonPressed( "Start") ) {
-      if( ! connected ) {
+     /* if( ! connected ) {
         onConnect();
       }
       else {
         startGame();
-      }
+      }*/
+      startGame();
     }
     
     return;
@@ -2121,7 +2137,7 @@ function Bomb(options, tar, origin) {
   this.active = true;
   this.guntype = options.guntype;
   this.decaying = false;
-  this.decay = BOMB_DECAY_TIME;
+  this.decay = randomBetween( 3.25, 6.8 );
   this.targetRef = tar;
   this.velocityX = 0.0;
   this.velocityY = 0.0;
@@ -2159,15 +2175,17 @@ function Bomb(options, tar, origin) {
     this.target(tar);
   }
 
-  let followTime = randomBetween( 1.75, 3.2);
+  let followTime = randomBetween( 1.75, 3.75);
   if(origin.id == ENEMY_NONE)
     followTime *= 2;
   if(this.smartBomb) {
-    this.speed =  (origin.id == ENEMY_NONE ? incSpeed(origin.speed) + 2  : origin.speed < DEFAULTSPEED ? DEFAULTSPEED: origin.speed );
+    this.speed =  (origin.id == ENEMY_NONE ? incSpeed(origin.speed) : (origin.speed < DEFAULTSPEED ? DEFAULTSPEED: origin.speed) );
+    this.speed += 2.0;
+    //smart bomb speed: 0.6 origin none = false origin speed = 0.5268
     origin.rocketActive = true;
     this.timerId = setTimeout(function(b) { 
       b.decaying = true;
-      b.decay = BOMB_DECAY_TIME;
+      //b.decay = randomBetween( 3, BOMB_DECAY_TIME );
        if(origin.id == ENEMY_NONE) {
         origin.rocketActive = false;
        }
@@ -2181,6 +2199,9 @@ function Bomb(options, tar, origin) {
    
     }, 40, this );
   }
+  else {
+    this.speed += randomBetween( 0.05 , 1.25 );
+  } 
 
   if(this.aimAndFire) {
     if(!tar.active || !playing)
@@ -2189,14 +2210,14 @@ function Bomb(options, tar, origin) {
   }
 
   this.spriteExplosion = spriteExplosions;
-  this.ttl = gameClock + randomBetween(3000,7000);
+  this.ttl = gameClock + randomBetween(2000,BOMB_DECAY_TIME * 1000);
 }
 
 Bomb.prototype.destruct = function() {
     if(this.decaying)
       return; // already done
     this.decaying = true;
-    this.decay = 6;
+    //this.decay = 6;
     if(this.origin.id == ENEMY_NONE) {
       this.origin.rocketActive = false;
     }
@@ -2377,7 +2398,7 @@ function BossEnemy(options) {
   this.evasionTiming = 0.0;
   this.alpha = 1.0;
   this.id = enemyId;
-  this.numRockets = Number.MAX_SAFE_INTEGER; // Lock & Load Ra8bits!
+  this.numRockets = Number.MAX_SAFE_INTEGER;
   this.runRadius = this.radius;
   this.spawnActive = false;
   this.coinOffset = randomBetween(0, 5);
@@ -2843,7 +2864,7 @@ function Enemy(options) {
   this.velocityY = 0;
   this.onTarget = (this.targetObject === undefined ? false: true);
   this.remoteControl = false;
-  this.aimAndFireDelay = (options !== undefined && options.aimAndFireDelay ? options.aimAndFireDelay : 1500 );
+  this.aimAndFireDelay = (options !== undefined && options.aimAndFireDelay ? options.aimAndFireDelay : randomBetween( 1500, 7000 ) );
   this.parent = (options !== undefined && options.parent ? options.parent : null );
   this.mass = 1;
 }
@@ -3035,6 +3056,9 @@ Enemy.prototype.draw = function() {
     
 
 function hitTest(item1, item2) {
+  if(item1.decaying || item2.decaying )
+    return false;
+
   let dx = item1.cx  - item2.cx;
   let dy = item1.cy  - item2.cy;
 
@@ -3489,7 +3513,10 @@ function handleBombCollisions() {
       else {
         if( bomb.origin.id != ENEMY_NONE ) {
           if(!ship.isIndestructable()) {
-           ship.hit(20);
+           if(!bomb.dacaying) {
+            ship.hit(10);
+            bomb.destruct();
+           }
           }
         }
       }
@@ -3833,7 +3860,6 @@ function drawShip(xPosition, yPosition) {
 
 
   if (ship.active && ship.ready && playing) {
-    //ship.update(xPosition,yPosition);
     ship.draw();
 
 
@@ -3944,6 +3970,7 @@ function updateTargetSystem() {
       continue;
     if(e.spawnBonusType == BONUS_COIN)
       continue;
+
     distanceToPlayer.push( e.distanceToPlayer() );
   }
 
@@ -4090,14 +4117,17 @@ function enemySpawns(pairs, type, same) {
 
   right = Math.floor( backgrounds[0].width + v );
   left = stage.width - backgrounds[1].width - (3 *radius) - right;
+
   up = Math.floor( radius * 2 ) + (radius/2);
   
+  up += randomBetween( -radius , radius );
+
   let smartBombers = randomBetween(0,50) > currentLevel ? false: true;
 
   for( let k = 0; k < pairs; k ++ ) {
 
-    newEnemy( { smartBomb: smartBombers, aimAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: left, y: 0 - ((k+1) * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
-    newEnemy( { smartBomb: smartBombers, andAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: right,y: 0 - ((k+1) * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
+    newEnemy( { smartBomb: smartBombers, aimAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: left, y: 0 - (1 * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
+    newEnemy( { smartBomb: smartBombers, andAndFire: true, zigzag: 0, minRadius: radius, maxRadius: radius, x: right,y: 0 - (1 * up),  id: (same ? sameId : randomBetween(0, ENEMY_INDEX - 1 )) } );
 
     left += offset_x;
     right -= offset_x;
@@ -4115,18 +4145,17 @@ function enemySpawns(pairs, type, same) {
 let lines = [
   "",
   "",
-  "(C) 2022 by Project Moonshot",
-  "(C) 2022 by Ra8bits",
-  "Written by @c0ntrolzero",
+  "(C) 2024 by RBITS",
+  "Written by @zer0ctrl",
   "Artwork by @Pixel8it and @luisqsm",
-  "Sound by @DandyBanger",
+  "Sound FX by @DandyBanger",
   "Music from ...",
   "Stone Oakvalley's SID Collection",
   "SID 6581 that is",
   "That soundchip in your C64",
   "Here is",
-  "Ra8bit Raiders",
-  "A playable demo",
+  "RBIT RAIDERS",
+  "A space shooter game",
   "In plain javascript",
   "Free to play",
   "Open Source",
@@ -4422,7 +4451,10 @@ function startGame(e) {
 
   if(ship === undefined ) {
     console.log("No spaceship selected yet");
-    return;
+    loadDefaultSpaceShip();
+    cycleShips(0);
+
+ 
   }
 
   openFullscreen();
@@ -4434,7 +4466,7 @@ function startGame(e) {
   dialogue.classList.add('dialogue--hidden');
   hud.classList.remove('hud--hidden');
 
-  e.currentTarget.blur();
+  //e.currentTarget.blur();
   
   //if( jukeBoxIndex == -1 )
    // stopAndPlayLooping("spaceintro");
@@ -4589,6 +4621,18 @@ function loadBackground(value) {
   img.onerror = imageNotFound;
   img.src = value;
   return img;
+}
+
+function loadDefaultSpaceShip() {
+
+  let demo = [ "1-red.webp" ];
+
+
+  for( let d of demo ) {
+    loadSpaceShipExternal( { spaceship: "assets/ships/"+ d , lasers: "assets/weapons/lasers.webp", speed:5, scale:1, power:50, firespeed: 9, rockets: 3  }, 1);
+  }   
+ 
+
 }
 
 function launchShip(w,h) {
@@ -4883,9 +4927,10 @@ document.addEventListener('gestureend', function(e) {
 
 var myLoader = 0;
 document.addEventListener( "DOMContentLoaded", function() {
-   myLoader = setInterval( loading, 1000 );
+   myLoader = setInterval( loading, 5000 );
 
 });
+
 
 onResize();
 
@@ -4894,6 +4939,7 @@ elem.addEventListener('keydown', this.handleJukeboxPressed.bind(this));
 elem.addEventListener('keyup', this.handleJukeboxRelease.bind(this));
 
 function loading() {
+  console.log("images loaded = " + imagesLoaded);
   if( imagesLoaded >= 9  ) {
     backgrounds[0].configure(0,0);
     backgrounds[1].configure(screen.width,0);
@@ -4903,9 +4949,12 @@ function loading() {
     doneLoading.classList.add('hidden');
 
     let startConnect = document.getElementById( "readyToConnect" );
-    startConnect.classList.remove( "hidden");
+    let startPlay = document.getElementById( "readyToPlay");
 
-    let mb = document.getElementById( "moonboxes" );
+    startConnect.classList.remove( "hidden");
+    startPlay.classList.remove( "hidden");
+
+    let mb = document.getElementById( "rabbitboxes" );
     mb.classList.remove( 'hidden' );
 
     render();

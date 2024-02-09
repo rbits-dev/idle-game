@@ -19,7 +19,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/0.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/0.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -41,7 +41,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/1.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/1.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -63,7 +63,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/2.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/2.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -85,7 +85,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/3.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/3.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -107,7 +107,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/4.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/4.webp"
 }, {
   "power" : 100,
   "speed" : 6,
@@ -129,7 +129,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/5.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/5.webp"
 }, {
   "power" : 100,
   "speed" : 6,
@@ -151,7 +151,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/6.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/6.webp"
 }, {
   "power" : 100,
   "speed" : 6,
@@ -173,7 +173,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/7.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/7.webp"
 }, {
   "power" : 100,
   "speed" : 6,
@@ -195,7 +195,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/8.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/8.webp"
 }, {
   "power" : 100,
   "speed" : 6,
@@ -217,7 +217,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/9.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/9.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -239,7 +239,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/10.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/10.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -261,7 +261,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/11.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/11.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -283,7 +283,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/12.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/12.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -305,7 +305,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/13.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/13.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -327,7 +327,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/14.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/14.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -349,7 +349,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/15.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/15.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -371,7 +371,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/16.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/16.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -393,7 +393,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/17.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/17.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -415,7 +415,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/18.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/18.webp"
 }, {
   "power" : 100,
   "speed" : 5,
@@ -437,7 +437,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/19.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/19.webp"
 }, {
   "power" : 100,
   "speed" : 7,
@@ -458,7 +458,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/20.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/20.webp"
 }, {
   "power" : 110,
   "speed" : 5,
@@ -496,7 +496,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/21.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/21.webp"
 }, {
   "power" : 110,
   "speed" : 5,
@@ -534,7 +534,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/22.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/22.webp"
 }, {
   "power" : 110,
   "speed" : 5,
@@ -572,7 +572,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/23.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/23.webp"
 }, {
   "power" : 110,
   "speed" : 5,
@@ -610,7 +610,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/24.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/24.webp"
 }, {
   "power" : 125,
   "speed" : 5,
@@ -648,7 +648,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers2x.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/25.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/25.webp"
 }, {
   "power" : 125,
   "speed" : 5,
@@ -686,7 +686,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers2x.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/26.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/26.webp"
 }, {
   "power" : 125,
   "speed" : 5,
@@ -724,7 +724,7 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers2x.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/27.webp"
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/27.webp"
 }, {
   "power" : 125,
   "speed" : 5,
@@ -762,102 +762,8 @@ var spaceShipMetadata = [ {
     "name" : "lasers",
     "uri" : "assets/weapons/lasers2x.webp"
   } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/28.webp"
-},
-{
-  "power" : 100,
-  "speed" : 5,
-  "firespeed" : 9,
-  "rockets" : 3,
-  "poster" : "cat1.webp",
-  "box" : "Wood",
-  "maxSupply" : 100,
-  "title" : "CatsBank UFO",
-  "callsign" : "Red Leader",
-  "color" : "Red",
-  "scale" : 1.25,
-  "sprites" : [ {
-    "columns" : 1,
-    "name" : "spaceship",
-    "uri" : "assets/ships/cat1.webp"
-  }, {
-    "columns" : 1,
-    "name" : "lasers",
-    "uri" : "assets/weapons/lasers.webp"
-  } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/29.webp"
-},
-{
-  "power" : 100,
-  "speed" : 5,
-  "firespeed" : 9,
-  "rockets" : 3,
-  "poster" : "cat2.webp",
-  "box" : "Wood",
-  "maxSupply" : 100,
-  "title" : "CatsBank UFO",
-  "callsign" : "Yellow Leader",
-  "color" : "Yellow",
-  "scale" : 1.25,
-  "sprites" : [ {
-    "columns" : 1,
-    "name" : "spaceship",
-    "uri" : "assets/ships/cat2.webp"
-  }, {
-    "columns" : 1,
-    "name" : "lasers",
-    "uri" : "assets/weapons/lasers.webp"
-  } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/30.webp"
-},
-
-{
-  "power" : 100,
-  "speed" : 5,
-  "firespeed" : 9,
-  "rockets" : 3,
-  "poster" : "cat3.webp",
-  "box" : "Wood",
-  "maxSupply" : 100,
-  "title" : "CatsBank UFO",
-  "callsign" : "Bruce",
-  "color" : "Brown",
-  "scale" : 1.25,
-  "sprites" : [ {
-    "columns" : 1,
-    "name" : "spaceship",
-    "uri" : "assets/ships/cat3.webp"
-  }, {
-    "columns" : 1,
-    "name" : "lasers",
-    "uri" : "assets/weapons/lasers.webp"
-  } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/31.webp"
-},
-{
-  "power" : 100,
-  "speed" : 5,
-  "firespeed" : 9,
-  "rockets" : 3,
-  "poster" : "cat4.webp",
-  "box" : "Wood",
-  "maxSupply" : 100,
-  "title" : "CatsBank UFO",
-  "callsign" : "Purple Leader",
-  "color" : "Purple",
-  "scale" : 1.25,
-  "sprites" : [ {
-    "columns" : 1,
-    "name" : "spaceship",
-    "uri" : "assets/ships/cat4.webp"
-  }, {
-    "columns" : 1,
-    "name" : "lasers",
-    "uri" : "assets/weapons/lasers.webp"
-  } ],
-  "logopath" : "https://moonboxes.io/api/nft/images/raiders/32.webp"
-},
-
+  "logopath" : "https://rbits.xyz/boxes/api/nft/images/raiders/28.webp"
+}
 
 ];
 
